@@ -30,7 +30,7 @@ namespace NetworkGh.Components.Remote
 
         public override GH_Exposure Exposure => GH_Exposure.primary;
         public override IEnumerable<string> Keywords => new string[] { "wp server" };
-        protected override Bitmap Icon => null;
+        protected override Bitmap Icon => Icons.WebsocketServer;
         public override Guid ComponentGuid => new Guid("50f302a5-ba3d-4f2b-aa3a-06c8408b990a");
 
         #endregion

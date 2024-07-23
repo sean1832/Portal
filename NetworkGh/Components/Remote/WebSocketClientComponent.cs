@@ -47,7 +47,7 @@ namespace NetworkGh.Components.Remote
 
         public override GH_Exposure Exposure => GH_Exposure.primary;
         public override IEnumerable<string> Keywords => new string[] { "wp client" };
-        protected override Bitmap Icon => Icons.websocket;
+        protected override Bitmap Icon => Icons.WebsocketClient;
         public override Guid ComponentGuid => new Guid("ab7b6872-2328-4667-a6fe-74b3fb61141b");
 
         #endregion

@@ -9,6 +9,7 @@
     <UseWindowsForms>true</UseWindowsForms>
     <FileVersion>0.0.1</FileVersion>
     <AssemblyVersion>0.0.1</AssemblyVersion>
+    <LangVersion>8</LangVersion>
   </PropertyGroup>
   
   <ItemGroup>

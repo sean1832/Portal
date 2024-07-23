@@ -127,13 +127,25 @@
   <data name="PiperSender" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\PiperSender.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="SharedMemoryReader" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\SharedMemoryReader.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="SharedMemoryReaderAuto" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\SharedMemoryReaderAuto.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="SharedMemoryWriter" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\SharedMemoryWriter.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="UDPReceiver" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\UDPReceiver.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="UDPSender" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\UDPSender.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="websocket" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\websocket.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="WebsocketClient" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\WebsocketClient.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="WebsocketServer" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\WebsocketServer.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

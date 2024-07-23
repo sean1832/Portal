@@ -8,16 +8,16 @@ Network GH is a Grasshopper plugin designed to facilitate Inter-Process Communic
 
 - **UDP Sockets**: Handle data transmission over UDP protocols. Suitable for applications where speed is critical and loss of data can be tolerated, UDP Sockets provide a faster, though less reliable, alternative to TCP.
 
-- **Named Pipes (local)**: Facilitate data exchange locally between applications on the same machine. Named Pipes are perfect for secure, reliable, and efficient communication between processes running locally.
+- **Named Pipes**: Communicate with single or cross-machine applications using Named Pipes. This feature is ideal for local network communication, enabling seamless data exchange between different software tools and services.
+
+- **Shared Memory**: Share data between processes using Shared Memory. This feature is particularly useful for high-speed data exchange between applications running on the same machine.
 
 
-|             | Speed | Reliability | Remote | Local | Real-time |
-| ----------- | ----- | ----------- | ------ | ----- | --------- |
-| WebSockets  | 3/5   | 4/5         | ✅     | ✅    | ✅        |
-| UDP Sockets | 4/5   | 3/5         | ✅     | ✅    | ❌        |
-| Named Pipes | 5/5   | 5/5         | ❌     | ✅    | ✅        |
-
-
-
+|               | Speed | Reliability | Remote | Streamable |
+| ------------- | ----- | ----------- | ------ | ---------- |
+| WebSockets    | 5/10  | 9/10        | ✅     | ✅         |
+| UDP Sockets   | 6/10  | 7/10        | ✅     | ❌         |
+| Named Pipes   | 8/10  | 10/10       | ❌     | ✅         |
+| Shared Memory | 10/10 | 6/10        | ❌     | ❌         |
 
 

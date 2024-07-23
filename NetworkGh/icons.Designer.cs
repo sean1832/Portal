@@ -93,6 +93,36 @@ namespace NetworkGh {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap SharedMemoryReader {
+            get {
+                object obj = ResourceManager.GetObject("SharedMemoryReader", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap SharedMemoryReaderAuto {
+            get {
+                object obj = ResourceManager.GetObject("SharedMemoryReaderAuto", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap SharedMemoryWriter {
+            get {
+                object obj = ResourceManager.GetObject("SharedMemoryWriter", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap UDPReceiver {
             get {
                 object obj = ResourceManager.GetObject("UDPReceiver", resourceCulture);
@@ -113,9 +143,19 @@ namespace NetworkGh {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap websocket {
+        internal static System.Drawing.Bitmap WebsocketClient {
             get {
-                object obj = ResourceManager.GetObject("websocket", resourceCulture);
+                object obj = ResourceManager.GetObject("WebsocketClient", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap WebsocketServer {
+            get {
+                object obj = ResourceManager.GetObject("WebsocketServer", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
