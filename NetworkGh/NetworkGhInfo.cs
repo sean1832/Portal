@@ -18,7 +18,7 @@ namespace NetworkGh
         public override Guid Id => new Guid("235fe0a6-bc24-441f-8390-190baa88f2f7");
 
         //Return a string identifying you or your company.
-        public override string AuthorName => "";
+        public override string AuthorName => "Zeke Zhang";
 
         //Return a string representing your preferred contact details.
         public override string AuthorContact => "";

@@ -30,7 +30,7 @@ namespace NetworkGh.Components.Local
         }
 
         public override GH_Exposure Exposure => GH_Exposure.primary;
-        public override IEnumerable<string> Keywords => new string[] { };
+        public override IEnumerable<string> Keywords => new string[] { "np receiver", "np server", "pipe receiver" };
         protected override Bitmap Icon => Icons.PipeReceiver;
         public override Guid ComponentGuid => new Guid("9903815c-5f6e-4341-b41b-278d3051730e");
 

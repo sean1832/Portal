@@ -3,7 +3,7 @@ using WebSocketSharp;
 
 namespace NetworkGh.Core.WebSocket
 {
-    internal class WebSocketManager
+    internal class WebSocketClientManager
     {
         private WebSocketSharp.WebSocket _ws;
 
