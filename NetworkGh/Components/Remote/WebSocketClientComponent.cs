@@ -22,8 +22,9 @@ namespace NetworkGh.Components.Remote
             : base("WebSocket Client", "WS Client",
                 "Client for sending data via WebSocket connection. Ideal for robust data communication with high data integrity. Slower than UDP." +
                 "\n\nWebSocket:\n" +
-                "A communication protocol enabling real-time, two-way interaction over the web. (Also work in local machine)\n" +
-                "It establishes persistent connections, making it suitable for environments where reliable data exchange is critical.",
+                "Facilitates real-time, bidirectional communication with web applications. " +
+                "WebSockets are less suited for high-speed requirements but provide robust, continuous data streams, " +
+                "making them ideal for interactive applications requiring constant updates.",
                 Config.Category, Config.SubCat.RemoteIpc)
         {
             _socketClient = new WebSocketClientManager();

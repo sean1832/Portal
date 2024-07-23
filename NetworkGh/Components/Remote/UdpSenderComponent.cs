@@ -19,10 +19,10 @@ namespace NetworkGh.Components.Remote
         public UdpSenderComponent()
             : base("UDP Sender", "<UDP>",
                 "Sends data packets to a server via UDP. Recommended for packets smaller than 1472 bytes." +
-                "\n\nUDP (User Datagram Protocol):\n" +
-                "A fast, efficient protocol for sending messages (datagrams) between devices and processes without prior connection.\n" +
-                "Ideal for low-latency applications, it doesn't guarantee order, error-checking, or delivery acknowledgment.\n" +
-                "Suitable for both internet and local machine communication where speed is critical and occasional data loss is acceptable.",
+                "\n\nUDP:\n" +
+                "Offers fast data transmission via UDP, prioritizing speed over reliability. " +
+                "Best for scenarios where occasional data loss is acceptable, " +
+                "UDP Sockets are not connection-oriented, hence faster but less reliable compared to TCP-based methods.",
                 Config.Category, Config.SubCat.RemoteIpc)
         {
         }

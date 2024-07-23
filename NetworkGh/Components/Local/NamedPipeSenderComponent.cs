@@ -19,8 +19,9 @@ namespace NetworkGh.Components.Local
             : base("Named Pipe Sender", "<pipe>",
                 "Client that sends messages to a named pipe server. " +
                 "\n\nNamed Pipes:\n" +
-                "A fast inter-process communication (IPC) method for local machine communication.\n" +
-                "Faster than WebSocket, UDP, and TCP, but limited to local use."
+                "Provides reliable inter-process communication within the same machine, using stream-based data transfer. " +
+                "Named Pipes are highly reliable and suitable for complex data exchanges within a single local machine, " +
+                "but they do not support remote communication."
                 , Config.Category, Config.SubCat.LocalIpc)
         {
         }

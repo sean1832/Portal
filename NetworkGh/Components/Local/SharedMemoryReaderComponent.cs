@@ -20,9 +20,9 @@ namespace NetworkGh.Components.Local
             : base("Shared Memory Reader", ">Memory<",
                 "Reads data once from a shared memory block. First 4 bytes represents size." +
                 "\n\nShared Memory:\n" +
-                "Shared memory is a high performance IPC method that allows multiple programs on the same machine to access a common memory block " +
-                "for data exchange and synchronization.\n" +
-                "Fastest communication, but may suffer instability due to direct memory manipulation. Limited to single machine communication.",
+                "Enables the fastest data exchange possible by allowing direct access to a common " +
+                "memory block between processes on the same machine. This method is unmatched in speed " +
+                "within local settings but lacks the data integrity checks and network capabilities of the other methods.",
                 Config.Category, Config.SubCat.LocalIpc)
         {
         }
