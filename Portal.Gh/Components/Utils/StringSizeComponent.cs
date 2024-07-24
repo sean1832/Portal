@@ -8,13 +8,13 @@ using Portal.Gh.Common;
 
 namespace Portal.Gh.Components.Utils
 {
-    public class DataSizeComponent : GH_Component
+    public class StringSizeComponent : GH_Component
     {
         #region Metadata
 
-        public DataSizeComponent()
-            : base("Data Size", "Size",
-                "Get data sizes information",
+        public StringSizeComponent()
+            : base("Text Size", "TxtSize",
+                "Get text sizes",
                 Config.Category, Config.SubCat.Utils)
         {
         }
