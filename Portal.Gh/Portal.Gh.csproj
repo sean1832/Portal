@@ -11,6 +11,10 @@
     <AssemblyVersion>0.0.1</AssemblyVersion>
     <LangVersion>8</LangVersion>
   </PropertyGroup>
+	
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DebugType>none</DebugType>
+  </PropertyGroup>
   
   <ItemGroup>
     <PackageReference Include="Grasshopper" Version="7.13.21348.13001" IncludeAssets="compile;build" />
