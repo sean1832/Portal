@@ -8,11 +8,11 @@ using Portal.Gh.Common;
 
 namespace Portal.Gh.Components.Utils
 {
-    public class DataInfoComponent : GH_Component
+    public class DataSizeComponent : GH_Component
     {
         #region Metadata
 
-        public DataInfoComponent()
+        public DataSizeComponent()
             : base("Data Size", "Size",
                 "Get data sizes information",
                 Config.Category, Config.SubCat.Utils)
