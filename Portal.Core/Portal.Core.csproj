@@ -49,6 +49,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Compression\GZip.cs" />
     <Compile Include="DataModel\Coordinates2D.cs" />
     <Compile Include="DataModel\Coordinates3D.cs" />
     <Compile Include="DataModel\PPlane.cs" />
