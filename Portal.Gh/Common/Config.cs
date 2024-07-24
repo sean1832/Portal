@@ -15,7 +15,7 @@ namespace Portal.Gh.Common
             public static readonly string Utils = "0.Utils";
             public static readonly string RemoteIpc = "1.RemoteIPC";
             public static readonly string LocalIpc = "2.LocalIPC";
-
+            public static readonly string Serialization = "3.Serialization";
         }
     }
 }
