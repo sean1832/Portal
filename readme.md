@@ -1,8 +1,19 @@
-# Network GH
+# Portal
 
-Network GH is a Grasshopper plugin designed to enhance Inter-Process Communication (IPC) capabilities. It allows Grasshopper to interact with various applications and services, optimizing workflows through efficient data integration across different platforms, including web-based and local network environments.
+Portal is a Grasshopper plugin designed to enhance Inter-Process Communication (IPC) capabilities. It allows Grasshopper to interact with various applications and services, optimizing workflows through efficient data integration across different platforms, including web-based and local network environments.
 
 ## Features
+- **Data Exchange with External Applications**
+- **Multiple Communication Methods**
+- **Data Serialization**
+  - Plain Text
+  - Mesh (Upcoming)
+  - Curve (Upcoming)
+  - Point (Upcoming)
+
+
+## Supported Methods
+Currently supports the following communication methods:
 
 - **UDP Sockets**: Offers fast data transmission via UDP, prioritizing speed over reliability. Best for scenarios where occasional data loss is acceptable, UDP Sockets are not connection-oriented, hence faster but less reliable compared to TCP-based methods.
 
