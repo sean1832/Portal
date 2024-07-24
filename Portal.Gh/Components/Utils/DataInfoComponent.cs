@@ -13,8 +13,8 @@ namespace Portal.Gh.Components.Utils
         #region Metadata
 
         public DataInfoComponent()
-            : base("Data Information", "DataInfo",
-                "Get data information such as sizes",
+            : base("Data Size", "Size",
+                "Get data sizes information",
                 Config.Category, Config.SubCat.Utils)
         {
         }
@@ -36,7 +36,6 @@ namespace Portal.Gh.Components.Utils
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
             pManager.AddIntegerParameter("Size", "Size", "Size of the data in bytes", GH_ParamAccess.item);
-            pManager.AddIntegerParameter("CharCount", "Count", "Character Count", GH_ParamAccess.item);
         }
 
         #endregion
@@ -47,13 +46,7 @@ namespace Portal.Gh.Components.Utils
 
             if (!DA.GetData(0, ref data)) return;
 
-            // convert data to byte array
-            byte[] bytes = System.Text.Encoding.UTF8.GetBytes(data);
-            // get size
-            int size = bytes.Length;
-
-            DA.SetData(0, size);
-            DA.SetData(1, data.Length);
+            DA.SetData(0, data.Length);
         }
     }
 }
