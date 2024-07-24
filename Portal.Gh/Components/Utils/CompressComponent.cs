@@ -54,7 +54,7 @@ namespace Portal.Gh.Components.Utils
             float compressionRate = ((float)compressedBytes.Length / data.Length)*100; // in percentage
             // round to 2 decimal places
             compressionRate = (float)Math.Round(compressionRate, 2);
-            Message = $"Compressed: {compressionRate}%";
+            Message = $"Compression: {compressionRate}%";
 
             DA.SetData(0, bytes);
         }
