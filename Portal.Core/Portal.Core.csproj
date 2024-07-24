@@ -49,6 +49,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataModel\Coordinates2D.cs" />
+    <Compile Include="DataModel\Coordinates3D.cs" />
+    <Compile Include="DataModel\PPlane.cs" />
+    <Compile Include="DataModel\PMesh.cs" />
+    <Compile Include="DataModel\PCurve.cs" />
     <Compile Include="NamedPipe\NamedPipeClient.cs" />
     <Compile Include="NamedPipe\NamedPipeServer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
