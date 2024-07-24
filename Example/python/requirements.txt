@@ -1,0 +1,2 @@
+pywin32 == 306
+websockets == 12.0
