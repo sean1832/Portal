@@ -38,7 +38,7 @@ namespace Portal.Gh.Components.Utils
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddTextParameter("Data", "Data", "Decompressed data", GH_ParamAccess.item);
+            pManager.AddTextParameter("String", "Str", "Decompressed string data", GH_ParamAccess.item);
         }
 
         #endregion

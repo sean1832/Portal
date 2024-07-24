@@ -33,7 +33,7 @@ namespace Portal.Gh.Components.Utils
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
-            pManager.AddTextParameter("JSON Data", "Json", "Json data to compress", GH_ParamAccess.item);
+            pManager.AddTextParameter("String Data", "Str", "String data to compress", GH_ParamAccess.item);
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
