@@ -11,14 +11,12 @@ namespace Portal.Core.DataModel
         public T X { get; set; }
         public T Y { get; set; }
         public T Z { get; set; }
-        public string Type { get; set; }
 
         public Coordinates3D(T x, T y, T z)
         {
             X = x;
             Y = y;
             Z = z;
-            Type = nameof(Coordinates3D<T>);
         }
     }
 
@@ -26,7 +24,6 @@ namespace Portal.Core.DataModel
     {
         public PVector3Df(float x, float y, float z) : base(x, y, z)
         {
-            Type = nameof(PVector3Df);
         }
 
         public static bool Validate(dynamic obj)
@@ -50,7 +47,6 @@ namespace Portal.Core.DataModel
     {
         public PVector3D(double x, double y, double z) : base(x, y, z)
         {
-            Type = nameof(PVector3D);
         }
 
         public static bool Validate(dynamic obj)
