@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net48</TargetFramework>
     <Version>0.0.1</Version>
-    <Title>Portal.GH</Title>
+    <Title>Portal.Gh</Title>
     <Description>Grasshopper plugin for Inter-Process Communication (IPC) and network communication</Description>
     <TargetExt>.gha</TargetExt>
     <UseWindowsForms>true</UseWindowsForms>
