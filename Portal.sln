@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.35013.160
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Portal.Gh", "Portal.GH\Portal.Gh.csproj", "{911ABC8E-F3EB-40AC-A98E-85229EC7E4CF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Portal.Core", "Portal.Core\Portal.Core.csproj", "{3CDCC4DB-1216-498B-87A7-CD268E9B0D21}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{911ABC8E-F3EB-40AC-A98E-85229EC7E4CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{911ABC8E-F3EB-40AC-A98E-85229EC7E4CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{911ABC8E-F3EB-40AC-A98E-85229EC7E4CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{911ABC8E-F3EB-40AC-A98E-85229EC7E4CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3CDCC4DB-1216-498B-87A7-CD268E9B0D21}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3CDCC4DB-1216-498B-87A7-CD268E9B0D21}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3CDCC4DB-1216-498B-87A7-CD268E9B0D21}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3CDCC4DB-1216-498B-87A7-CD268E9B0D21}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8719DE4C-1FFB-4351-9A1D-730CC9410730}
+	EndGlobalSection
+EndGlobal

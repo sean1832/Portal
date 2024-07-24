@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Portal.Gh": {
+      "commandName": "Executable",
+      "executablePath": "D:\\design\\Rhino\\Rhino 7\\System\\Rhino.exe"
+    }
+  }
+}
