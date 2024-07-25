@@ -23,7 +23,7 @@ namespace Portal.Gh.Components.Remote
                 "Offers fast data transmission via UDP, prioritizing speed over reliability. " +
                 "Best for scenarios where occasional data loss is acceptable, " +
                 "UDP Sockets are not connection-oriented, hence faster but less reliable compared to TCP-based methods.",
-                Config.Category, Config.SubCat.RemoteIpc)
+                Config.Category, Config.SubCat.Remote)
         {
         }
 

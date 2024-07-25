@@ -24,7 +24,7 @@ namespace Portal.Gh.Components.Remote
                 "Facilitates real-time, bidirectional communication with web applications. " +
                 "WebSockets are less suited for high-speed requirements but provide robust, continuous data streams, " +
                 "making them ideal for interactive applications requiring constant updates.",
-                Config.Category, Config.SubCat.RemoteIpc)
+                Config.Category, Config.SubCat.Remote)
         {
             _socketClient = new WebSocketClientManager();
             _socketClient.MessageReceived += (sender, msg) =>

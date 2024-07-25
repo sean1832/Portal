@@ -22,7 +22,7 @@ namespace Portal.Gh.Components.Local
                 "Provides reliable inter-process communication within the same machine, using stream-based data transfer. " +
                 "Named Pipes are highly reliable and suitable for complex data exchanges within a single local machine, " +
                 "but they do not support remote communication."
-                , Config.Category, Config.SubCat.LocalIpc)
+                , Config.Category, Config.SubCat.Local)
         {
         }
 

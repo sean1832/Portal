@@ -16,7 +16,7 @@ namespace Portal.Gh.Components.Local
         public FileWriterComponent()
             : base("File Writer", ">File<",
                 "Write a file in bytes",
-                Config.Category, Config.SubCat.LocalIpc)
+                Config.Category, Config.SubCat.Local)
         {
         }
 

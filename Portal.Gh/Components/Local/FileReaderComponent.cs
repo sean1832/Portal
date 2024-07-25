@@ -16,7 +16,7 @@ namespace Portal.Gh.Components.Local
         public FileReaderComponent()
             : base("File Reader", "<File>",
                 "Read a file in bytes",
-                Config.Category, Config.SubCat.LocalIpc)
+                Config.Category, Config.SubCat.Local)
         {
         }
 

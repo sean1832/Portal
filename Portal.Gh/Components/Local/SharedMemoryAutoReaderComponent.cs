@@ -24,7 +24,7 @@ namespace Portal.Gh.Components.Local
                 "Enables the fastest data exchange possible by allowing direct access to a common " +
                 "memory block between processes on the same machine. This method is unmatched in speed " +
                 "within local settings but lacks the data integrity checks and network capabilities of the other methods.",
-                Config.Category, Config.SubCat.LocalIpc)
+                Config.Category, Config.SubCat.Local)
         {
         }
 
