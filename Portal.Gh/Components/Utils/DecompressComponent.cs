@@ -38,7 +38,7 @@ namespace Portal.Gh.Components.Utils
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddTextParameter("String", "Str", "Decompressed string data", GH_ParamAccess.item);
+            pManager.AddParameter(new BytesParam(), "Bytes", "Bytes", "Decompressed bytes", GH_ParamAccess.item);
         }
 
         #endregion
@@ -54,9 +54,9 @@ namespace Portal.Gh.Components.Utils
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Failed to decompress data. Decompression resulted in 0 bytes.");
                 return;
             }
-            string decompressedData = Encoding.UTF8.GetString(decompressedBytes);
+            BytesGoo decompressedBytesGoo = new BytesGoo(decompressedBytes);
 
-            DA.SetData(0, decompressedData);
+            DA.SetData(0, decompressedBytesGoo);
         }
     }
 }

@@ -16,8 +16,8 @@ namespace Portal.Gh.Components.Utils
         #region Metadata
 
         public CompressComponent()
-            : base("Compress Bytes", "BCompress",
-                "Compress string to bytes with gzip algorithm",
+            : base("Compress Bytes", "CompBytes",
+                "Compress bytes with gzip algorithm",
                 Config.Category, Config.SubCat.Utils)
         {
         }
@@ -33,7 +33,7 @@ namespace Portal.Gh.Components.Utils
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
-            pManager.AddTextParameter("String Data", "Str", "String data to compress", GH_ParamAccess.item);
+            pManager.AddParameter(new BytesParam(), "Bytes", "Bytes", "Bytes to decompress", GH_ParamAccess.item);
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
@@ -45,13 +45,13 @@ namespace Portal.Gh.Components.Utils
 
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            string data = string.Empty;
+            BytesGoo data = null;
 
             if (!DA.GetData(0, ref data)) return;
 
-            byte[] compressedBytes = GZip.Compress(Encoding.UTF8.GetBytes(data));
+            byte[] compressedBytes = GZip.Compress(data.Value);
             BytesGoo bytes = new BytesGoo(compressedBytes);
-            float compressionRate = ((float)compressedBytes.Length / data.Length)*100; // in percentage
+            float compressionRate = ((float)compressedBytes.Length / data.Value.Length)*100; // in percentage
             // round to 2 decimal places
             compressionRate = (float)Math.Round(compressionRate, 2);
             Message = $"Compression: {compressionRate}%";
