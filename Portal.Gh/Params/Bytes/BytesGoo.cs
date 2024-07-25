@@ -24,7 +24,13 @@ namespace Portal.Gh.Params.Bytes
 
         public override string ToString()
         {
-            return $"{Value.Length} bytes";
+            if (Value.Length > 1024) // 1 KB
+                return $"{Value.Length / 1024} KB";
+            
+            if (Value.Length > 1024*1024) // 1 MB
+                return $"{Value.Length / (1024*1024)} MB";
+            
+            return $"{Value.Length} b";
         }
 
         public override bool IsValid => Value != null;
