@@ -24,7 +24,7 @@ namespace Portal.Gh.Components.Serialization
         {
         }
 
-        public override GH_Exposure Exposure => GH_Exposure.primary;
+        public override GH_Exposure Exposure => GH_Exposure.secondary;
         public override IEnumerable<string> Keywords => new string[] { "deserialize crv" };
         protected override Bitmap Icon => null;
         public override Guid ComponentGuid => new Guid("4d71d088-84fe-48fe-9a42-8bd33c35f5b9");
