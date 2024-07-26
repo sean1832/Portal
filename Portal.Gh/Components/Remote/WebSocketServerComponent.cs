@@ -28,6 +28,7 @@ namespace Portal.Gh.Components.Remote
                 "making them ideal for interactive applications requiring constant updates.",
                 Config.Category, Config.SubCat.Remote)
         {
+            Instances.DocumentServer.DocumentRemoved += OnDocumentClose;
         }
 
         public override GH_Exposure Exposure => GH_Exposure.primary;
@@ -53,7 +54,12 @@ namespace Portal.Gh.Components.Remote
         }
 
         #endregion
-        
+
+        private void OnDocumentClose(GH_DocumentServer sender, GH_Document doc)
+        {
+            StopServer();
+        }
+
         protected override void SolveInstance(IGH_DataAccess DA)
         {
             string route = "";

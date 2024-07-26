@@ -30,6 +30,7 @@ namespace Portal.Gh.Components.Remote
                 "UDP Sockets are not connection-oriented, hence faster but less reliable compared to TCP-based methods.",
                 Config.Category, Config.SubCat.Remote)
         {
+            Instances.DocumentServer.DocumentRemoved += OnDocumentClose;
         }
 
         public override GH_Exposure Exposure => GH_Exposure.secondary;
@@ -53,6 +54,11 @@ namespace Portal.Gh.Components.Remote
         }
 
         #endregion
+
+        private void OnDocumentClose(GH_DocumentServer sender, GH_Document doc)
+        {
+            DisposeServer();
+        }
 
         protected override void SolveInstance(IGH_DataAccess DA)
         {

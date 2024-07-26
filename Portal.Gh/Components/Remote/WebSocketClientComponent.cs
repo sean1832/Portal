@@ -26,6 +26,7 @@ namespace Portal.Gh.Components.Remote
                 "making them ideal for interactive applications requiring constant updates.",
                 Config.Category, Config.SubCat.Remote)
         {
+            Instances.DocumentServer.DocumentRemoved += OnDocumentClose;
             _socketClient = new WebSocketClientManager();
             _socketClient.Connected += (sender, args) => Message = "Connected";
             _socketClient.Disconnected += (sender, args) => Message = "Disconnected";
@@ -69,6 +70,11 @@ namespace Portal.Gh.Components.Remote
         }
 
         #endregion
+
+        private void OnDocumentClose(GH_DocumentServer sender, GH_Document doc)
+        {
+            Dispose();
+        }
 
         protected override void SolveInstance(IGH_DataAccess DA)
         {
@@ -117,12 +123,17 @@ namespace Portal.Gh.Components.Remote
             }
         }
 
-        public override void RemovedFromDocument(GH_Document document)
+        private void Dispose()
         {
             if (_socketClient != null && _socketClient.IsConnected)
             {
                 _socketClient.Disconnect();
             }
+        }
+
+        public override void RemovedFromDocument(GH_Document document)
+        {
+            Dispose();
             base.RemovedFromDocument(document);
         }
     }

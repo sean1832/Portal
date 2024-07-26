@@ -26,6 +26,7 @@ namespace Portal.Gh.Components.Local
                 "within local settings but lacks the data integrity checks and network capabilities of the other methods.",
                 Config.Category, Config.SubCat.Local)
         {
+            Instances.DocumentServer.DocumentRemoved += OnDocumentClose;
         }
 
         public override GH_Exposure Exposure => GH_Exposure.secondary;
@@ -64,6 +65,11 @@ namespace Portal.Gh.Components.Local
             ExpireSolution(true);
         }
         #endregion
+
+        private void OnDocumentClose(GH_DocumentServer sender, GH_Document doc)
+        {
+            DisposeMem();
+        }
 
         protected override void SolveInstance(IGH_DataAccess DA)
         {

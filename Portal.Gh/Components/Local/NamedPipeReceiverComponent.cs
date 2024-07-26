@@ -29,6 +29,7 @@ namespace Portal.Gh.Components.Local
                 "but they do not support remote communication.",
                 Config.Category, Config.SubCat.Local)
         {
+            Instances.DocumentServer.DocumentRemoved += OnDocumentClose;
         }
 
         public override GH_Exposure Exposure => GH_Exposure.primary;
@@ -54,6 +55,11 @@ namespace Portal.Gh.Components.Local
         }
 
         #endregion
+
+        private void OnDocumentClose(GH_DocumentServer sender, GH_Document doc)
+        {
+            DisposeServer();
+        }
 
         protected override void SolveInstance(IGH_DataAccess DA)
         {
