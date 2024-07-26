@@ -31,7 +31,7 @@ namespace Portal.Gh.Components.Utils
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
-            pManager.AddTextParameter("Text", "Txt", "Text to serialize", GH_ParamAccess.item);
+            pManager.AddTextParameter("Text", "Txt", "Text to encode into binary", GH_ParamAccess.item);
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)

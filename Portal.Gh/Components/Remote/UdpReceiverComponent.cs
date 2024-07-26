@@ -50,7 +50,7 @@ namespace Portal.Gh.Components.Remote
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddParameter(new BytesParam(), "Data", "Data", "Data received from client", GH_ParamAccess.item);
+            pManager.AddParameter(new BytesParam(), "Bytes", "Bytes", "Bytes received from client", GH_ParamAccess.item);
         }
 
         #endregion

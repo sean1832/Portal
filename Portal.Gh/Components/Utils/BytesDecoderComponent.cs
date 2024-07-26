@@ -36,7 +36,7 @@ namespace Portal.Gh.Components.Utils
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddTextParameter("Text", "Txt", "Decoded text", GH_ParamAccess.item);
+            pManager.AddTextParameter("Text", "Txt", "Decoded text from binary", GH_ParamAccess.item);
         }
 
         #endregion

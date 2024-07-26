@@ -39,7 +39,7 @@ namespace Portal.Gh.Components.Serialization
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddTextParameter("JsonData", "Json", "Serialized curve as JSON", GH_ParamAccess.item);
+            pManager.AddTextParameter("Json data", "Json", "Serialized curve as JSON", GH_ParamAccess.item);
         }
 
         #endregion
