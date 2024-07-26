@@ -9,12 +9,13 @@ using Rhino;
 using System.Text;
 using Portal.Gh.Common;
 using Portal.Core.NamedPipe;
+using Portal.Gh.Params.Bytes;
 
 namespace Portal.Gh.Components.Local
 {
     public class NamedPipeReceiverComponent : GH_Component
     {
-        private string _lastReceivedMessage;
+        private byte[] _lastReceivedMessage = Array.Empty<byte>();
         private NamedPipeServer _server;
 
         #region Metadata
@@ -49,7 +50,7 @@ namespace Portal.Gh.Components.Local
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddTextParameter("Data", "Data", "Data received from client", GH_ParamAccess.item);
+            pManager.AddParameter(new BytesParam(), "Data", "Data", "Data received from client", GH_ParamAccess.item);
         }
 
         #endregion
@@ -76,8 +77,10 @@ namespace Portal.Gh.Components.Local
                 Message = "Stopped";
             }
 
+            BytesGoo outputGoo = new BytesGoo(_lastReceivedMessage);
+
             // Always set the last received message to output, even if it's null
-            DA.SetData(0, _lastReceivedMessage);
+            DA.SetData(0, outputGoo);
 
         }
 
@@ -98,7 +101,7 @@ namespace Portal.Gh.Components.Local
             {
                 RhinoApp.InvokeOnUiThread((Action)delegate
                 {
-                    _lastReceivedMessage = Encoding.UTF8.GetString(data);
+                    _lastReceivedMessage = data;
                     ExpireSolution(true);
                 });
             }

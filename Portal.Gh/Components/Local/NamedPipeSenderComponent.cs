@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Portal.Gh.Common;
 using Portal.Core.Utils;
 using Portal.Core.NamedPipe;
+using Portal.Gh.Params.Bytes;
 
 namespace Portal.Gh.Components.Local
 {
@@ -39,7 +40,7 @@ namespace Portal.Gh.Components.Local
         {
             pManager.AddTextParameter("Server Name", "Server", "The name or IP address of the server hosting the named pipe. Use '.' for the local machine.", GH_ParamAccess.item, ".");
             pManager.AddTextParameter("Pipe Name", "Pipe", "The unique identifier for the named pipe. This name is used by both the server and clients to connect.", GH_ParamAccess.item);
-            pManager.AddTextParameter("Message", "msg", "The message to be sent to the server via the named pipe.", GH_ParamAccess.item);
+            pManager.AddParameter(new BytesParam(), "Bytes", "Bytes", "Data in bytes to be sent to the server via the named pipe.", GH_ParamAccess.item);
             pManager.AddBooleanParameter("Send", "Send", "Set to true to send the message to the server.", GH_ParamAccess.item,
                 false);
         }
@@ -54,7 +55,7 @@ namespace Portal.Gh.Components.Local
         {
             string serverName = null;
             string pipeName = null;
-            string message = null;
+            BytesGoo message = null;
             bool send = false;
 
             if (!DA.GetData(0, ref serverName)) return;
@@ -71,7 +72,7 @@ namespace Portal.Gh.Components.Local
                 {
                     using var client = new NamedPipeClient(serverName, pipeName, HandleError);
                     client.Connect();
-                    client.SendAsync(System.Text.Encoding.UTF8.GetBytes(message)).Wait();
+                    client.SendAsync(message.Value).Wait();
                     UpdateMessage($@"\\{serverName}\pipe\{pipeName}");
                 }
                 catch (Exception ex)

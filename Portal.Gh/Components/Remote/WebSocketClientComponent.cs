@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 using Portal.Gh.Common;
 using Portal.Core.Utils;
 using Portal.Core.WebSocket;
+using Portal.Gh.Params.Bytes;
 
 namespace Portal.Gh.Components.Remote
 {
     public class WebSocketClientComponent : GH_Component
     {
         private readonly WebSocketClientManager _socketClient;
-        private string _lastReceivedMessage;
         #region Metadata
 
         public WebSocketClientComponent()
@@ -27,15 +27,6 @@ namespace Portal.Gh.Components.Remote
                 Config.Category, Config.SubCat.Remote)
         {
             _socketClient = new WebSocketClientManager();
-            _socketClient.MessageReceived += (sender, msg) =>
-            {
-                _lastReceivedMessage = msg;
-                // Expire the solution to recompute the component on message received
-                Rhino.RhinoApp.InvokeOnUiThread((Action)delegate
-                {
-                    ExpireSolution(true);
-                });
-            };
             _socketClient.Connected += (sender, args) => Message = "Connected";
             _socketClient.Disconnected += (sender, args) => Message = "Disconnected";
             _socketClient.Error += (sender, args) =>
@@ -64,7 +55,7 @@ namespace Portal.Gh.Components.Remote
 
             pManager.AddTextParameter("Route", "Route", "Endpoint Route. format: '/route'\nIt specifies the path that the server will listen to for incoming WebSocket connections.", GH_ParamAccess.item);
 
-            pManager.AddTextParameter("Message", "msg", "Message to send to server", GH_ParamAccess.item);
+            pManager.AddParameter(new BytesParam(), "Bytes", "Bytes", "Message in bytes to send to server", GH_ParamAccess.item);
 
             pManager.AddBooleanParameter("Send", "Send",
                 "Start sending message to server", GH_ParamAccess.item, false);
@@ -75,7 +66,6 @@ namespace Portal.Gh.Components.Remote
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddTextParameter("output", "out", "Output received from the WebSocket server.", GH_ParamAccess.item);
         }
 
         #endregion
@@ -85,7 +75,7 @@ namespace Portal.Gh.Components.Remote
             string hostIp = "";
             int port = 8765;
             string route = "";
-            string msg = "";
+            BytesGoo msg = null;
             bool connect = false;
 
             if (!DA.GetData(0, ref hostIp)) return;
@@ -121,12 +111,10 @@ namespace Portal.Gh.Components.Remote
                 _socketClient.Disconnect();
             }
 
-            if (!string.IsNullOrEmpty(msg))
+            if (msg.Value.Length != 0)
             {
-                _socketClient.Send(msg);
+                _socketClient.Send(msg.Value);
             }
-
-            DA.SetData(0, _lastReceivedMessage);
         }
 
         public override void RemovedFromDocument(GH_Document document)

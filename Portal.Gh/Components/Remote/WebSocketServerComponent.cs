@@ -7,13 +7,14 @@ using System.Drawing;
 using Portal.Core.Utils;
 using Portal.Gh.Common;
 using Portal.Gh.Components.Remote.Behavior;
+using Portal.Gh.Params.Bytes;
 using WebSocketSharp.Server;
 
 namespace Portal.Gh.Components.Remote
 {
     public class WebSocketServerComponent : GH_Component
     {
-        private string _lastReceivedMessage;
+        private byte[] _lastReceivedMessage = Array.Empty<byte>();
         private WebSocketServer _server;
 
         #region Metadata
@@ -48,7 +49,7 @@ namespace Portal.Gh.Components.Remote
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddTextParameter("Message", "msg", "Message received", GH_ParamAccess.item);
+            pManager.AddParameter(new BytesParam(), "Bytes", "Bytes", "Message received in bytes", GH_ParamAccess.item);
         }
 
         #endregion
@@ -79,7 +80,10 @@ namespace Portal.Gh.Components.Remote
             {
                 StopServer();
             }
-            DA.SetData(0, _lastReceivedMessage);
+
+            BytesGoo outputGoo = new BytesGoo(_lastReceivedMessage);
+
+            DA.SetData(0, outputGoo);
         }
 
         private void StartServer(int port, string route)

@@ -10,13 +10,14 @@ using Portal.Gh.Common;
 using Portal.Core;
 using Rhino;
 using Portal.Core.Udp;
+using Portal.Gh.Params.Bytes;
 
 namespace Portal.Gh.Components.Remote
 {
     public class UdpReceiverComponent : GH_Component
     {
         private UdpServerManager _server;
-        private string _lastReceivedMessage;
+        private byte[] _lastReceivedMessage = Array.Empty<byte>();
 
         #region Metadata
 
@@ -48,7 +49,7 @@ namespace Portal.Gh.Components.Remote
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddTextParameter("Data", "Data", "Data received from client", GH_ParamAccess.item);
+            pManager.AddParameter(new BytesParam(), "Data", "Data", "Data received from client", GH_ParamAccess.item);
         }
 
         #endregion
@@ -76,7 +77,7 @@ namespace Portal.Gh.Components.Remote
                             {
                                 if (_server != null)
                                 {
-                                    _lastReceivedMessage = Encoding.UTF8.GetString(data);
+                                    _lastReceivedMessage = data;
                                     ExpireSolution(true);
                                 }
                             });
@@ -101,7 +102,9 @@ namespace Portal.Gh.Components.Remote
                 DisposeServer();
             }
 
-            DA.SetData(0, _lastReceivedMessage);
+            BytesGoo outputGoo = new BytesGoo(_lastReceivedMessage);
+
+            DA.SetData(0, outputGoo);
         }
 
         private void DisposeServer()

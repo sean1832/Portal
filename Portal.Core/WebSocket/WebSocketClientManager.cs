@@ -7,7 +7,7 @@ namespace Portal.Core.WebSocket
     {
         private WebSocketSharp.WebSocket _ws;
 
-        public event EventHandler<string> MessageReceived;
+        public event EventHandler<byte[]> MessageReceived;
         public event EventHandler Connected;
         public event EventHandler Disconnected;
         public event EventHandler<ErrorEventArgs> Error;
@@ -24,7 +24,7 @@ namespace Portal.Core.WebSocket
 
             // new instance of WebSocket
             _ws = new WebSocketSharp.WebSocket(uri);
-            _ws.OnMessage += (sender, e) => MessageReceived?.Invoke(this, e.Data);
+            _ws.OnMessage += (sender, e) => MessageReceived?.Invoke(this, e.RawData);
             _ws.OnOpen += (sender, e) => Connected?.Invoke(this, EventArgs.Empty);
             _ws.OnClose += (sender, e) => Disconnected?.Invoke(this, EventArgs.Empty);
             _ws.OnError += (sender, e) => Error?.Invoke(this, e);
@@ -38,7 +38,7 @@ namespace Portal.Core.WebSocket
             _ws = null;
         }
 
-        public void Send(string message)
+        public void Send(byte[] message)
         {
             if (_ws != null && _ws.IsAlive)
             {

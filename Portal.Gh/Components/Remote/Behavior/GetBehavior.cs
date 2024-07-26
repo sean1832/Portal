@@ -7,12 +7,12 @@ namespace Portal.Gh.Components.Remote.Behavior
 {
     internal class GetBehavior : WebSocketBehavior
     {
-        public static event Action<string> MessageReceived; 
+        public static event Action<byte[]> MessageReceived; 
         public static event Action<string> ErrorOccured;
         protected override void OnMessage(MessageEventArgs e)
         {
             Send("Data Received by server!");
-            MessageReceived?.Invoke(e.Data);
+            MessageReceived?.Invoke(e.RawData);
         }
 
         protected override void OnError(ErrorEventArgs e)

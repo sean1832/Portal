@@ -7,12 +7,13 @@ using System.IO.MemoryMappedFiles;
 using System.Timers;
 using Portal.Gh.Common;
 using Portal.Core.SharedMemory;
+using Portal.Gh.Params.Bytes;
 
 namespace Portal.Gh.Components.Local
 {
     public class SharedMemoryAutoReaderComponent : GH_Component
     {
-        private string _lastReadMessage;
+        private byte[] _lastReadMessage = Array.Empty<byte>();
         private int _lastDataSize;
 
         #region Metadata
@@ -47,8 +48,7 @@ namespace Portal.Gh.Components.Local
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddTextParameter("Data", "Data", "Data read from the shared memory block", GH_ParamAccess.item);
-            pManager.AddTextParameter("Data Size", "Size", "Incoming data size in bytes", GH_ParamAccess.item);
+            pManager.AddParameter(new BytesParam(), "Bytes", "Bytes", "Data in bytes read from the shared memory block", GH_ParamAccess.item);
         }
 
         #endregion
@@ -82,18 +82,18 @@ namespace Portal.Gh.Components.Local
                     using var reader = new SharedMemoryManager(name);
                     _lastDataSize = BitConverter.ToInt32(reader.ReadRange(0, 4), 0); // read data size
                     byte[] dataBytes = reader.ReadRange(4, _lastDataSize);
-                    _lastReadMessage = System.Text.Encoding.UTF8.GetString(dataBytes);
+                    _lastReadMessage = dataBytes;
                 }
                 catch (Exception e)
                 {
                     AddRuntimeMessage(GH_RuntimeMessageLevel.Error, e.Message);
-                    _lastReadMessage = "Error";
+                    _lastReadMessage = null;
                 }
                 
             }
+            BytesGoo outputGoo = new BytesGoo(_lastReadMessage);
 
-            DA.SetData(0, _lastReadMessage);
-            DA.SetData(1, _lastDataSize);
+            DA.SetData(0, outputGoo);
         }
     }
 }

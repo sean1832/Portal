@@ -9,6 +9,7 @@ using Portal.Gh.Common;
 using Portal.Core;
 using Portal.Core.Udp;
 using Portal.Core.Utils;
+using Portal.Gh.Params.Bytes;
 
 namespace Portal.Gh.Components.Remote
 {
@@ -41,9 +42,8 @@ namespace Portal.Gh.Components.Remote
             pManager.AddTextParameter("Server IP", "IP", "IP address of the target UDP server (default '127.0.0.1)", GH_ParamAccess.item,
                 "127.0.0.1");
             pManager.AddIntegerParameter("Port", "Port", "Port number of the target UDP server (make sure this port is free)", GH_ParamAccess.item);
-            pManager.AddTextParameter("Message", "msg", "Message to send", GH_ParamAccess.item);
-
-            pManager.AddBooleanParameter("Send", "Send", "Start sending message to server", GH_ParamAccess.item,
+            pManager.AddParameter(new BytesParam(), "Bytes", "Bytes", "Message data in bytes to send", GH_ParamAccess.item);
+            pManager.AddBooleanParameter("Send", "Send", "Start sending data to server", GH_ParamAccess.item,
                 false);
         }
 
@@ -57,7 +57,7 @@ namespace Portal.Gh.Components.Remote
         {
             string ip = null;
             int port = 0;
-            string message = null;
+            BytesGoo message = null;
             bool send = false;
 
             if (!DA.GetData(0, ref ip)) return;
@@ -72,7 +72,7 @@ namespace Portal.Gh.Components.Remote
                 return;
             }
 
-            if (IsDataExceeded(message))
+            if (IsDataExceeded(message.Value))
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "Data size is exceeded 1472 bytes. Consider using WebSocket instead.");
                 return;
@@ -84,7 +84,7 @@ namespace Portal.Gh.Components.Remote
             {
                 using (var udpClient = new UdpClientManager(ip, port))
                 {
-                    udpClient.Send(Encoding.UTF8.GetBytes(message));
+                    udpClient.Send(message.Value);
                     Message = $"Sent to {ip}:{port}";
                     udpClient.Error += (sender, e) =>
                     {
@@ -100,9 +100,9 @@ namespace Portal.Gh.Components.Remote
             }
         }
 
-        private bool IsDataExceeded(string data)
+        private bool IsDataExceeded(byte[] data)
         {
-            return Encoding.UTF8.GetByteCount(data) > 1472;
+            return data.Length > 1472;
         }
     }
 }
