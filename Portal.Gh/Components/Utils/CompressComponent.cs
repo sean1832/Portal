@@ -24,7 +24,7 @@ namespace Portal.Gh.Components.Utils
 
         public override GH_Exposure Exposure => GH_Exposure.secondary;
         public override IEnumerable<string> Keywords => new string[] { "compress b", "cb" };
-        protected override Bitmap Icon => null;
+        protected override Bitmap Icon => Icons.Compress;
         public override Guid ComponentGuid => new Guid("2569a8ae-8722-47bb-8843-c00a111e5096");
 
         #endregion

@@ -118,6 +118,36 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="BytesParam" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\BytesParam.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Compress" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Compress.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Decode" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Decode.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Decompress" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Decompress.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="DeserializeCurve" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\DeserializeCurve.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="DeserializeMesh" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\DeserializeMesh.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="DeserializePoint" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\DeserializePoint.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Encode" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\Encode.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="FileRead" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\FileRead.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="FileWrite" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\FileWrite.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="NetworkInfo" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\NetworkInfo.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -126,6 +156,15 @@
   </data>
   <data name="PiperSender" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\PiperSender.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="SerializeCurve" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\SerializeCurve.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="SerializeMesh" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\SerializeMesh.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="SerializePoint" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\SerializePoint.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="SharedMemoryReader" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\SharedMemoryReader.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

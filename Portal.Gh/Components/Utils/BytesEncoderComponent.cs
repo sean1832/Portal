@@ -22,7 +22,7 @@ namespace Portal.Gh.Components.Utils
 
         public override GH_Exposure Exposure => GH_Exposure.tertiary;
         public override IEnumerable<string> Keywords => new string[] { };
-        protected override Bitmap Icon => null;
+        protected override Bitmap Icon => Icons.Encode;
         public override Guid ComponentGuid => new Guid("b32f547d-0bd2-464a-9765-2fa4af720891");
 
         #endregion

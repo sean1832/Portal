@@ -14,7 +14,7 @@ namespace Portal.Gh.Params.Bytes
                 Config.Category, Config.SubCat.Params)
         {
         }
-
+        protected override Bitmap Icon => Icons.BytesParam;
         public override GH_Exposure Exposure => GH_Exposure.secondary;
         public override Guid ComponentGuid => new Guid("43a5e600-6ae7-49e6-aba1-c4e8999ff48a");
         protected override GH_GetterResult Prompt_Singular(ref BytesGoo value)
