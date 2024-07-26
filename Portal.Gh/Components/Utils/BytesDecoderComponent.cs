@@ -14,7 +14,7 @@ namespace Portal.Gh.Components.Utils
         #region Metadata
 
         public BytesDecoderComponent()
-            : base("Bytes Decoder", "DeBytes",
+            : base("Bytes Decoder", "DeB",
                 "Decode a byte array into text",
                 Config.Category, Config.SubCat.Utils)
         {

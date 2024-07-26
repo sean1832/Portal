@@ -17,7 +17,7 @@ namespace Portal.Gh.Components.Serialization
         #region Metadata
 
         public SerializeCurveComponent()
-            : base("Serialize Curve", "SrlzCrv",
+            : base("Serialize Curve", "SrCrv",
                 "Serialize curves into a JSON representation. This data can be send over communication pipeline for data exchange.",
                 Config.Category, Config.SubCat.Serialization)
         {

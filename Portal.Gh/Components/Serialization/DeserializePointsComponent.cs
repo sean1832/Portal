@@ -17,14 +17,14 @@ namespace Portal.Gh.Components.Serialization
         #region Metadata
 
         public DeserializePointsComponent()
-            : base("Deserialize Points", "DSrlzPt",
+            : base("Deserialize Points", "DSrPt",
                 "Deserialize JSON string into points. This data can be read from communication pipeline for data exchange.",
                 Config.Category, Config.SubCat.Serialization)
         {
         }
 
         public override GH_Exposure Exposure => GH_Exposure.primary;
-        public override IEnumerable<string> Keywords => new string[] { };
+        public override IEnumerable<string> Keywords => new string[] { "desrpt" };
         protected override Bitmap Icon => null;
         public override Guid ComponentGuid => new Guid("59607625-a1e4-4198-bae0-857bd4458258");
 

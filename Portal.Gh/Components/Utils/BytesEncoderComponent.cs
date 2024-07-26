@@ -14,7 +14,7 @@ namespace Portal.Gh.Components.Utils
         #region Metadata
 
         public BytesEncoderComponent()
-            : base("Bytes Encoder", "EnBytes",
+            : base("Bytes Encoder", "EnB",
                 "Encode string into bytes array",
                 Config.Category, Config.SubCat.Utils)
         {

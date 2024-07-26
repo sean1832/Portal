@@ -18,14 +18,14 @@ namespace Portal.Gh.Components.Serialization
         #region Metadata
 
         public DeserializeCurveComponent()
-            : base("Deserialize Curve", "DSrlzCrv",
+            : base("Deserialize Curve", "DSrCrv",
                 "Deserialize JSON string into curves. This data can be read from communication pipeline for data exchange.",
                 Config.Category, Config.SubCat.Serialization)
         {
         }
 
         public override GH_Exposure Exposure => GH_Exposure.secondary;
-        public override IEnumerable<string> Keywords => new string[] { "deserialize crv" };
+        public override IEnumerable<string> Keywords => new string[] { "deserialize crv", "desrcrv" };
         protected override Bitmap Icon => null;
         public override Guid ComponentGuid => new Guid("4d71d088-84fe-48fe-9a42-8bd33c35f5b9");
 

@@ -15,7 +15,7 @@ namespace Portal.Gh.Components.Serialization
         #region Metadata
 
         public SerializeMeshComponent()
-            : base("Serialize Mesh", "SrlzMesh",
+            : base("Serialize Mesh", "SrMesh",
                 "Serialize meshes into a JSON representation. This data can be send over communication pipeline for data exchange.",
                 Config.Category, Config.SubCat.Serialization)
         {

@@ -20,7 +20,7 @@ namespace Portal.Gh.Components.Serialization
         #region Metadata
 
         public SerializePointComponent()
-            : base("Serialize Points", "SrlzPt",
+            : base("Serialize Points", "SrPt",
                 "Serialize points into a JSON representation. This data can be send over communication pipeline for data exchange.",
                 Config.Category, Config.SubCat.Serialization)
         {
