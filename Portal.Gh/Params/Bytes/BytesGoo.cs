@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Portal.Core.Compression;
 
 namespace Portal.Gh.Params.Bytes
 {
@@ -24,13 +25,18 @@ namespace Portal.Gh.Params.Bytes
 
         public override string ToString()
         {
+            string msg;
+
             if (Value.Length > 1024) // 1 KB
-                return $"{Value.Length / 1024} KB";
-            
-            if (Value.Length > 1024*1024) // 1 MB
-                return $"{Value.Length / (1024*1024)} MB";
-            
-            return $"{Value.Length} B";
+                msg =  $"{Value.Length / 1024} KB";
+            else if (Value.Length > 1024*1024) // 1 MB
+                msg = $"{Value.Length / (1024*1024)} MB";
+            else
+                msg = $"{Value.Length} B"; // 1 B
+
+            if (GZip.IsGzipped(Value))
+                msg += " (gzip)";
+            return msg;
         }
 
         public override bool IsValid => Value != null;

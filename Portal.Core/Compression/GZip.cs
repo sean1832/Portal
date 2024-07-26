@@ -35,5 +35,14 @@ namespace Portal.Core.Compression
             gzipStream.CopyTo(resultStream);
             return resultStream.ToArray();
         }
+
+        public static bool IsGzipped(byte[] data)
+        {
+            if (data == null || data.Length < 2)
+                return false;
+
+            // GZip header magic number
+            return data[0] == 0x1F && data[1] == 0x8B;
+        }
     }
 }

@@ -48,6 +48,12 @@ namespace Portal.Gh.Components.Utils
             BytesGoo bytes = null;
 
             if (!DA.GetData(0, ref bytes)) return;
+            if (!GZip.IsGzipped(bytes.Value))
+            {
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Input data is not GZip compressed.");
+                return;
+            }
+
             byte[] decompressedBytes = GZip.Decompress(bytes.Value);
             if (decompressedBytes == null || decompressedBytes.Length == 0)
             {
@@ -55,7 +61,6 @@ namespace Portal.Gh.Components.Utils
                 return;
             }
             BytesGoo decompressedBytesGoo = new BytesGoo(decompressedBytes);
-
             DA.SetData(0, decompressedBytesGoo);
         }
     }
