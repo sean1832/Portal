@@ -18,7 +18,7 @@ namespace Portal.Gh.Components.Local
 
         public NamedPipeSenderComponent()
             : base("Named Pipe Sender", "<pipe>",
-                "Client that sends messages to a named pipe server. " +
+                "Client that sends messages to a named pipe server. First 4 bytes represents size." +
                 "\n\nNamed Pipes:\n" +
                 "Provides reliable inter-process communication within the same machine, using stream-based data transfer. " +
                 "Named Pipes are highly reliable and suitable for complex data exchanges within a single local machine, " +
@@ -70,9 +70,13 @@ namespace Portal.Gh.Components.Local
             {
                 try
                 {
+                    byte[] data = message.Value;
+
+
                     using var client = new NamedPipeClient(serverName, pipeName, HandleError);
                     client.Connect();
-                    client.SendAsync(message.Value).Wait();
+                    data = client.EncodeLengthPrefix(data); // Add length prefix. 4 bytes
+                    client.SendAsync(data).Wait();
                     UpdateMessage($@"\\{serverName}\pipe\{pipeName}");
                 }
                 catch (Exception ex)

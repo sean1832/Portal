@@ -7,15 +7,13 @@ namespace Portal.Core.NamedPipe
     {
         private readonly NamedPipeServerStream _server;
         private bool _isServerRunning;
-        private readonly int _bufferSize;
 
         private bool _disposed;
 
         private readonly Action<Exception> _onError;
-        private Action<byte[]> _onMessageReceived;
+        private readonly Action<byte[]> _onMessageReceived;
         public NamedPipeServer(string pipeName, int bufferSize, Action<Exception> onError, Action<byte[]> onMessageReceived)
         {
-            _bufferSize = bufferSize;
             _onError = onError;
             _onMessageReceived = onMessageReceived;
 
@@ -27,8 +25,8 @@ namespace Portal.Core.NamedPipe
                     1,
                     PipeTransmissionMode.Byte,
                     PipeOptions.Asynchronous,
-                    _bufferSize,
-                    _bufferSize);
+                    bufferSize,
+                    bufferSize);
             }
             catch (Exception e)
             {
@@ -71,9 +69,16 @@ namespace Portal.Core.NamedPipe
 
             try
             {
-                byte[] buffer = new byte[_bufferSize];
-                int bytesRead;
-                while ((bytesRead = _server.Read(buffer, 0, buffer.Length)) > 0)
+                byte[] lengthBuffer = new byte[4];
+                int bytesRead = _server.Read(lengthBuffer, 0, lengthBuffer.Length);
+                if (bytesRead == 0)
+                {
+                    _server.Disconnect();
+                    return;
+                }
+                int dataLength = BitConverter.ToInt32(lengthBuffer, 0);
+                byte[] buffer = new byte[dataLength];
+                while ((bytesRead = _server.Read(buffer, 0, dataLength)) > 0)
                 {
                     byte[] receivedData = new byte[bytesRead];
                     Array.Copy(buffer, receivedData, bytesRead);

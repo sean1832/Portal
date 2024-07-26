@@ -22,7 +22,7 @@ namespace Portal.Gh.Components.Local
 
         public NamedPipeReceiverComponent()
             : base("Named Pipe Receiver", ">pipe<",
-                "Server that listens for messages sent to a named pipe." +
+                "Server that listens for messages sent to a named pipe. First 4 bytes represents size." +
                 "\n\nNamed Pipes:\n" +
                 "Provides reliable inter-process communication within the same machine, using stream-based data transfer. " +
                 "Named Pipes are highly reliable and suitable for complex data exchanges within a single local machine, " +
@@ -44,7 +44,6 @@ namespace Portal.Gh.Components.Local
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
             pManager.AddTextParameter("Pipe Name", "Pipe", "The unique identifier for the named pipe. This name is used by both the server and clients to connect.", GH_ParamAccess.item);
-            pManager.AddIntegerParameter("Buffer Size", "BufSize", "The size of the buffer used for each read operation, in bytes. Default is 4096 bytes.", GH_ParamAccess.item, 4096);
             pManager.AddBooleanParameter("Start", "Start", "Set to true to start the server and begin listening on the specified pipe.", GH_ParamAccess.item,
                 false);
         }
@@ -64,17 +63,15 @@ namespace Portal.Gh.Components.Local
         protected override void SolveInstance(IGH_DataAccess DA)
         {
             string pipeName = null;
-            int bufferSize = 0;
             bool start = false;
 
             if (!DA.GetData(0, ref pipeName)) return;
-            if (!DA.GetData(1, ref bufferSize)) return;
-            if (!DA.GetData(2, ref start)) return;
+            if (!DA.GetData(1, ref start)) return;
 
             if (start && _server == null)
             {
                 // Initializes and starts the server if not already started
-                StartServer(pipeName, bufferSize);
+                StartServer(pipeName, 4096);
             }
             else if (!start)
             {
