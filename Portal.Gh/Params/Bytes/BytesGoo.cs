@@ -30,7 +30,7 @@ namespace Portal.Gh.Params.Bytes
             if (Value.Length > 1024*1024) // 1 MB
                 return $"{Value.Length / (1024*1024)} MB";
             
-            return $"{Value.Length} b";
+            return $"{Value.Length} B";
         }
 
         public override bool IsValid => Value != null;
