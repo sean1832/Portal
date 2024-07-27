@@ -19,7 +19,8 @@ namespace Portal.Gh.Components.Local
 
         public SharedMemoryWriterComponent()
             : base("Shared Memory Writer", "<Memory>",
-                "Writes data to a shared memory block. First 4 bytes represents size." +
+                "Writes data to a shared memory block.\n" +
+                "[4b: int32 size] [data]" +
                 "\n\nShared Memory:\n" +
                 "Enables the fastest data exchange possible by allowing direct access to a common " +
                 "memory block between processes on the same machine. This method is unmatched in speed " +

@@ -22,7 +22,8 @@ namespace Portal.Gh.Components.Local
 
         public NamedPipeReceiverComponent()
             : base("Pipe Receiver", ">pipe<",
-                "Server that listens for messages sent to a named pipe. First 4 bytes represents size." +
+                "Server that listens for messages sent to a named pipe.\n" +
+                "[4b: int32 size] [data]" +
                 "\n\nNamed Pipes:\n" +
                 "Provides reliable inter-process communication within the same machine, using stream-based data transfer. " +
                 "Named Pipes are highly reliable and suitable for complex data exchanges within a single local machine, " +

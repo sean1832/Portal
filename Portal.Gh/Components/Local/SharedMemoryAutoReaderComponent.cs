@@ -20,7 +20,8 @@ namespace Portal.Gh.Components.Local
 
         public SharedMemoryAutoReaderComponent()
             : base("Shared Memory Auto-Reader", ">>Memory<<",
-                "Continuously reads data from a shared memory block at specific intervals. First 4 bytes represents size." +
+                "Continuously reads data from a shared memory block at specific intervals.\n" +
+                "[4b: int32 size] [data]" +
                 "\n\nShared Memory:\n" +
                 "Enables the fastest data exchange possible by allowing direct access to a common " +
                 "memory block between processes on the same machine. This method is unmatched in speed " +
