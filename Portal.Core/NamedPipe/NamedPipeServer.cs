@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO.Pipes;
+using Portal.Core.Interfaces;
 
 namespace Portal.Core.NamedPipe
 {
@@ -12,11 +13,14 @@ namespace Portal.Core.NamedPipe
 
         private readonly Action<Exception> _onError;
         private readonly Action<byte[]> _onMessageReceived;
-        public NamedPipeServer(string pipeName, int bufferSize, Action<Exception> onError, Action<byte[]> onMessageReceived)
+        private readonly IReceivedBehaviour<NamedPipeServerStream> _receivedBehaviour;
+        public NamedPipeServer(string pipeName, int bufferSize, 
+            Action<Exception> onError, Action<byte[]> onMessageReceived, 
+            IReceivedBehaviour<NamedPipeServerStream> receivedBehaviour = null)
         {
             _onError = onError;
             _onMessageReceived = onMessageReceived;
-
+            _receivedBehaviour = receivedBehaviour ?? new DefaultNamedPipeServerReceivedBehaviour();
             try
             {
                 _server = new NamedPipeServerStream(
@@ -69,37 +73,7 @@ namespace Portal.Core.NamedPipe
 
             try
             {
-                byte[] connectionFlagBuffer = new byte[1];
-                int connectionFlagBytesRead = _server.Read(connectionFlagBuffer, 0, connectionFlagBuffer.Length);
-                if (connectionFlagBytesRead == 0)
-                {
-                    _server.Disconnect();
-                    return;
-                }
-                bool isConnected = connectionFlagBuffer[0] == 1;
-                if (!isConnected)
-                {
-                    _server.Disconnect();
-                    return;
-                }
-
-                byte[] lengthBuffer = new byte[4];
-                int bytesRead = _server.Read(lengthBuffer, 0, lengthBuffer.Length);
-                if (bytesRead == 0)
-                {
-                    _server.Disconnect();
-                    return;
-                }
-                int dataLength = BitConverter.ToInt32(lengthBuffer, 0);
-                byte[] buffer = new byte[dataLength];
-                while ((bytesRead = _server.Read(buffer, 0, dataLength)) > 0)
-                {
-                    byte[] receivedData = new byte[bytesRead];
-                    Array.Copy(buffer, receivedData, bytesRead);
-                    _onMessageReceived?.Invoke(receivedData);
-                }
-
-                _server.Disconnect();
+                _receivedBehaviour.ProcessData(_server, _onMessageReceived, _onError);
             }
             catch (Exception e)
             {
