@@ -6,20 +6,20 @@ using System.Threading.Tasks;
 
 namespace Portal.Core.DataModel
 {
-    public class PCurve
+    public abstract class PCurve
     {
         public string Type { get; protected set; }
         public List<PVector3D> Points { get; protected set; }
 
-        public PCurve() {}
+        protected PCurve() {}
 
-        public PCurve(string type, List<PVector3D> points)
+        protected PCurve(string type, List<PVector3D> points)
         {
             Type = type;
             Points = points;
         }
 
-        public PCurve(List<PVector3D> points)
+        protected PCurve(List<PVector3D> points)
         {
             Type = nameof(PCurve);
             Points = points;

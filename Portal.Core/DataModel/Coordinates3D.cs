@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace Portal.Core.DataModel
 {
-    public class Coordinates3D<T>
+    public abstract class Coordinates3D<T>
     {
         public T X { get; set; }
         public T Y { get; set; }
         public T Z { get; set; }
 
-        public Coordinates3D(T x, T y, T z)
+        protected Coordinates3D(T x, T y, T z)
         {
             X = x;
             Y = y;
