@@ -1,6 +1,9 @@
+import json
 import queue
 import struct
 import threading
+import gzip
+import io
 
 import bpy
 import pywintypes
@@ -16,7 +19,14 @@ pipe_name = r"\\.\pipe\testpipe"
 
 def handle_data(data):
     """handle parsed data in string, this is the main place to implement your logic"""
-    print("Blender received:", data)
+    try:
+        message_dics = json.loads(data)
+        for i, item in enumerate(message_dics):
+            vertices, faces, uvs = deserialize_mesh(item)
+            create_or_replace_mesh(f"object_{i}", vertices, faces)
+
+    except json.JSONDecodeError:
+        print(f"Received message: {data}")
 
 
 def handle_raw_bytes(pipe):
@@ -24,6 +34,7 @@ def handle_raw_bytes(pipe):
     try:
         win32pipe.ConnectNamedPipe(pipe, None)
         while True:
+
             is_open_flag = win32file.ReadFile(pipe, 1)[1]
             if is_open_flag == b"\x00":  # Close flag
                 print("Close flag received, closing connection")
@@ -36,7 +47,9 @@ def handle_raw_bytes(pipe):
                 shutdown_event.set()  # Signal shutdown
                 break
 
-            data = win32file.ReadFile(pipe, size)[1].decode("utf-8")
+            data = win32file.ReadFile(pipe, size)[1]
+
+            data = decompress_if_gzip(data).decode("utf-8")
             data_queue.put(data)
     except pywintypes.error:
         pass
@@ -45,6 +58,66 @@ def handle_raw_bytes(pipe):
         shutdown_event.set()
     finally:
         win32file.CloseHandle(pipe)
+
+
+def deserialize_mesh(data):
+    """Deserialize mesh data from json string"""
+    vertices = []
+    faces = []
+    uvs = []
+
+    for vertex in data["Vertices"]:
+        vertices.append((vertex["X"], vertex["Y"], vertex["Z"]))
+    for face_list in data["Faces"]:
+        faces.append(tuple(face_list))
+    for uv in data["UVs"]:
+        uvs.append((uv["X"], uv["Y"]))
+
+    return vertices, faces, uvs
+
+
+def decompress_if_gzip(data: bytes) -> bytes:
+    """
+    Check if the given byte array is gzipped and decompress it if true.
+    """
+    # Check for gzip magic number
+    if data[:2] == b"\x1f\x8b":
+        # Use gzip.GzipFile to decompress the data
+        with gzip.GzipFile(fileobj=io.BytesIO(data)) as gz:
+            try:
+                # Decompress the data
+                return gz.read()
+            except OSError:
+                # Return the original data if decompression fails
+                return data
+    else:
+        # Return the original data if it's not gzipped
+        return data
+
+
+def create_or_replace_mesh(object_name, vertices, faces):
+    # Attempt to get the object
+    obj = bpy.data.objects.get(object_name)
+
+    # Create a new mesh
+    new_mesh_data = bpy.data.meshes.new(f"{object_name}_mesh")
+
+    # Set new mesh data
+    new_mesh_data.from_pydata(vertices, [], faces)
+    new_mesh_data.update()
+
+    if obj and obj.type == "MESH":
+        # Replace the existing mesh data with the new mesh
+        old_mesh = obj.data
+        obj.data = new_mesh_data
+        bpy.data.meshes.remove(old_mesh)  # Remove old mesh data
+    else:
+        # Create a new object and link it to the scene
+        new_object = bpy.data.objects.new(object_name, new_mesh_data)
+        bpy.context.collection.objects.link(new_object)
+
+    # Update mesh with new data
+    new_mesh_data.update()
 
 
 def pipe_server():
