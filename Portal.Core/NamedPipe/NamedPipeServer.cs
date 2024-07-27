@@ -21,7 +21,7 @@ namespace Portal.Core.NamedPipe
             {
                 _server = new NamedPipeServerStream(
                     pipeName,
-                    PipeDirection.InOut,
+                    PipeDirection.In,
                     1,
                     PipeTransmissionMode.Byte,
                     PipeOptions.Asynchronous,
