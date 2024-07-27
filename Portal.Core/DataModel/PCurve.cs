@@ -10,20 +10,6 @@ namespace Portal.Core.DataModel
     {
         public string Type { get; protected set; }
         public List<PVector3D> Points { get; protected set; }
-
-        protected PCurve() {}
-
-        protected PCurve(string type, List<PVector3D> points)
-        {
-            Type = type;
-            Points = points;
-        }
-
-        protected PCurve(List<PVector3D> points)
-        {
-            Type = nameof(PCurve);
-            Points = points;
-        }
     }
 
     public class PNurbsCurve : PCurve {
