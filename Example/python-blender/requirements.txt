@@ -1,0 +1,1 @@
+fake-bpy-module # This is a fake module to avoid errors in IDEs
