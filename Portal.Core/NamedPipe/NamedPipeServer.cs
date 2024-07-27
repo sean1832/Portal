@@ -69,6 +69,20 @@ namespace Portal.Core.NamedPipe
 
             try
             {
+                byte[] connectionFlagBuffer = new byte[1];
+                int connectionFlagBytesRead = _server.Read(connectionFlagBuffer, 0, connectionFlagBuffer.Length);
+                if (connectionFlagBytesRead == 0)
+                {
+                    _server.Disconnect();
+                    return;
+                }
+                bool isConnected = connectionFlagBuffer[0] == 1;
+                if (!isConnected)
+                {
+                    _server.Disconnect();
+                    return;
+                }
+
                 byte[] lengthBuffer = new byte[4];
                 int bytesRead = _server.Read(lengthBuffer, 0, lengthBuffer.Length);
                 if (bytesRead == 0)

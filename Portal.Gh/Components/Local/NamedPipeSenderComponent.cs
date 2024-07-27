@@ -9,17 +9,20 @@ using Portal.Gh.Common;
 using Portal.Core.Utils;
 using Portal.Core.NamedPipe;
 using Portal.Gh.Params.Bytes;
+using System.Windows.Forms;
 
 namespace Portal.Gh.Components.Local
 {
     public class NamedPipeSenderComponent : GH_Component
     {
+        private bool _sendCloseFlag;
+
         #region Metadata
 
         public NamedPipeSenderComponent()
             : base("Pipe Sender", "<pipe>",
                 "Client that sends messages to a named pipe server.\n" +
-                "[4b: int32 size] [data]" +
+                "[1b: bool isClose] [4b: int32 size] [data]" +
                 "\n\nNamed Pipes:\n" +
                 "Provides reliable inter-process communication within the same machine, using stream-based data transfer. " +
                 "Named Pipes are highly reliable and suitable for complex data exchanges within a single local machine, " +
@@ -63,20 +66,31 @@ namespace Portal.Gh.Components.Local
             if (!DA.GetData(1, ref pipeName)) return;
             if (!DA.GetData(2, ref message)) return;
             if (!DA.GetData(3, ref send)) return;
-            
 
-            if (!send) return;
 
+            if (send)
+            {
+                SendMessage(message.Value, serverName, pipeName);
+                _sendCloseFlag = true;
+            }
+            else
+            {
+                if (!_sendCloseFlag) return;
+                SendCloseFlag(serverName, pipeName);
+                _sendCloseFlag = false;
+            }
+        }
+
+        private void SendMessage(byte[] data, string serverName, string pipeName)
+        {
             Task.Run(() =>
             {
                 try
                 {
-                    byte[] data = message.Value;
-
-
                     using var client = new NamedPipeClient(serverName, pipeName, HandleError);
                     client.Connect();
                     data = client.EncodeLengthPrefix(data); // Add length prefix. 4 bytes
+                    data = client.EncodeConnectionFlagPrefix(data, true); // add connection status prefix. 1 byte
                     client.SendAsync(data).Wait();
                     UpdateMessage($@"\\{serverName}\pipe\{pipeName}");
                 }
@@ -86,6 +100,26 @@ namespace Portal.Gh.Components.Local
                 }
             });
         }
+
+        private void SendCloseFlag(string serverName, string pipeName)
+        {
+            Task.Run(() =>
+            {
+                try
+                {
+                    using var client = new NamedPipeClient(serverName, pipeName, HandleError);
+                    client.Connect();
+                    byte[] data = client.EncodeConnectionFlagPrefix(false); // add connection status prefix. 1 byte
+                    client.SendAsync(data).Wait();
+                    UpdateMessage($@"\\{serverName}\pipe\{pipeName}");
+                }
+                catch (Exception ex)
+                {
+                    HandleError(ex);
+                }
+            });
+        }
+
         private void HandleError(Exception ex)
         {
             AddRuntimeMessage(GH_RuntimeMessageLevel.Error, ex.Message);
