@@ -6,7 +6,7 @@ import win32file
 
 
 def pipe_client():
-    pipe_name = r"\\.\pipe\neurosity"
+    pipe_name = r"\\.\pipe\testpipe"
     try:
         pipe = win32file.CreateFile(
             pipe_name,
