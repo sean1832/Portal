@@ -17,7 +17,7 @@ namespace Portal.Gh.Components.Local
         #region Metadata
 
         public NamedPipeSenderComponent()
-            : base("Named Pipe Sender", "<pipe>",
+            : base("Pipe Sender", "<pipe>",
                 "Client that sends messages to a named pipe server. First 4 bytes represents size." +
                 "\n\nNamed Pipes:\n" +
                 "Provides reliable inter-process communication within the same machine, using stream-based data transfer. " +
