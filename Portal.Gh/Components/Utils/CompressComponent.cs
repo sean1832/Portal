@@ -33,7 +33,7 @@ namespace Portal.Gh.Components.Utils
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
-            pManager.AddParameter(new BytesParam(), "Bytes", "Bytes", "Bytes to decompress", GH_ParamAccess.item);
+            pManager.AddParameter(new BytesParam(), "Bytes", "Bytes", "Bytes to compress", GH_ParamAccess.item);
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
