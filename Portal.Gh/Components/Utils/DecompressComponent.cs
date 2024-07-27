@@ -48,6 +48,12 @@ namespace Portal.Gh.Components.Utils
             BytesGoo bytes = null;
 
             if (!DA.GetData(0, ref bytes)) return;
+            if (bytes.Value == null || bytes.Value.Length == 0)
+            {
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "Input data is empty.");
+                return;
+            }
+
             if (!GZip.IsGzipped(bytes.Value))
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Input data is not GZip compressed.");
