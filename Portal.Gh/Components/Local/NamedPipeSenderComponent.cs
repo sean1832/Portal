@@ -40,7 +40,7 @@ namespace Portal.Gh.Components.Local
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
             pManager.AddTextParameter("Server Name", "Server", "The name or IP address of the server hosting the named pipe. Use '.' for the local machine.", GH_ParamAccess.item, ".");
-            pManager.AddTextParameter("Pipe Name", "Pipe", "The unique identifier for the named pipe. This name is used by both the server and clients to connect.", GH_ParamAccess.item);
+            pManager.AddTextParameter("Pipe Name", "Name", "The unique identifier for the named pipe. This name is used by both the server and clients to connect.", GH_ParamAccess.item);
             pManager.AddParameter(new BytesParam(), "Bytes", "Bytes", "Data in bytes to be sent to the server via the named pipe.", GH_ParamAccess.item);
             pManager.AddBooleanParameter("Send", "Send", "Set to true to send the message to the server.", GH_ParamAccess.item,
                 false);

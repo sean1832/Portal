@@ -44,7 +44,7 @@ namespace Portal.Gh.Components.Local
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
-            pManager.AddTextParameter("Pipe Name", "Pipe", "The unique identifier for the named pipe. This name is used by both the server and clients to connect.", GH_ParamAccess.item);
+            pManager.AddTextParameter("Pipe Name", "Name", "The unique identifier for the named pipe. This name is used by both the server and clients to connect.", GH_ParamAccess.item);
             pManager.AddBooleanParameter("Start", "Start", "Set to true to start the server and begin listening on the specified pipe.", GH_ParamAccess.item,
                 false);
         }
