@@ -63,6 +63,7 @@
     <Compile Include="SharedMemory\SharedMemoryManager.cs" />
     <Compile Include="Udp\UdpClientManager.cs" />
     <Compile Include="Udp\UdpServerManager.cs" />
+    <Compile Include="Utils\ByteManipulator.cs" />
     <Compile Include="Utils\NetworkInfo.cs" />
     <Compile Include="Utils\NetworkInfoManager.cs" />
     <Compile Include="Utils\NetworkInputValidator.cs" />

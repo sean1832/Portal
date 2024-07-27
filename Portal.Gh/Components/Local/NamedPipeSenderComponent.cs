@@ -89,8 +89,9 @@ namespace Portal.Gh.Components.Local
                 {
                     using var client = new NamedPipeClient(serverName, pipeName, HandleError);
                     client.Connect();
-                    data = client.EncodeLengthPrefix(data); // Add length prefix. 4 bytes
-                    data = client.EncodeConnectionFlagPrefix(data, true); // add connection status prefix. 1 byte
+                    int dataLength = data.Length;
+                    data = ByteManipulator.PrependBytes(data, BitConverter.GetBytes(dataLength), 4); // Add length prefix. 4 bytes
+                    data = ByteManipulator.PrependBytes(data, true); // add connection status prefix. 1 byte
                     client.SendAsync(data).Wait();
                     UpdateMessage($@"\\{serverName}\pipe\{pipeName}");
                 }
@@ -109,7 +110,7 @@ namespace Portal.Gh.Components.Local
                 {
                     using var client = new NamedPipeClient(serverName, pipeName, HandleError);
                     client.Connect();
-                    byte[] data = client.EncodeConnectionFlagPrefix(false); // add connection status prefix. 1 byte
+                    byte[] data = new byte[1] { ByteManipulator.BooleanByte(false) }; // add connection status prefix. 1 byte
                     client.SendAsync(data).Wait();
                     UpdateMessage($@"\\{serverName}\pipe\{pipeName}");
                 }
