@@ -1,6 +1,6 @@
 # Portal
 
-Portal is a Grasshopper plugin designed to enhance Inter-Process Communication (IPC) capabilities. It allows Grasshopper to interact with various applications and services, optimizing workflows through efficient data integration across different platforms, including web-based and local network environments.
+Portal is a Grasshopper plugin designed to facilitate Inter-Process Communication (IPC). It allows Grasshopper to exchange data with external applications and processes. It is generic and can be used with any application that supports one of the communication methods provided by the plugin.
 
 ## Features
 - **Data Exchange with External Applications**
@@ -27,11 +27,7 @@ Currently supports the following communication methods:
 
 - **Memory Mapped File**: Enables the fastest data exchange possible by allowing direct access to a common memory space between processes on the same machine. This method is unmatched in speed within local settings but lacks the data integrity checks and network capabilities of the other methods.
 
-- **Local File**: Local file communication is a basic method that writes data to a file on the disk, which can be read manually or by another application. This method is the slowest and least reliable but is useful for simple data exchange between applications that do not require real-time communication.
-
-- **HTTP**: Coming soon!
-
-- **TCP Sockets**: Coming soon!
+- **Local File**: Local file communication is a basic method that writes data to a file on the disk, which can be read manually or by another application. This method is the slowest and least reliable (when automated) but is useful for simple data exchange between applications that do not require real-time communication.
 
 
 |                    | Speed | Reliability | Remote | Streamable |
