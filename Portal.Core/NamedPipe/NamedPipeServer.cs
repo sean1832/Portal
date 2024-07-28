@@ -106,8 +106,8 @@ namespace Portal.Core.NamedPipe
             if (_disposed) return;
             if (disposing)
             {
-                _server.Close();
-                _server.Dispose();
+                _server?.Close();
+                _server?.Dispose();
             }
             _disposed = true;
         }

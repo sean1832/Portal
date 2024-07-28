@@ -100,6 +100,7 @@ namespace Portal.Gh.Components.Local
                 {
                     AddRuntimeMessage(GH_RuntimeMessageLevel.Error, $"Error: {ex.Message}");
                 });
+                DisposeServer();
             }
 
             void HandleMessage(byte[] data)
