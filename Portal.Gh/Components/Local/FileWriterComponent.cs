@@ -44,7 +44,7 @@ namespace Portal.Gh.Components.Local
 
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            byte[] data = null;
+            BytesGoo data = null;
             string path = string.Empty;
             bool write = false;
 
@@ -54,7 +54,7 @@ namespace Portal.Gh.Components.Local
 
             if (write)
             {
-                System.IO.File.WriteAllBytes(path, data);
+                System.IO.File.WriteAllBytes(path, data.Value);
                 Message = "Written";
             }
         }
