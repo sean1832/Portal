@@ -99,7 +99,9 @@ namespace Portal.Gh.Components.Local
         private void WriteToMemory(string name, byte[] data)
         {
             _smm = new SharedMemoryManager(name);
-            _smm.WriteWithSize(data);
+
+            _smm.Write(BitConverter.GetBytes(data.Length), 0, 4);
+            _smm.Write(data, 4, data.Length);
         }
 
         private void DisposeMem()

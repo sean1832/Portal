@@ -13,41 +13,19 @@ namespace Portal.Core.SharedMemory
             _name = name;
         }
 
-        /// <summary>
-        /// Write data to shared memory with size encoded in the first 4 bytes
-        /// </summary>
-        /// <param name="data"></param>
-        public void WriteWithSize(byte[] data)
-        {
-            // encode length into the first 4 bytes
-            int totalLength = data.Length + 4;
-
-            _mmf = MemoryMappedFile.CreateOrOpen(_name, totalLength);
-            using var accessor = _mmf.CreateViewAccessor();
-
-            // write length
-            accessor.Write(0, data.Length);
-
-            // write
-            accessor.WriteArray(4, data, 0, data.Length);
-        }
-
         public void Write(byte[] data)
-        {
-            _mmf = MemoryMappedFile.CreateOrOpen(_name, data.Length);
-            using var accessor = _mmf.CreateViewAccessor();
 
-            // write
-            accessor.WriteArray(0, data, 0, data.Length);
+        {
+            Write(data, 0, data.Length);
         }
 
-        public void Write(byte[] data, int position)
+        public void Write(byte[] data, int start, int end)
         {
-            _mmf = MemoryMappedFile.CreateOrOpen(_name, data.Length);
+            _mmf ??= MemoryMappedFile.CreateOrOpen(_name, end);
             using var accessor = _mmf.CreateViewAccessor();
 
             // write
-            accessor.WriteArray(position, data, 0, data.Length + position);
+            accessor.WriteArray(start, data, 0, end);
         }
 
         public byte[] ReadRange(int start, int end)
