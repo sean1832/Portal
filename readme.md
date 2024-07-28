@@ -1,44 +1,114 @@
 # Portal
 
-Portal is a Grasshopper plugin designed to facilitate Inter-Process Communication (IPC). It allows Grasshopper to exchange data with external applications and processes. It is generic and can be used with any application that supports one of the communication methods provided by the plugin.
+Portal is a Grasshopper3D plugin designed to facilitate Inter-Process Communication (IPC), enabling seamless data exchange between Grasshopper and external applications or processes. By extending workflow capabilities beyond Grasshopper3D and Rhino3D, Portal opens up new possibilities for integrated, multi-platform design processes.
 
-## Features
-- **Data Exchange with External Applications**
-- **Multiple Communication Methods**
-- **Data Serialization / Deserialization**
+## 🌟 Features
+- **Multiple Communication Methods**:
+  - UDP Sockets
+  - WebSockets
+  - Named Pipes
+  - Memory Mapped File
+  - Local File
+- **Data Serialization / Deserialization** for various geometry types:
   - Point
   - Mesh
-  - Curve
-    - PolylineCurve
-    - ArcCurve
-    - LineCurve
-    - NurbsCurve
-- **Data Compression / Decompression (GZip)**
+  - Curve (PolylineCurve, ArcCurve, LineCurve, NurbsCurve)
+- **Data Compression / Decompression** using GZip
+
+## 🛠️ System Requirements
+
+- Rhino3D 7.13+
+- Windows OS
+
+## 📥 Installation
+1. Download the `Portal.Gh.zip` from the [Releases](https://github.com/sean1832/Portal/releases/latest) page.
+2. Unzip and copy the `Portal.GH` folder into `...\AppData\Roaming\Grasshopper\Libraries`
+3. Unblock all library files:
+   - Right-click on each `.gha` and `.dll` file
+   - If there's an "Unblock" option, make sure to select it
+
+## 🔌 Communication Methods
+
+Portal supports various communication methods, each with its own strengths:
+
+| Method             | Speed | Reliability | Remote | Streamable | Description                                                                                                                                                                               |
+| ------------------ | ----- | ----------- | ------ | ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| WebSockets         | 5/10  | 9/10        | ✅      | ✅          | Real-time, bidirectional communication. Ideal for interactive applications requiring constant updates.                                                                                    |
+| UDP Sockets        | 6/10  | 7/10        | ✅      | ❌          | Fast data transmission, prioritizing speed over reliability. Best for scenarios where occasional data loss is acceptable.                                                                 |
+| Named Pipes        | 8/10  | 10/10       | ❌      | ✅          | Reliable inter-process communication within the same machine. Suitable for complex data exchanges locally.                                                                                |
+| Memory Mapped File | 10/10 | 6/10        | ❌      | ❌          | Fastest data exchange possible on the same machine. Unmatched in speed for local settings but less reliable and may cause crash or memory leak if one side doesn't handel data correctly. |
+| Local File         | 1/10  | 2/10        | ❌      | ❌          | Basic method for simple data exchange. Slowest but useful for non-real-time communication.                                                                                                |
+
+## 📊 Data Structure and Model
+
+Portal uses a flexible data structure to facilitate communication between Grasshopper and external applications. Understanding this structure is crucial for effectively handling data transfer.
+
+### Data Format
+
+- All data is sent and received as bytes.
+- Data can be compressed using GZip before sending to save bandwidth and increase transfer speed. Proper decompression handling is required on the receiving end.
+
+### Data Types
+
+1. **Direct Text Messages**: Simple text can be sent and received directly.
+
+2. **Structured Data (JSON)**: Complex data structures can be sent as JSON, allowing for flexible data exchange. The receiving end must know how to handle and parse the JSON data.
+
+3. **Geometry Data**: Geometric data (like meshes, curves) can be serialized into JSON, encoded into bytes, compressed, and then sent. The receiving end must reverse this process to reconstruct the geometry.
+
+### Data Models
+
+Portal provides JSON data models for various geometric entities. These models define the structure for serializing and deserializing geometric data:
+
+- [Point Data Model](/Example/data-model/point.json)
+- [Mesh Data Model](/Example/data-model/mesh.json)
+- [Polyline Curve Model](/Example/data-model/polyline-curve.json)
+- [Arc Curve Model](/Example/data-model/arc-curve.json)
+- [Line Curve Model](/Example/data-model/line-curve.json)
+- [Nurbs Curve Model](/Example/data-model/nurbs-curve.json)
 
 
-## Communication
-Currently supports the following communication methods:
+### Memory Mapped File and Named Pipe Structure
 
-- **UDP Sockets**: Offers fast data transmission via UDP, prioritizing speed over reliability. Best for scenarios where occasional data loss is acceptable, UDP Sockets are not connection-oriented, hence faster but less reliable compared to TCP-based methods.
+For Memory Mapped File and Named Pipe communication methods, the data structure is as follows:
+```
+[1B: bool isOpen] [4B: int32 size] [payload]
+```
+- The first 4 bytes contain an `int32` value indicating the payload size.
+- This prefix allows the receiver to allocate the correct memory buffer size for the incoming data.
+- The payload contains the actual data bytes.
 
-- **WebSockets**: Facilitates real-time, bidirectional communication with web applications. WebSockets are less suited for high-speed requirements but provide robust, continuous data streams, making them ideal for interactive applications requiring constant updates.
+### Example Workflow
 
-- **Named Pipes**: Provides reliable inter-process communication within the same machine, using stream-based data transfer. Named Pipes are highly reliable and suitable for complex data exchanges within a single local machine, but they do not support remote communication.
+Here's an example of how you might send a mesh from Grasshopper to another application (e.g., Blender):
 
-- **Memory Mapped File**: Enables the fastest data exchange possible by allowing direct access to a common memory space between processes on the same machine. This method is unmatched in speed within local settings but lacks the data integrity checks and network capabilities of the other methods.
+1. In Grasshopper:
+   - Serialize the mesh into JSON
+   - Encode the JSON text into bytes
+   - Compress the bytes using GZip
+   - Send the compressed data via Named Pipe
 
-- **Local File**: Local file communication is a basic method that writes data to a file on the disk, which can be read manually or by another application. This method is the slowest and least reliable (when automated) but is useful for simple data exchange between applications that do not require real-time communication.
+2. In the receiving application (e.g., Blender):
+   - Receive the compressed bytes
+   - Decompress the data
+   - Decode the bytes into a string
+   - Parse the JSON
+   - Deserialize and construct the mesh
 
+## 🚀 Code Examples
 
-|                    | Speed | Reliability | Remote | Streamable |
-| ------------------ | ----- | ----------- | ------ | ---------- |
-| WebSockets         | 5/10  | 9/10        | ✅      | ✅          |
-| UDP Sockets        | 6/10  | 7/10        | ✅      | ❌          |
-| Named Pipes        | 8/10  | 10/10       | ❌      | ✅          |
-| Memory Mapped File | 10/10 | 6/10        | ❌      | ❌          |
-| Local File         | 1/10  | 2/10        | ❌      | ❌          |
-
-## Examples
 - [Grasshopper Implementation](./Example/grasshopper/)
-- [Python Implementation](./Example/python/)
+- [Python Implementation](./Example/python-native/)
+- [Blender Python Implementation](./Example/python-blender/)
 
+## 📜 License
+
+Portal is licensed under the Apache License 2.0. See the [LICENSE](LICENSE) for more details.
+
+## 📞 Support
+
+If you encounter any issues or have questions, please file an issue on the GitHub repository.
+
+---
+
+Made with ❤️ by [Zeke Zhang](https://github.com/sean1832)
