@@ -237,7 +237,7 @@ def register():
     bpy.utils.register_class(StopPipeServer)
     bpy.types.Scene.pipe_name = bpy.props.StringProperty(name="Pipe Name", default="testpipe")
     bpy.types.Scene.event_timer = bpy.props.FloatProperty(
-        name="Event Timer", default=0.01, min=0.001, max=1.0
+        name="Interval (seconds)", default=0.01, min=0.001, max=1.0
     )
 
 

@@ -69,8 +69,9 @@ class MMF_PT_ControlPanel(bpy.types.Panel):
         layout.prop(scene, "mmf_buffer_size")
 
         # Start and stop buttons
-        layout.operator("mmf.start_reading", text="Start Reading")
-        layout.operator("mmf.stop_reading", text="Stop Reading")
+        row = layout.row()
+        row.operator("mmf.start_reading", text="Start")
+        row.operator("mmf.stop_reading", text="Stop")
 
 
 class MMF_OT_StartReading(bpy.types.Operator):
