@@ -10,23 +10,9 @@ namespace Portal.Gh.Components.Local.Behaviour
 {
     internal class NamedPipeServerReceivedBehaviour: IReceivedBehaviour<NamedPipeServerStream>
     {
-
         public void ProcessData(NamedPipeServerStream server, Action<byte[]> onMessageReceived, Action<Exception> onError)
         {
-            byte[] connectionFlagBuffer = new byte[1];
-            int connectionFlagBytesRead = server.Read(connectionFlagBuffer, 0, connectionFlagBuffer.Length);
-            if (connectionFlagBytesRead == 0)
-            {
-                server.Disconnect();
-                return;
-            }
-            bool isConnected = connectionFlagBuffer[0] == 1;
-            if (!isConnected)
-            {
-                server.Disconnect();
-                return;
-            }
-
+            // read the length of the message
             byte[] lengthBuffer = new byte[4];
             int bytesRead = server.Read(lengthBuffer, 0, lengthBuffer.Length);
             if (bytesRead == 0)
@@ -35,6 +21,8 @@ namespace Portal.Gh.Components.Local.Behaviour
                 return;
             }
             int dataLength = BitConverter.ToInt32(lengthBuffer, 0);
+
+            // read the data
             byte[] buffer = new byte[dataLength];
             while ((bytesRead = server.Read(buffer, 0, dataLength)) > 0)
             {
@@ -42,7 +30,6 @@ namespace Portal.Gh.Components.Local.Behaviour
                 Array.Copy(buffer, receivedData, bytesRead);
                 onMessageReceived?.Invoke(receivedData);
             }
-
             server.Disconnect();
         }
     }

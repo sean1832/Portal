@@ -15,7 +15,6 @@ namespace Portal.Gh.Components.Local
 {
     public class NamedPipeSenderComponent : GH_Component
     {
-        private bool _sendCloseFlag;
 
         #region Metadata
 
@@ -71,13 +70,6 @@ namespace Portal.Gh.Components.Local
             if (send)
             {
                 SendMessage(message.Value, serverName, pipeName);
-                _sendCloseFlag = true;
-            }
-            else
-            {
-                if (!_sendCloseFlag) return;
-                SendCloseFlag(serverName, pipeName);
-                _sendCloseFlag = false;
             }
         }
 
@@ -89,28 +81,7 @@ namespace Portal.Gh.Components.Local
                 {
                     using var client = new NamedPipeClient(serverName, pipeName, HandleError);
                     client.Connect();
-                    int dataLength = data.Length;
-                    data = ByteManipulator.PrependBytes(data, BitConverter.GetBytes(dataLength), 4); // Add length prefix. 4 bytes
-                    data = ByteManipulator.PrependBytes(data, true); // add connection status prefix. 1 byte
-                    client.SendAsync(data).Wait();
-                    UpdateMessage($@"\\{serverName}\pipe\{pipeName}");
-                }
-                catch (Exception ex)
-                {
-                    HandleError(ex);
-                }
-            });
-        }
-
-        private void SendCloseFlag(string serverName, string pipeName)
-        {
-            Task.Run(() =>
-            {
-                try
-                {
-                    using var client = new NamedPipeClient(serverName, pipeName, HandleError);
-                    client.Connect();
-                    byte[] data = new byte[1] { ByteManipulator.BooleanByte(false) }; // add connection status prefix. 1 byte
+                    data = ByteManipulator.PrependBytes(data, BitConverter.GetBytes(data.Length), 4); // Add length prefix. 4 bytes
                     client.SendAsync(data).Wait();
                     UpdateMessage($@"\\{serverName}\pipe\{pipeName}");
                 }
