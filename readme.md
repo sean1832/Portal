@@ -72,7 +72,7 @@ Portal provides JSON data models for various geometric entities. These models de
 
 For Memory Mapped File and Named Pipe communication methods, the data structure is as follows:
 ```
-[1B: bool isOpen] [4B: int32 size] [payload]
+[4B: int32 size] [payload]
 ```
 - The first 4 bytes contain an `int32` value indicating the payload size.
 - This prefix allows the receiver to allocate the correct memory buffer size for the incoming data.
