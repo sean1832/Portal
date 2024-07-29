@@ -2,6 +2,12 @@
 
 Portal is a Grasshopper3D plugin designed to facilitate Inter-Process Communication (IPC), enabling seamless data exchange between Grasshopper and external applications or processes. By extending workflow capabilities beyond Grasshopper3D and Rhino3D, Portal opens up new possibilities for integrated, multi-platform design processes.
 
+
+
+https://github.com/user-attachments/assets/070eb40c-2fe2-4cb2-8e6d-64786fcd9897
+
+
+
 ## 🌟 Features
 - **Multiple Communication Methods**:
   - UDP Sockets
