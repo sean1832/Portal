@@ -1,5 +1,5 @@
 name: portal
-version: 0.0.2
+version: 0.1.1
 authors:
 - Zeke Zhang
 description: Portal enables realtime data exchange between Grasshopper and external applications with Inter-Process Communication methods including UDP, Websocket, Named Pipes, Memory Mapped Files and Local File, expanding design workflow capabilities beyond the Rhino3D ecosystem.
