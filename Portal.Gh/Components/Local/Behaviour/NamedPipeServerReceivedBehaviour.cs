@@ -12,25 +12,50 @@ namespace Portal.Gh.Components.Local.Behaviour
     {
         public void ProcessData(NamedPipeServerStream server, Action<byte[]> onMessageReceived, Action<Exception> onError)
         {
-            // read the length of the message
-            byte[] lengthBuffer = new byte[4];
-            int bytesRead = server.Read(lengthBuffer, 0, lengthBuffer.Length);
-            if (bytesRead == 0)
+            try
+            {
+                while (server.IsConnected)
+                {
+                    // Read the length of the message
+                    byte[] lengthBuffer = new byte[4];
+                    int bytesRead = server.Read(lengthBuffer, 0, lengthBuffer.Length);
+                    if (bytesRead == 0)
+                    {
+                        break; // End of stream
+                    }
+                    int dataLength = BitConverter.ToInt32(lengthBuffer, 0);
+
+                    // Read the data
+                    byte[] buffer = new byte[dataLength];
+                    int totalBytesRead = 0;
+                    while (totalBytesRead < dataLength)
+                    {
+                        bytesRead = server.Read(buffer, totalBytesRead, dataLength - totalBytesRead);
+                        if (bytesRead == 0)
+                        {
+                            break; // End of stream
+                        }
+                        totalBytesRead += bytesRead;
+                    }
+
+                    if (totalBytesRead == dataLength)
+                    {
+                        onMessageReceived?.Invoke(buffer);
+                    }
+                    else
+                    {
+                        throw new Exception("Incomplete message received");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                onError?.Invoke(ex);
+            }
+            finally
             {
                 server.Disconnect();
-                return;
             }
-            int dataLength = BitConverter.ToInt32(lengthBuffer, 0);
-
-            // read the data
-            byte[] buffer = new byte[dataLength];
-            while ((bytesRead = server.Read(buffer, 0, dataLength)) > 0)
-            {
-                byte[] receivedData = new byte[bytesRead];
-                Array.Copy(buffer, receivedData, bytesRead);
-                onMessageReceived?.Invoke(receivedData);
-            }
-            server.Disconnect();
         }
     }
 }
