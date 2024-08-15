@@ -79,7 +79,7 @@ namespace Portal.Gh.Components.Local
             {
                 try
                 {
-                    using var client = new NamedPipeClient(serverName, pipeName, HandleError);
+                    using var client = new NamedPipeClient(serverName, pipeName, HandleError); // TODO: manually dispose
                     client.Connect();
                     data = ByteManipulator.PrependBytes(data, BitConverter.GetBytes(data.Length), 4); // Add length prefix. 4 bytes
                     client.SendAsync(data).Wait();

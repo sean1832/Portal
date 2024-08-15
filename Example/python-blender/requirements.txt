@@ -1,1 +1,3 @@
 fake-bpy-module # This is a fake module to avoid errors in IDEs
+pywin32 == 306
+websockets == 12.0
