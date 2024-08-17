@@ -55,6 +55,7 @@
     <Compile Include="DataModel\PPlane.cs" />
     <Compile Include="DataModel\PMesh.cs" />
     <Compile Include="DataModel\PCurve.cs" />
+    <Compile Include="Encryption\Crypto.cs" />
     <Compile Include="Interfaces\IReceivedBehaviour.cs" />
     <Compile Include="NamedPipe\DefaultNamedPipeServerReceivedBehaviour.cs" />
     <Compile Include="NamedPipe\NamedPipeClient.cs" />
