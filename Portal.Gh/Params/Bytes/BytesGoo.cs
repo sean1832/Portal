@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Grasshopper.Kernel;
 using Portal.Core.Compression;
+using Portal.Core.Encryption;
 
 namespace Portal.Gh.Params.Bytes
 {
@@ -43,6 +44,11 @@ namespace Portal.Gh.Params.Bytes
 
             if (GZip.IsGzipped(Value))
                 msg += " (gzip)";
+            if (Crypto.IsAesEncrypted(Value))
+            {
+                msg += " (aes)";
+            }
+                
             return msg;
         }
 
