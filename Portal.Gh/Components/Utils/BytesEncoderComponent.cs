@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 using Portal.Core.Compression;
+using Portal.Core.Encryption;
 using Portal.Gh.Common;
 using Portal.Gh.Params.Bytes;
 
@@ -34,8 +35,11 @@ namespace Portal.Gh.Components.Utils
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
             pManager.AddTextParameter("Text", "Txt", "Text to encode into binary", GH_ParamAccess.item);
-            pManager.AddBooleanParameter("Compress", "Zip", "Compress the bytes with Gzip", GH_ParamAccess.item,
+            pManager.AddTextParameter("Password", "Pass", "(Optional) Encrypt bytes with a password", GH_ParamAccess.item);
+            pManager.AddBooleanParameter("Compress", "Zip", "(Optional) Compress the bytes with Gzip", GH_ParamAccess.item,
                 false);
+
+            pManager[1].Optional = true;
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
@@ -48,13 +52,16 @@ namespace Portal.Gh.Components.Utils
         protected override void SolveInstance(IGH_DataAccess DA)
         {
             string txt = null;
+            string password = null;
             bool compress = false;
 
             if (!DA.GetData(0, ref txt)) return;
-            DA.GetData(1, ref compress);
+            DA.GetData(1, ref password);
+            DA.GetData(2, ref compress);
 
             byte[] bytes = Encoding.UTF8.GetBytes(txt);
 
+            // compression
             if (compress)
             {
                 int dataLength = bytes.Length;
@@ -68,6 +75,14 @@ namespace Portal.Gh.Components.Utils
             else
             {
                 Message = "";
+            }
+
+
+            // encryption
+            if (!string.IsNullOrEmpty(password))
+            {
+                Crypto crypto = new Crypto();
+                bytes = crypto.Encrypt(bytes, password);
             }
 
             BytesGoo bytesGoo = new BytesGoo(bytes);
