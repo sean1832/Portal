@@ -4,6 +4,7 @@ using Rhino.Geometry;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using Portal.Core.Compression;
 using Portal.Gh.Common;
 using Portal.Gh.Params.Bytes;
 
@@ -21,7 +22,7 @@ namespace Portal.Gh.Components.Utils
         }
 
         public override GH_Exposure Exposure => GH_Exposure.tertiary;
-        public override IEnumerable<string> Keywords => new string[] { };
+        public override IEnumerable<string> Keywords => new string[] { "fromBytes" };
         protected override Bitmap Icon => Icons.Decode;
         public override Guid ComponentGuid => new Guid("1cb92168-973b-4d72-b4d0-907eb6c5bd61");
 
@@ -43,11 +44,17 @@ namespace Portal.Gh.Components.Utils
 
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            BytesGoo bytes = null;
+            BytesGoo bytesGoo = null;
 
-            if (!DA.GetData(0, ref bytes)) return;
+            if (!DA.GetData(0, ref bytesGoo)) return;
+            byte[] bytes = bytesGoo.Value;
 
-            string txt = System.Text.Encoding.UTF8.GetString(bytes.Value);
+            // decompress if gzipped
+            if (GZip.IsGzipped(bytes))
+            {
+                bytes = GZip.Decompress(bytes);
+            }
+            string txt = System.Text.Encoding.UTF8.GetString(bytes);
 
             DA.SetData(0, txt);
         }
