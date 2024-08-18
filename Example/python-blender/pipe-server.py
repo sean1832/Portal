@@ -8,24 +8,27 @@ import time
 
 import bpy
 import pywintypes
+import win32event
 import win32file
 import win32pipe
-import win32event
-
 
 global_pipe_server = None
 
+
 class DataHandler:
     @staticmethod
-    def handle_data(data):
+    def handle_data(data, data_type):
         """Handle parsed data in string, this is the main place to implement your logic"""
         try:
-            message_dics = json.loads(data)
-            for i, item in enumerate(message_dics):
-                vertices, faces, uvs = MeshHandler.deserialize_mesh(item)
-                MeshHandler.create_or_replace_mesh(f"object_{i}", vertices, faces)
+            if data_type == "Text":
+                print(f"Received message: {data}")
+            elif data_type == "Mesh":
+                message_dics = json.loads(data)
+                for i, item in enumerate(message_dics):
+                    vertices, faces, uvs = MeshHandler.deserialize_mesh(item)
+                    MeshHandler.create_or_replace_mesh(f"object_{i}", vertices, faces)
         except json.JSONDecodeError:
-            print(f"Received message: {data}")
+            print(f"Unsupported data: {data}")
 
 
 class MeshHandler:
@@ -195,6 +198,7 @@ class PipeServerUIPanel(bpy.types.Panel):
 
         layout.prop(scene, "pipe_name")
         layout.prop(scene, "event_timer")
+        layout.prop(scene, "data_type")
 
         row = layout.row()
         row.operator("wm.start_pipe_server", text="Start")
@@ -239,6 +243,14 @@ def register():
     bpy.types.Scene.event_timer = bpy.props.FloatProperty(
         name="Interval (seconds)", default=0.01, min=0.001, max=1.0
     )
+    bpy.types.Scene.data_type = bpy.props.EnumProperty(
+        name="Data Type",
+        items=[
+            ("Mesh", "Mesh", "Receive mesh data"),
+            ("Text", "Text", "Receive text data"),
+        ],
+        default="Mesh",
+    )
 
 
 def unregister():
@@ -248,6 +260,7 @@ def unregister():
     bpy.utils.unregister_class(StopPipeServer)
     del bpy.types.Scene.pipe_name
     del bpy.types.Scene.event_timer
+    del bpy.types.Scene.data_type
 
 
 if __name__ == "__main__":
