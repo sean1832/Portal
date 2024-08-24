@@ -119,7 +119,7 @@ namespace Portal.Gh.Components.Local
         {
             if (_smm != null)
             {
-                _smm.DeleteFile();
+                _smm.DeleteMemoryMappedFile();
                 _smm.Dispose();
                 _smm = null;
             }

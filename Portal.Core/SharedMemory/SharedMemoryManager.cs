@@ -1,15 +1,13 @@
 ﻿using System;
-using System.IO;
 using System.IO.MemoryMappedFiles;
 using System.Threading;
-using Newtonsoft.Json.Bson;
 
 namespace Portal.Core.SharedMemory
 {
     public class SharedMemoryManager : IDisposable
     {
         private readonly string _name;
-        private FileStream _fileStream;
+        private MemoryMappedFile _mmf;
         private Mutex _mutex;
         private const long DefaultCapacity = 1024 * 1024; // 1 MB default capacity
         private bool _disposed;
@@ -18,23 +16,17 @@ namespace Portal.Core.SharedMemory
         {
             _name = name;
             _mutex = new Mutex(false, $"Global\\{_name}Mutex");
+            CreateOrOpenMemoryMappedFile(DefaultCapacity);
         }
 
-        private string FilePath => Path.Combine(Path.GetTempPath(), $"{_name}.mmf");
-
-        private void EnsureFileCreated(long requiredSize)
+        private void CreateOrOpenMemoryMappedFile(long capacity)
         {
             _mutex.WaitOne();
             try
             {
-                if (_fileStream == null)
+                if (_mmf == null)
                 {
-                    _fileStream = new FileStream(FilePath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite);
-                }
-
-                if (_fileStream.Length < requiredSize)
-                {
-                    _fileStream.SetLength(requiredSize);
+                    _mmf = MemoryMappedFile.CreateOrOpen(_name, capacity, MemoryMappedFileAccess.ReadWrite);
                 }
             }
             finally
@@ -45,13 +37,14 @@ namespace Portal.Core.SharedMemory
 
         public void Write(byte[] data, long offset, int count)
         {
-            EnsureFileCreated(offset + count);
+            EnsureCapacity(offset + count);
             _mutex.WaitOne();
             try
             {
-                _fileStream.Position = offset;
-                _fileStream.Write(data, 0, count);
-                _fileStream.Flush();
+                using (var accessor = _mmf.CreateViewAccessor(offset, count, MemoryMappedFileAccess.Write))
+                {
+                    accessor.WriteArray(0, data, 0, count);
+                }
             }
             finally
             {
@@ -61,13 +54,15 @@ namespace Portal.Core.SharedMemory
 
         public byte[] ReadRange(long offset, int count)
         {
-            EnsureFileCreated(offset + count);
+            EnsureCapacity(offset + count);
             _mutex.WaitOne();
             try
             {
                 byte[] buffer = new byte[count];
-                _fileStream.Position = offset;
-                _fileStream.Read(buffer, 0, count);
+                using (var accessor = _mmf.CreateViewAccessor(offset, count, MemoryMappedFileAccess.Read))
+                {
+                    accessor.ReadArray(0, buffer, 0, count);
+                }
                 return buffer;
             }
             finally
@@ -76,31 +71,28 @@ namespace Portal.Core.SharedMemory
             }
         }
 
-        public void DeleteFile()
+        private void EnsureCapacity(long requiredSize)
+        {
+            if (requiredSize > DefaultCapacity)
+            {
+                // If more capacity is needed, create a new MMF with larger size
+                CreateOrOpenMemoryMappedFile(requiredSize);
+            }
+        }
+
+        public void DeleteMemoryMappedFile()
         {
             if (_mutex == null) return; // Already disposed
 
             _mutex.WaitOne();
             try
             {
-                if (_fileStream != null)
-                {
-                    _fileStream.Dispose();
-                    _fileStream = null;
-                }
-
-                if (File.Exists(FilePath))
-                {
-                    File.Delete(FilePath);
-                }
+                Dispose(true);
             }
             finally
             {
                 _mutex.ReleaseMutex();
             }
-
-            // Dispose after releasing the mutex
-            Dispose(true);
         }
 
         public void Dispose()
@@ -114,8 +106,8 @@ namespace Portal.Core.SharedMemory
             if (_disposed) return;
             if (disposing)
             {
-                _fileStream?.Dispose();
-                _fileStream = null;
+                _mmf?.Dispose();
+                _mmf = null;
                 _mutex?.Dispose();
                 _mutex = null;
             }
@@ -127,5 +119,4 @@ namespace Portal.Core.SharedMemory
             Dispose(false);
         }
     }
-
 }
