@@ -14,6 +14,7 @@ namespace Portal.Gh.Components.Local
     public class SharedMemoryWriterComponent : GH_Component
     {
         private SharedMemoryManager _smm;
+        private string _currentName;
 
         #region Metadata
 
@@ -98,16 +99,31 @@ namespace Portal.Gh.Components.Local
 
         private void WriteToMemory(string name, byte[] data)
         {
-            _smm = new SharedMemoryManager(name);
+            if (_smm == null || _currentName != name)
+            {
+                DisposeMem();
+                _smm = new SharedMemoryManager(name);
+                _currentName = name;
+            }
 
-            _smm.Write(BitConverter.GetBytes(data.Length), 0, 4);
+            byte[] lengthPrefix = BitConverter.GetBytes(data.Length);
+
+            // Write the length of the data at the start. Length of lengthPrefix is 4 bytes.
+            _smm.Write(lengthPrefix, 0, 4);
+
+            // Write the actual data starting from offset 4.
             _smm.Write(data, 4, data.Length);
         }
 
         private void DisposeMem()
         {
-            _smm?.Dispose();
-            _smm = null;
+            if (_smm != null)
+            {
+                _smm.DeleteFile();
+                _smm.Dispose();
+                _smm = null;
+            }
+            _currentName = null;
         }
 
         public override void RemovedFromDocument(GH_Document document)
