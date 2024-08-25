@@ -135,5 +135,13 @@ namespace Portal.Core.Encryption
             rng.GetBytes(salt);
             return salt;
         }
+
+        public static byte[] ComputeHash(byte[] data, HashAlgorithm algorithm)
+        {
+            using (algorithm)
+            {
+                return algorithm.ComputeHash(data);
+            }
+        }
     }
 }
