@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.IO.MemoryMappedFiles;
 using System.Threading;
 
@@ -12,11 +13,19 @@ namespace Portal.Core.SharedMemory
         private const long DefaultCapacity = 1024 * 1024; // 1 MB default capacity
         private bool _disposed;
 
-        public SharedMemoryManager(string name)
+        public SharedMemoryManager(string name, bool createNotExist = false)
         {
             _name = name;
             _mutex = new Mutex(false, $"Global\\{_name}Mutex");
-            CreateOrOpenMemoryMappedFile(DefaultCapacity);
+            if (createNotExist)
+            {
+                CreateOrOpenMemoryMappedFile(DefaultCapacity);
+            }
+            else
+            {
+                OpenMemoryMappedFile();
+            }
+            
         }
 
         private void CreateOrOpenMemoryMappedFile(long capacity)
@@ -28,6 +37,28 @@ namespace Portal.Core.SharedMemory
                 {
                     _mmf = MemoryMappedFile.CreateOrOpen(_name, capacity, MemoryMappedFileAccess.ReadWrite);
                 }
+            }
+            finally
+            {
+                _mutex.ReleaseMutex();
+            }
+        }
+
+        private void OpenMemoryMappedFile()
+        {
+            _mutex.WaitOne();
+            try
+            {
+                if (_mmf == null)
+                {
+                    _mmf = MemoryMappedFile.OpenExisting(_name, MemoryMappedFileRights.ReadWrite);
+                }
+            }
+            catch (FileNotFoundException)
+            {
+                // Handle the case where the file does not exist
+                _mmf = null;
+                throw new FileNotFoundException($"Memory mapped file '{_name}' not found.");
             }
             finally
             {
