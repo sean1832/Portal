@@ -79,11 +79,7 @@ namespace Portal.Gh.Components.Local
                     {
                         ExpireSolution(true);
                     });
-
-                    using var reader = new SharedMemoryManager(name);
-                    _lastDataSize = BitConverter.ToInt32(reader.ReadRange(0, 4), 0); // read data size
-                    byte[] dataBytes = reader.ReadRange(4, _lastDataSize);
-                    _lastReadMessage = dataBytes;
+                    _lastReadMessage = ReadFromMemory(name);
                 }
                 catch (Exception e)
                 {
@@ -95,6 +91,21 @@ namespace Portal.Gh.Components.Local
             BytesGoo outputGoo = new BytesGoo(_lastReadMessage);
 
             DA.SetData(0, outputGoo);
+        }
+
+        private byte[] ReadFromMemory(string name)
+        {
+            using var smm = new SharedMemoryManager(name);
+            byte[] lengthBuffer = smm.ReadRange(0, 4);
+            int dataLength = BitConverter.ToInt32(lengthBuffer, 0);
+            AddRuntimeMessage(GH_RuntimeMessageLevel.Remark, $"Data Read. length:{dataLength}, mmap_filename: '{name}'");
+            if (dataLength > 0)
+            {
+                byte[] data = smm.ReadRange(4, dataLength);
+                return data;
+            }
+            AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "No data read.");
+            return Array.Empty<byte>();
         }
     }
 }
