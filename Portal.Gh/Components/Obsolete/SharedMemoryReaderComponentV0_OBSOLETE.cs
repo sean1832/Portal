@@ -11,13 +11,13 @@ using Portal.Gh.Params.Bytes;
 
 namespace Portal.Gh.Components.Obsolete
 {
-    public class SharedMemoryReaderComponent : GH_Component
+    public class SharedMemoryReaderComponentV0_OBSOLETE : GH_Component
     {
         private byte[] _lastReadMessage = Array.Empty<byte>();
         private int _lastSize;
         #region Metadata
 
-        public SharedMemoryReaderComponent()
+        public SharedMemoryReaderComponentV0_OBSOLETE()
             : base("Shared Memory Reader", ">Memory<",
                 "Reads data once from a shared memory block.\n" +
                 "[4b: int32 size] [data]" +
