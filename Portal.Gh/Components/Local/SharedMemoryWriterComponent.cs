@@ -4,7 +4,9 @@ using Rhino.Geometry;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Security.Cryptography;
 using System.Text;
+using Portal.Core.Encryption;
 using Portal.Core.SharedMemory;
 using Portal.Gh.Common;
 using Portal.Gh.Params.Bytes;
@@ -14,13 +16,14 @@ namespace Portal.Gh.Components.Local
     public class SharedMemoryWriterComponent : GH_Component
     {
         private SharedMemoryManager _smm;
+        private string _currentName;
 
         #region Metadata
 
         public SharedMemoryWriterComponent()
-            : base("Shared Memory Writer", "<Memory>",
+            : base("Shared Memory Writer", "<MMF>",
                 "Writes data to a shared memory block.\n" +
-                "[4b: int32 size] [data]" +
+                "[16b: byte[] md5] [4b: int32 size] [data]" +
                 "\n\nShared Memory:\n" +
                 "Enables the fastest data exchange possible by allowing direct access to a common " +
                 "memory block between processes on the same machine. This method is unmatched in speed " +
@@ -31,7 +34,7 @@ namespace Portal.Gh.Components.Local
         }
 
         public override GH_Exposure Exposure => GH_Exposure.secondary;
-        public override IEnumerable<string> Keywords => new string[] { "memory write" };
+        public override IEnumerable<string> Keywords => new string[] { "memory write", "mmfwriter", "mmf writer" };
         protected override Bitmap Icon => Icons.SharedMemoryWriter;
         public override Guid ComponentGuid => new Guid("e44d5593-6665-4396-907f-751c8bc72e03");
 
@@ -98,16 +101,36 @@ namespace Portal.Gh.Components.Local
 
         private void WriteToMemory(string name, byte[] data)
         {
-            _smm = new SharedMemoryManager(name);
+            if (_smm == null || _currentName != name)
+            {
+                DisposeMem();
+                _smm = new SharedMemoryManager(name, createNotExist: true);
+                _currentName = name;
+            }
 
-            _smm.Write(BitConverter.GetBytes(data.Length), 0, 4);
-            _smm.Write(data, 4, data.Length);
+            byte[] lengthPrefix = BitConverter.GetBytes(data.Length);
+
+            byte[] hash = Crypto.ComputeHash(data, MD5.Create());
+
+            // write the hash of the data at the start. Length of hash is 16 bytes.
+            _smm.Write(hash, 0, hash.Length);
+
+            // Write the length of the data. Length of lengthPrefix is 4 bytes.
+            _smm.Write(lengthPrefix, hash.Length, lengthPrefix.Length);
+
+            // Write the actual data starting from offset (4 + 16) = 20.
+            _smm.Write(data, hash.Length + lengthPrefix.Length, data.Length);
         }
 
         private void DisposeMem()
         {
-            _smm?.Dispose();
-            _smm = null;
+            if (_smm != null)
+            {
+                _smm.DeleteMemoryMappedFile();
+                _smm.Dispose();
+                _smm = null;
+            }
+            _currentName = null;
         }
 
         public override void RemovedFromDocument(GH_Document document)

@@ -36,13 +36,13 @@ namespace Portal.Core.Compression
             return resultStream.ToArray();
         }
 
-        public static bool IsGzipped(byte[] data)
+        public static bool IsGzipped(byte[] data, int offset=0)
         {
-            if (data == null || data.Length < 2)
+            if (data == null || data.Length < offset + 2)
                 return false;
 
             // GZip header magic number
-            return data[0] == 0x1F && data[1] == 0x8B;
+            return data[offset + 0] == 0x1F && data[offset + 1] == 0x8B;
         }
     }
 }

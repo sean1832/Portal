@@ -7,6 +7,11 @@ namespace Portal.Core.Utils
         public static (bool, string) IsEndpointValid(string endpointName)
         {
             Regex validRegex = new Regex(@"^/[a-zA-Z0-9_/]+$", RegexOptions.Compiled);
+            // exception
+            if (endpointName == "/")
+                return (true, "");
+
+            // check for invalid characters
             if (string.IsNullOrEmpty(endpointName))
                 return (false, "Empty or null");
             if (!endpointName.StartsWith("/"))

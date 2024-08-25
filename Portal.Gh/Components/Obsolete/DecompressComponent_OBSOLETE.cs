@@ -9,20 +9,20 @@ using Portal.Core.Compression;
 using Portal.Gh.Common;
 using Portal.Gh.Params.Bytes;
 
-namespace Portal.Gh.Components.Utils
+namespace Portal.Gh.Components.Obsolete
 {
-    public class DecompressComponent : GH_Component
+    public class DecompressComponent_OBSOLETE : GH_Component
     {
         #region Metadata
 
-        public DecompressComponent()
+        public DecompressComponent_OBSOLETE()
             : base("Decompress Bytes", "DeCB",
                 "Decompress bytes back to string with gzip algorithm",
                 Config.Category, Config.SubCat.Utils)
         {
         }
 
-        public override GH_Exposure Exposure => GH_Exposure.secondary;
+        public override GH_Exposure Exposure => GH_Exposure.hidden;
         public override IEnumerable<string> Keywords => new string[] { "decb", "decompress b" };
         protected override Bitmap Icon => Icons.Decompress;
         public override Guid ComponentGuid => new Guid("0309a890-6f40-447f-81e5-7bec19bbe341");

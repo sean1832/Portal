@@ -4,25 +4,23 @@ using Rhino.Geometry;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
 using System.IO.MemoryMappedFiles;
-using System.Text;
 using Portal.Core.SharedMemory;
 using Portal.Gh.Common;
 using Portal.Gh.Params.Bytes;
 
-namespace Portal.Gh.Components.Local
+namespace Portal.Gh.Components.Obsolete
 {
-    public class SharedMemoryReaderComponent : GH_Component
+    public class SharedMemoryReaderComponentV0_OBSOLETE : GH_Component
     {
         private byte[] _lastReadMessage = Array.Empty<byte>();
-        private byte[] _lastHash;
+        private int _lastSize;
         #region Metadata
 
-        public SharedMemoryReaderComponent()
-            : base("Shared Memory Reader", ">MMF<",
+        public SharedMemoryReaderComponentV0_OBSOLETE()
+            : base("Shared Memory Reader", ">Memory<",
                 "Reads data once from a shared memory block.\n" +
-                "[16b: byte[] md5] [4b: int32 size] [data]" +
+                "[4b: int32 size] [data]" +
                 "\n\nShared Memory:\n" +
                 "Enables the fastest data exchange possible by allowing direct access to a common " +
                 "memory block between processes on the same machine. This method is unmatched in speed " +
@@ -31,10 +29,10 @@ namespace Portal.Gh.Components.Local
         {
         }
 
-        public override GH_Exposure Exposure => GH_Exposure.secondary;
-        public override IEnumerable<string> Keywords => new string[] { "memory read", "mmfreader", "mmf reader" };
+        public override GH_Exposure Exposure => GH_Exposure.hidden;
+        public override IEnumerable<string> Keywords => new string[] { "memory read" };
         protected override Bitmap Icon => Icons.SharedMemoryReader;
-        public override Guid ComponentGuid => new Guid("12ad5c40-db66-49d0-9bf7-d47c6d9a8bad");
+        public override Guid ComponentGuid => new Guid("1d19b1bb-caa6-45e1-8131-542d8e22f7dc");
 
         #endregion
 
@@ -43,6 +41,7 @@ namespace Portal.Gh.Components.Local
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
             pManager.AddTextParameter("Memory name", "name", "Unique identifier of a shared memory block", GH_ParamAccess.item);
+            pManager.AddBooleanParameter("Start", "Start", "Start reading the shared memory block", GH_ParamAccess.item);
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
@@ -55,21 +54,22 @@ namespace Portal.Gh.Components.Local
         protected override void SolveInstance(IGH_DataAccess DA)
         {
             string name = null;
+            bool read = false;
 
 
             if (!DA.GetData(0, ref name)) return;
+            if (!DA.GetData(1, ref read)) return;
 
-            try
+            if (read)
             {
-                _lastReadMessage = ReadFromMemory(name);
-            }
-            catch (FileNotFoundException e)
-            {
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, e.Message);
-            }
-            catch (Exception e)
-            {
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, e.Message);
+                try
+                {
+                    _lastReadMessage = ReadFromMemory(name);
+                }
+                catch (Exception e)
+                {
+                    AddRuntimeMessage(GH_RuntimeMessageLevel.Error, e.Message);
+                }
             }
 
             BytesGoo outputGoo = new BytesGoo(_lastReadMessage);
@@ -81,22 +81,15 @@ namespace Portal.Gh.Components.Local
         private byte[] ReadFromMemory(string name)
         {
             using var smm = new SharedMemoryManager(name);
-            byte[] hash = smm.ReadRange(0, 16);
-            if (_lastHash != null && _lastHash == hash)
-            {
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Remark, "No new data is read.");
-                return _lastReadMessage;
-            }
-            _lastHash = hash;
-            byte[] lengthBuffer = smm.ReadRange(16, 4);
+            byte[] lengthBuffer = smm.ReadRange(0, 4);
             int dataLength = BitConverter.ToInt32(lengthBuffer, 0);
+            AddRuntimeMessage(GH_RuntimeMessageLevel.Remark, $"Data Read. length:{dataLength}, mmap_filename: '{name}'");
             if (dataLength > 0)
             {
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Remark, $"Data Read. length: {dataLength}, mmf_name: '{name}'");
-                byte[] data = smm.ReadRange(20, dataLength);
+                byte[] data = smm.ReadRange(4, dataLength);
                 return data;
             }
-            AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "0 byte is read.");
+            AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "No data read.");
             return Array.Empty<byte>();
         }
     }

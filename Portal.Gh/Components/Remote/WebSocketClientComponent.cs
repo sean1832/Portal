@@ -54,7 +54,7 @@ namespace Portal.Gh.Components.Remote
             pManager.AddIntegerParameter("Port", "Port",
                 "The port number on which the WebSocket server is listening. (make sure this port is free)", GH_ParamAccess.item);
 
-            pManager.AddTextParameter("Route", "Route", "Endpoint Route. format: '/route'\nIt specifies the path that the server will listen to for incoming WebSocket connections.", GH_ParamAccess.item);
+            pManager.AddTextParameter("Route", "Route", "Endpoint Route. format: '/route'\nIt specifies the path that the server will listen to for incoming WebSocket connections.", GH_ParamAccess.item, "/");
 
             pManager.AddParameter(new BytesParam(), "Bytes", "Bytes", "Message in bytes to send to server", GH_ParamAccess.item);
 
@@ -117,7 +117,7 @@ namespace Portal.Gh.Components.Remote
                 _socketClient.Disconnect();
             }
 
-            if (msg.Value.Length != 0)
+            if (msg != null && msg.Value.Length != 0)
             {
                 _socketClient.Send(msg.Value);
             }

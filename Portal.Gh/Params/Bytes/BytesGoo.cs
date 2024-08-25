@@ -5,7 +5,9 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Grasshopper.Kernel;
 using Portal.Core.Compression;
+using Portal.Core.Encryption;
 
 namespace Portal.Gh.Params.Bytes
 {
@@ -16,6 +18,12 @@ namespace Portal.Gh.Params.Bytes
         public BytesGoo(byte[] value)
         {
             Value = value;
+        }
+
+        // convert string to bytes
+        public BytesGoo(string value)
+        {
+            Value = Encoding.UTF8.GetBytes(value);
         }
 
         public override IGH_Goo Duplicate()
@@ -36,7 +44,23 @@ namespace Portal.Gh.Params.Bytes
 
             if (GZip.IsGzipped(Value))
                 msg += " (gzip)";
+            if (Crypto.IsAesEncrypted(Value))
+            {
+                msg += " (aes)";
+            }
+                
             return msg;
+        }
+
+        public override bool CastFrom(object source)
+        {
+            if (GH_Convert.ToString(source, out var str, GH_Conversion.Both))
+            {
+                Value = Encoding.UTF8.GetBytes(str);
+                return true;
+            }
+
+            return false;
         }
 
         public override bool IsValid => Value != null;
