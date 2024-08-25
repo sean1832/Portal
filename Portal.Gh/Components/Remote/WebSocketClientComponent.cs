@@ -117,7 +117,7 @@ namespace Portal.Gh.Components.Remote
                 _socketClient.Disconnect();
             }
 
-            if (msg.Value.Length != 0)
+            if (msg != null && msg.Value.Length != 0)
             {
                 _socketClient.Send(msg.Value);
             }
