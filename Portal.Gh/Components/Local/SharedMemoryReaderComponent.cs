@@ -4,6 +4,7 @@ using Rhino.Geometry;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.IO.MemoryMappedFiles;
 using System.Text;
 using Portal.Core.SharedMemory;
@@ -61,6 +62,10 @@ namespace Portal.Gh.Components.Local
             try
             {
                 _lastReadMessage = ReadFromMemory(name);
+            }
+            catch (FileNotFoundException e)
+            {
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, e.Message);
             }
             catch (Exception e)
             {
