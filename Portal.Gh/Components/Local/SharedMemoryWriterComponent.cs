@@ -34,7 +34,7 @@ namespace Portal.Gh.Components.Local
         }
 
         public override GH_Exposure Exposure => GH_Exposure.secondary;
-        public override IEnumerable<string> Keywords => new string[] { "memory write", "mmf" };
+        public override IEnumerable<string> Keywords => new string[] { "memory write", "mmfwriter", "mmf writer" };
         protected override Bitmap Icon => Icons.SharedMemoryWriter;
         public override Guid ComponentGuid => new Guid("e44d5593-6665-4396-907f-751c8bc72e03");
 
