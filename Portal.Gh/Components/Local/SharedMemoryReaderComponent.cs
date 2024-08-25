@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO.MemoryMappedFiles;
+using System.Text;
 using Portal.Core.SharedMemory;
 using Portal.Gh.Common;
 using Portal.Gh.Params.Bytes;
@@ -14,13 +15,13 @@ namespace Portal.Gh.Components.Local
     public class SharedMemoryReaderComponent : GH_Component
     {
         private byte[] _lastReadMessage = Array.Empty<byte>();
-        private int _lastSize;
+        private byte[] _lastHash;
         #region Metadata
 
         public SharedMemoryReaderComponent()
-            : base("Shared Memory Reader", ">Memory<",
+            : base("Shared Memory Reader", ">MMF<",
                 "Reads data once from a shared memory block.\n" +
-                "[4b: int32 size] [data]" +
+                "[16b: byte[] md5] [4b: int32 size] [data]" +
                 "\n\nShared Memory:\n" +
                 "Enables the fastest data exchange possible by allowing direct access to a common " +
                 "memory block between processes on the same machine. This method is unmatched in speed " +
@@ -75,12 +76,19 @@ namespace Portal.Gh.Components.Local
         private byte[] ReadFromMemory(string name)
         {
             using var smm = new SharedMemoryManager(name);
-            byte[] lengthBuffer = smm.ReadRange(0, 4);
+            byte[] hash = smm.ReadRange(0, 16);
+            if (_lastHash != null && _lastHash == hash)
+            {
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Remark, "No new data is read.");
+                return _lastReadMessage;
+            }
+            _lastHash = hash;
+            byte[] lengthBuffer = smm.ReadRange(16, 4);
             int dataLength = BitConverter.ToInt32(lengthBuffer, 0);
             if (dataLength > 0)
             {
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Remark, $"Data Read. length:{dataLength}, mmap_filename: '{name}'");
-                byte[] data = smm.ReadRange(4, dataLength);
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Remark, $"Data Read. length: {dataLength}, mmf_name: '{name}'");
+                byte[] data = smm.ReadRange(20, dataLength);
                 return data;
             }
             AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "0 byte is read.");

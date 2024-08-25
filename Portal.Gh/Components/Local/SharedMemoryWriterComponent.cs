@@ -4,7 +4,9 @@ using Rhino.Geometry;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Security.Cryptography;
 using System.Text;
+using Portal.Core.Encryption;
 using Portal.Core.SharedMemory;
 using Portal.Gh.Common;
 using Portal.Gh.Params.Bytes;
@@ -19,9 +21,9 @@ namespace Portal.Gh.Components.Local
         #region Metadata
 
         public SharedMemoryWriterComponent()
-            : base("Shared Memory Writer", "<Memory>",
+            : base("Shared Memory Writer", "<MMF>",
                 "Writes data to a shared memory block.\n" +
-                "[4b: int32 size] [data]" +
+                "[16b: byte[] md5] [4b: int32 size] [data]" +
                 "\n\nShared Memory:\n" +
                 "Enables the fastest data exchange possible by allowing direct access to a common " +
                 "memory block between processes on the same machine. This method is unmatched in speed " +
@@ -102,17 +104,22 @@ namespace Portal.Gh.Components.Local
             if (_smm == null || _currentName != name)
             {
                 DisposeMem();
-                _smm = new SharedMemoryManager(name);
+                _smm = new SharedMemoryManager(name, createNotExist: true);
                 _currentName = name;
             }
 
             byte[] lengthPrefix = BitConverter.GetBytes(data.Length);
 
-            // Write the length of the data at the start. Length of lengthPrefix is 4 bytes.
-            _smm.Write(lengthPrefix, 0, 4);
+            byte[] hash = Crypto.ComputeHash(data, MD5.Create());
 
-            // Write the actual data starting from offset 4.
-            _smm.Write(data, 4, data.Length);
+            // write the hash of the data at the start. Length of hash is 16 bytes.
+            _smm.Write(hash, 0, hash.Length);
+
+            // Write the length of the data. Length of lengthPrefix is 4 bytes.
+            _smm.Write(lengthPrefix, hash.Length, lengthPrefix.Length);
+
+            // Write the actual data starting from offset (4 + 16) = 20.
+            _smm.Write(data, hash.Length + lengthPrefix.Length, data.Length);
         }
 
         private void DisposeMem()
