@@ -77,13 +77,13 @@ namespace Portal.Gh.Components.Local
             using var smm = new SharedMemoryManager(name);
             byte[] lengthBuffer = smm.ReadRange(0, 4);
             int dataLength = BitConverter.ToInt32(lengthBuffer, 0);
-            AddRuntimeMessage(GH_RuntimeMessageLevel.Remark, $"Data Read. length:{dataLength}, mmap_filename: '{name}'");
             if (dataLength > 0)
             {
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Remark, $"Data Read. length:{dataLength}, mmap_filename: '{name}'");
                 byte[] data = smm.ReadRange(4, dataLength);
                 return data;
             }
-            AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "No data read.");
+            AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "0 byte is read.");
             return Array.Empty<byte>();
         }
     }
