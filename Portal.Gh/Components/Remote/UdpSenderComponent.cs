@@ -19,7 +19,7 @@ namespace Portal.Gh.Components.Remote
 
         public UdpSenderComponent()
             : base("UDP Sender", "<UDP>",
-                "Sends data packets to a server via UDP. Recommended for packets smaller than 1472 bytes." +
+                "Sends data packets to a server via UDP. Recommended for packets smaller than 1472 bytes to avoid fragmentation." +
                 "\n\nUDP:\n" +
                 "Offers fast data transmission via UDP, prioritizing speed over reliability. " +
                 "Best for scenarios where occasional data loss is acceptable, " +
@@ -74,7 +74,7 @@ namespace Portal.Gh.Components.Remote
 
             if (IsDataExceeded(message.Value))
             {
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "Data size is exceeded 1472 bytes. Consider using WebSocket instead.");
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "Data exceeds max size of 1472 bytes. Consider using Websockets instead to avoid fragmentation.");
                 return;
             }
 
