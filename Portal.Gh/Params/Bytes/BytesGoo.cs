@@ -54,7 +54,8 @@ namespace Portal.Gh.Params.Bytes
 
         public override bool CastFrom(object source)
         {
-            if (GH_Convert.ToString(source, out var str, GH_Conversion.Both))
+            
+            if (GH_Convert.ToString(source, out var str, GH_Conversion.Primary))
             {
                 Value = Encoding.UTF8.GetBytes(str);
                 return true;

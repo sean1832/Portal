@@ -11,14 +11,14 @@ using Portal.Core.NamedPipe;
 using Portal.Gh.Params.Bytes;
 using System.Windows.Forms;
 
-namespace Portal.Gh.Components.Local
+namespace Portal.Gh.Components.Obsolete
 {
-    public class NamedPipeSenderComponent : GH_Component
+    public class NamedPipeSenderComponentV0_OBSOLETE : GH_Component
     {
 
         #region Metadata
 
-        public NamedPipeSenderComponent()
+        public NamedPipeSenderComponentV0_OBSOLETE()
             : base("Pipe Sender", "<pipe>",
                 "Client that sends messages to a named pipe server.\n" +
                 "[4b: int32 size] [data]" +
@@ -30,10 +30,10 @@ namespace Portal.Gh.Components.Local
         {
         }
 
-        public override GH_Exposure Exposure => GH_Exposure.primary;
+        public override GH_Exposure Exposure => GH_Exposure.hidden;
         public override IEnumerable<string> Keywords => new string[] { "np sender", "np client", "pipe sender" };
         protected override Bitmap Icon => Icons.PiperSender;
-        public override Guid ComponentGuid => new Guid("43908314-80b3-438e-87c7-3ab78ed27816");
+        public override Guid ComponentGuid => new Guid("a90b6d3b-f595-4bab-9f79-5536c9c4bf67");
 
         #endregion
 
@@ -41,6 +41,7 @@ namespace Portal.Gh.Components.Local
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
+            pManager.AddTextParameter("Server Name", "Server", "The name or IP address of the server hosting the named pipe. Use '.' for the local machine.", GH_ParamAccess.item, ".");
             pManager.AddTextParameter("Pipe Name", "Name", "The unique identifier for the named pipe. This name is used by both the server and clients to connect.", GH_ParamAccess.item);
             pManager.AddParameter(new BytesParam(), "Bytes", "Bytes", "Data in bytes to be sent to the server via the named pipe.", GH_ParamAccess.item);
             pManager.AddBooleanParameter("Send", "Send", "Set to true to send the message to the server.", GH_ParamAccess.item,
@@ -55,15 +56,16 @@ namespace Portal.Gh.Components.Local
 
         protected override void SolveInstance(IGH_DataAccess DA)
         {
+            string serverName = null;
             string pipeName = null;
             BytesGoo message = null;
             bool send = false;
 
-            if (!DA.GetData(0, ref pipeName)) return;
-            if (!DA.GetData(1, ref message)) return;
-            if (!DA.GetData(2, ref send)) return;
+            if (!DA.GetData(0, ref serverName)) return;
+            if (!DA.GetData(1, ref pipeName)) return;
+            if (!DA.GetData(2, ref message)) return;
+            if (!DA.GetData(3, ref send)) return;
 
-            string serverName = "."; // Local machine
 
             if (send)
             {
