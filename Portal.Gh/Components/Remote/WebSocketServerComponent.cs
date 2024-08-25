@@ -44,8 +44,11 @@ namespace Portal.Gh.Components.Remote
         {
             
             pManager.AddIntegerParameter("Port", "Port", "The port number on which the WebSocket server is listening. (make sure this port is free)", GH_ParamAccess.item);
-            pManager.AddTextParameter("Route", "Route", "Endpoint Route. format: '/route'\nIt specifies the path that the server will listen to for incoming WebSocket connections.", GH_ParamAccess.item);
+            pManager.AddTextParameter("Route", "Route", "Endpoint Route. format: '/route'\nIt specifies the path that the server will listen to for incoming WebSocket connections.", GH_ParamAccess.item, "/");
             pManager.AddBooleanParameter("Start", "Start", "Start the server", GH_ParamAccess.item, false);
+
+            // optional
+            pManager[1].Optional = true;
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
