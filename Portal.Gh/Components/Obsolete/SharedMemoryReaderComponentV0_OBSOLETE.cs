@@ -9,7 +9,7 @@ using Portal.Core.SharedMemory;
 using Portal.Gh.Common;
 using Portal.Gh.Params.Bytes;
 
-namespace Portal.Gh.Components.Local
+namespace Portal.Gh.Components.Obsolete
 {
     public class SharedMemoryReaderComponent : GH_Component
     {
@@ -29,10 +29,10 @@ namespace Portal.Gh.Components.Local
         {
         }
 
-        public override GH_Exposure Exposure => GH_Exposure.secondary;
+        public override GH_Exposure Exposure => GH_Exposure.hidden;
         public override IEnumerable<string> Keywords => new string[] { "memory read" };
         protected override Bitmap Icon => Icons.SharedMemoryReader;
-        public override Guid ComponentGuid => new Guid("12ad5c40-db66-49d0-9bf7-d47c6d9a8bad");
+        public override Guid ComponentGuid => new Guid("1d19b1bb-caa6-45e1-8131-542d8e22f7dc");
 
         #endregion
 
@@ -41,6 +41,7 @@ namespace Portal.Gh.Components.Local
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
             pManager.AddTextParameter("Memory name", "name", "Unique identifier of a shared memory block", GH_ParamAccess.item);
+            pManager.AddBooleanParameter("Start", "Start", "Start reading the shared memory block", GH_ParamAccess.item);
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
@@ -53,17 +54,22 @@ namespace Portal.Gh.Components.Local
         protected override void SolveInstance(IGH_DataAccess DA)
         {
             string name = null;
+            bool read = false;
 
 
             if (!DA.GetData(0, ref name)) return;
+            if (!DA.GetData(1, ref read)) return;
 
-            try
+            if (read)
             {
-                _lastReadMessage = ReadFromMemory(name);
-            }
-            catch (Exception e)
-            {
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, e.Message);
+                try
+                {
+                    _lastReadMessage = ReadFromMemory(name);
+                }
+                catch (Exception e)
+                {
+                    AddRuntimeMessage(GH_RuntimeMessageLevel.Error, e.Message);
+                }
             }
 
             BytesGoo outputGoo = new BytesGoo(_lastReadMessage);
