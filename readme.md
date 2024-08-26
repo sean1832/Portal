@@ -108,7 +108,7 @@ Here's an example of how you might send a mesh from Grasshopper to another appli
 
 - [Grasshopper Implementation](./Example/grasshopper/)
 - [Python Implementation](./Example/python-native/)
-- [Blender Python Implementation](./Example/python-blender/)
+- ~~[Blender Python Implementation](https://github.com/sean1832/Portal/tree/75a81188b3ee689532f92b246b4fc5bae1cfcb20/Example/python-blender)~~ (This has since been developed as Blender add-on at [Portal.blender](https://github.com/sean1832/Portal.blender), which is more user-friendly and feature-rich. Old code examples are still available for reference [here](https://github.com/sean1832/Portal/tree/75a81188b3ee689532f92b246b4fc5bae1cfcb20/Example/python-blender). Note that some features may be outdated and not fully compatible with the latest version of Portal.Gh.) 
 
 ## 📜 License
 
