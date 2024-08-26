@@ -1,1 +1,2 @@
-vspacker==0.0.2
+vspacker==0.0.7
+pyyaml==6.0.2
