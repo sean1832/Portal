@@ -52,6 +52,7 @@
     <Compile Include="Compression\GZip.cs" />
     <Compile Include="DataModel\Coordinates2D.cs" />
     <Compile Include="DataModel\Coordinates3D.cs" />
+    <Compile Include="DataModel\PColor.cs" />
     <Compile Include="DataModel\PPlane.cs" />
     <Compile Include="DataModel\PMesh.cs" />
     <Compile Include="DataModel\PCurve.cs" />

@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Linq;
 using Portal.Core.DataModel;
 using Portal.Gh.Common;
+using Rhino.Geometry.Collections;
 
 namespace Portal.Gh.Components.Serialization
 {
@@ -58,10 +59,13 @@ namespace Portal.Gh.Components.Serialization
             {
                 var vertices = mesh.Vertices.Select(vertex => new PVector3Df(vertex.X, vertex.Y, vertex.Z)).ToList();
                 var faces = mesh.Faces.Select(face => new[] { face.A, face.B, face.C, face.D }).ToList();
-                var normals = mesh.Normals.Select(normal => new PVector3Df(normal.X, normal.Y, normal.Z)).ToList();
-                var uVs = mesh.TextureCoordinates.Select(uv => new PVector2Df(uv.X, uv.Y)).ToList();
-                PMesh meshModel = new PMesh(vertices, normals, faces, uVs);
-
+                var vertexColors = mesh.VertexColors.Select(color =>
+                    {
+                        var pColor = new PColor(color.R, color.G, color.B, color.A);
+                        return pColor.ToHex();
+                    })
+                    .ToList();
+                PMesh meshModel = new PMesh(vertices, faces, vertexColors);
                 meshesModel.Add(meshModel);
             }
 
