@@ -1,6 +1,10 @@
 # Portal
+![GitHub Release](https://img.shields.io/github/v/release/sean1832/portal)
+![Static Badge](https://img.shields.io/badge/Grasshopper-7.13%2B-blue)
+![GitHub License](https://img.shields.io/github/license/sean1832/portal)
 
-Portal is a Grasshopper3D plugin designed to facilitate Inter-Process Communication (IPC), enabling seamless data exchange between Grasshopper and external applications or processes. By extending workflow capabilities beyond Grasshopper3D and Rhino3D, Portal opens up new possibilities for integrated, multi-platform design processes.
+
+Portal is a Grasshopper3D plugin designed to facilitate [Inter-Process Communication (IPC)](https://en.wikipedia.org/wiki/Inter-process_communication), enabling seamless data exchange between Grasshopper and external applications or processes. By extending workflow capabilities beyond Grasshopper3D and Rhino3D, Portal opens up new possibilities for integrated, multi-platform design processes.
 
 ## Adaptors
 - [Portal.blender](https://github.com/sean1832/Portal.blender)
@@ -38,15 +42,16 @@ https://github.com/user-attachments/assets/070eb40c-2fe2-4cb2-8e6d-64786fcd9897
 
 ## 🔌 Communication Methods
 
-Portal supports various communication methods, each with its own strengths:
+Portal supports various communication methods, each with its own strengths and drawbacks. The choice of method depends on the specific requirements of your workflow, such as speed, reliability, and whether the communication is local or remote.
+> ⭐ Recommended methods for most use cases.
 
 | Method             | Speed | Reliability | Remote | Streamable | Description                                                                                                                                                                               |
 | ------------------ | ----- | ----------- | ------ | ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| WebSockets         | 5/10  | 9/10        | ✅      | ✅          | Real-time, bidirectional communication. Ideal for interactive applications requiring constant updates.                                                                                    |
-| UDP Sockets        | 6/10  | 7/10        | ✅      | ❌          | Fast data transmission, prioritizing speed over reliability. Best for scenarios where occasional data loss is acceptable.                                                                 |
-| Named Pipes        | 8/10  | 10/10       | ❌      | ✅          | Reliable inter-process communication within the same machine. Suitable for complex data exchanges locally.                                                                                |
-| Memory Mapped File | 10/10 | 6/10        | ❌      | ❌          | Fastest data exchange possible on the same machine. Unmatched in speed for local settings but less reliable and may cause crash or memory leak if one side doesn't handel data correctly. |
-| Local File         | 1/10  | 2/10        | ❌      | ❌          | Basic method for simple data exchange. Slowest but useful for non-real-time communication.                                                                                                |
+| ⭐WebSockets         | 5/10  | 9/10        | ✅      | ✅          | [Websockets](https://en.wikipedia.org/wiki/WebSocket#:~:text=WebSocket%20is%20a%20computer%20communications,as%20RFC%206455%20in%202011.) provide a stable connection capable of handling large payloads, ideal for large, content-critical data that requires cross-machine communication over a network, but can also support local communication, although not as efficiently as Named Pipes.                                                                                    |
+| UDP Sockets        | 6/10  | 7/10        | ✅      | ❌          | [UDP](https://en.wikipedia.org/wiki/User_Datagram_Protocol) offers fast, connectionless transmission, ideal for payloads under **1472 bytes** requiring quick, straightforward transmission without connection setup or integrity checks (e.g., sending small instructions), and supports cross-machine communication; however, it is [not suitable for payloads over 1472 bytes](https://stackoverflow.com/questions/1098897/what-is-the-largest-safe-udp-packet-size-on-the-internet) as data may become corrupted due to fragmentation.                                                                 |
+| ⭐Named Pipes        | 8/10  | 10/10       | ❌      | ✅          | [Named Pipes](https://en.wikipedia.org/wiki/Named_pipe) enable unidirectional communication through a pipe, suitable for fast, reliable, and ordered byte-stream-based data transfer. Limited to the local machine.                                                                                |
+| Memory Mapped File | 10/10 | 6/10        | ❌      | ❌          | [Memory-Mapped Files](https://en.wikipedia.org/wiki/Memory-mapped_file) map a portion of memory to the address space of a process for efficient inter-process communication, ideal for extremely fast read and write operations directly in shared memory; however, they are limited to the local machine and may cause data corruption, memory leaks, or program crashes if not handled properly. |
+| Local File I/O         | 1/10  | 2/10        | ❌      | ❌          | File I/O operations allow reading from and writing to files on a storage device, suitable for scenarios requiring persistent storage of data; however, they are limited to the local machine and can be slow compared to memory and network operations.                                                                                                |
 
 ## 📊 Data Structure and Model
 
@@ -76,15 +81,23 @@ Portal provides JSON data models for various geometric entities. These models de
 - [Line Curve Model](/Example/data-model/line-curve.json)
 - [Nurbs Curve Model](/Example/data-model/nurbs-curve.json)
 
+### Custom Headers
+For local communication methods (Named Pipe, Memory Mapped File), Portal uses custom headers to structure the data. These headers help the receiver understand the data format, size and if it's changed from last transmission.
 
-### Memory Mapped File and Named Pipe Structure
-
-For Memory Mapped File and Named Pipe communication methods, the data structure is as follows:
+#### Named Pipe Headers
 ```
 [4B: int32 size] [payload]
 ```
-- The first 4 bytes contain an `int32` value indicating the payload size.
-- This prefix allows the receiver to allocate the correct memory buffer size for the incoming data.
+- The first 4 bytes contain an `int32` value indicating the payload size. This prefix allows the receiver to allocate the correct memory buffer size for the incoming data.
+- The payload contains the actual data bytes.
+
+
+#### Memory Mapped File Headers
+```
+[16B: byte[] md5] [4B: int32 size] [payload]
+```
+- The first 16 bytes contain a `byte[]` of [MD5 checksum](https://en.wikipedia.org/wiki/MD5) of the payload data. This hash is used to verify data integrity and detect changes.
+- The next 4 bytes contain an `int32` value indicating the payload size.
 - The payload contains the actual data bytes.
 
 ### Example Workflow
@@ -108,7 +121,11 @@ Here's an example of how you might send a mesh from Grasshopper to another appli
 
 - [Grasshopper Implementation](./Example/grasshopper/)
 - [Python Implementation](./Example/python-native/)
-- [Blender Python Implementation](./Example/python-blender/)
+- **Blender Integration**: 
+  - ✨ **New**: [Portal.blender](https://github.com/sean1832/Portal.blender) - A user-friendly and feature-rich Blender add-on.
+  - 🗃️ **Legacy**: [Python-Blender Implementation](https://github.com/sean1832/Portal/tree/75a81188b3ee689532f92b246b4fc5bae1cfcb20/Example/python-blender) - Old script examples (compatible up to Portal.Gh [v0.1.2](https://github.com/sean1832/Portal/releases/tag/0.1.2)).
+    > ⚠️ Note: The legacy implementation is outdated and not compatible with latest Portal.Gh. It's provided for reference only.
+
 
 ## 📜 License
 

@@ -8,6 +8,7 @@ SETLOCAL EnableDelayedExpansion
 
 REM Assign command line arguments to variable
 SET "PROJECT_PATH=%~1"
+SET "RUNYAK=%~2"
 
 REM Go to root directory
 cd ..
@@ -26,7 +27,7 @@ if not exist "venv\" (
 REM Activate the virtual environment
 call .\venv\Scripts\activate
 
-python package.py %PROJECT_PATH%
+python package.py %PROJECT_PATH% %RUNYAK%
 
 :END
 ENDLOCAL
