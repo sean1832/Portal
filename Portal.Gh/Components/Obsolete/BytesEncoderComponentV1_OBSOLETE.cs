@@ -23,7 +23,7 @@ namespace Portal.Gh.Components.Obsolete
         {
         }
 
-        public override GH_Exposure Exposure => GH_Exposure.tertiary;
+        public override GH_Exposure Exposure => GH_Exposure.hidden;
         public override IEnumerable<string> Keywords => new string[] { "toBytes" };
         protected override Bitmap Icon => Icons.Encode;
         public override Guid ComponentGuid => new Guid("3d414461-a9e7-4383-b64a-eeb7af53d8d0");
