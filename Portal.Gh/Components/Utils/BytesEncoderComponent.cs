@@ -6,7 +6,9 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 using Portal.Core.Compression;
+using Portal.Core.DataModel;
 using Portal.Core.Encryption;
+using Portal.Core.Utils;
 using Portal.Gh.Common;
 using Portal.Gh.Params.Bytes;
 
@@ -26,7 +28,7 @@ namespace Portal.Gh.Components.Utils
         public override GH_Exposure Exposure => GH_Exposure.tertiary;
         public override IEnumerable<string> Keywords => new string[] { "toBytes" };
         protected override Bitmap Icon => Icons.Encode;
-        public override Guid ComponentGuid => new Guid("3d414461-a9e7-4383-b64a-eeb7af53d8d0");
+        public override Guid ComponentGuid => new Guid("01a51d94-51ea-49b8-a6ea-194dc9911c11");
 
         #endregion
 
@@ -38,7 +40,8 @@ namespace Portal.Gh.Components.Utils
             pManager.AddTextParameter("Password", "Pass", "(Optional) Encrypt bytes with a password", GH_ParamAccess.item);
             pManager.AddBooleanParameter("Compress", "Zip", "(Optional) Compress the bytes with Gzip", GH_ParamAccess.item,
                 false);
-
+            pManager.AddBooleanParameter("Timestamp", "time", "(Optional) Add a timestamp to header to calculate elapse",
+                GH_ParamAccess.item, false);
             pManager[1].Optional = true;
         }
 
@@ -53,21 +56,27 @@ namespace Portal.Gh.Components.Utils
         {
             string txt = null;
             string password = null;
-            bool compress = false;
+            bool isCompress = false;
+            bool hasTimestamp = false;
 
             if (!DA.GetData(0, ref txt)) return;
             DA.GetData(1, ref password);
-            DA.GetData(2, ref compress);
+            DA.GetData(2, ref isCompress);
+            DA.GetData(3, ref hasTimestamp);
 
-            byte[] bytes = Encoding.UTF8.GetBytes(txt);
+            bool isEncrypted = !string.IsNullOrEmpty(password);
+
+            byte[] payload = Encoding.UTF8.GetBytes(txt);
+            Crc16 crc16 = new Crc16();
+            ushort checksum = crc16.ComputeChecksum(payload);
 
             // compression
-            if (compress)
+            if (isCompress)
             {
-                int dataLength = bytes.Length;
-                bytes = GZip.Compress(Encoding.UTF8.GetBytes(txt));
+                int dataLength = payload.Length;
+                payload = GZip.Compress(payload);
 
-                float compressionRate = (float)bytes.Length / dataLength * 100; // in percentage
+                float compressionRate = (float)payload.Length / dataLength * 100; // in percentage
                 // round to 2 decimal places
                 compressionRate = (float)Math.Round(compressionRate, 2);
                 Message = $"Compression: {compressionRate}%";
@@ -77,16 +86,25 @@ namespace Portal.Gh.Components.Utils
                 Message = "";
             }
 
-
             // encryption
-            if (!string.IsNullOrEmpty(password))
+            if (isEncrypted)
             {
                 Crypto crypto = new Crypto();
-                bytes = crypto.Encrypt(bytes, password);
+                payload = crypto.Encrypt(payload, password);
             }
 
-            BytesGoo bytesGoo = new BytesGoo(bytes);
+            // Creating a packet with an optional timestamp
+            Packet packet;
+            if (hasTimestamp)
+            {
+                packet = new Packet(payload, isEncrypted, isCompress, Helpers.GetTimestamp(), checksum);
+            }
+            else
+            {
+                packet = new Packet(payload, isEncrypted, isCompress, checksum);
+            }
 
+            BytesGoo bytesGoo = new BytesGoo(packet.Serialize());
             DA.SetData(0, bytesGoo);
         }
     }
