@@ -1,4 +1,8 @@
 # Portal
+![GitHub Release](https://img.shields.io/github/v/release/sean1832/portal)
+![Static Badge](https://img.shields.io/badge/Grasshopper-7.13%2B-blue)
+![GitHub License](https://img.shields.io/github/license/sean1832/portal)
+
 
 Portal is a Grasshopper3D plugin designed to facilitate [Inter-Process Communication (IPC)](https://en.wikipedia.org/wiki/Inter-process_communication), enabling seamless data exchange between Grasshopper and external applications or processes. By extending workflow capabilities beyond Grasshopper3D and Rhino3D, Portal opens up new possibilities for integrated, multi-platform design processes.
 
@@ -77,10 +81,10 @@ Portal provides JSON data models for various geometric entities. These models de
 - [Line Curve Model](/Example/data-model/line-curve.json)
 - [Nurbs Curve Model](/Example/data-model/nurbs-curve.json)
 
+### Custom Headers
+For local communication methods (Named Pipe, Memory Mapped File), Portal uses custom headers to structure the data. These headers help the receiver understand the data format, size and if it's changed from last transmission.
 
-### Named Pipe Structure
-
-For Named Pipe, the data structure is as follows:
+#### Named Pipe Headers
 ```
 [4B: int32 size] [payload]
 ```
@@ -88,12 +92,11 @@ For Named Pipe, the data structure is as follows:
 - The payload contains the actual data bytes.
 
 
-### Memory Mapped File Structure
-For Memory Mapped File, the data structure is as follows:
+#### Memory Mapped File Headers
 ```
 [16B: byte[] md5] [4B: int32 size] [payload]
 ```
-- The first 16 bytes contain an MD5 hash of the payload data. This hash is used to verify data integrity.
+- The first 16 bytes contain a `byte[]` of [MD5 checksum](https://en.wikipedia.org/wiki/MD5) of the payload data. This hash is used to verify data integrity and detect changes.
 - The next 4 bytes contain an `int32` value indicating the payload size.
 - The payload contains the actual data bytes.
 
