@@ -10,18 +10,14 @@ namespace Portal.Core.DataModel
     {
         public bool IsCompressed { get; }
         public bool IsEncrypted { get; }
-        public bool HasTimestamp { get; }
         public int Size { get; }
         public ushort Checksum { get; }
         public long Timestamp { get; private set; }
-
-        public PacketHeader() { }
 
         public PacketHeader(bool isEncrypted, bool isCompressed, int size, ushort checksum, long timestamp)
         {
             IsEncrypted = isEncrypted;
             IsCompressed = isCompressed;
-            HasTimestamp = timestamp != 0;
             Size = size;
             Checksum = checksum;
             Timestamp = timestamp;
@@ -31,7 +27,6 @@ namespace Portal.Core.DataModel
         {
             IsEncrypted = isEncrypted;
             IsCompressed = isCompressed;
-            HasTimestamp = false;
             Size = size;
             Checksum = checksum;
         }
@@ -78,7 +73,6 @@ namespace Portal.Core.DataModel
             // adding flags 
             headerBytes.Add((byte)(Header.IsCompressed ? 1 : 0));
             headerBytes.Add((byte)(Header.IsEncrypted ? 1 : 0));
-            headerBytes.Add((byte)(Header.HasTimestamp ? 1 : 0));
 
             // adding checksum
             headerBytes.AddRange(BitConverter.GetBytes(Header.Checksum));
@@ -87,10 +81,7 @@ namespace Portal.Core.DataModel
             headerBytes.AddRange(BitConverter.GetBytes(Header.Size));
 
             // adding timestamp
-            if (Header.HasTimestamp)
-            {
-                headerBytes.AddRange(BitConverter.GetBytes(Header.Timestamp));
-            }
+            headerBytes.AddRange(BitConverter.GetBytes(Header.Timestamp));
 
             // combine header and data
             byte[] result = new byte[headerBytes.Count + Data.Length];
@@ -123,7 +114,6 @@ namespace Portal.Core.DataModel
             // read flags
             bool isCompressed = data[index++] == 1;
             bool isEncrypted = data[index++] == 1;
-            bool hasTimestamp = data[index++] == 1;
 
             // read checksum
             ushort checksum = BitConverter.ToUInt16(data, index);
@@ -134,12 +124,8 @@ namespace Portal.Core.DataModel
             index += 4;
 
             // read timestamp
-            long timestamp = 0;
-            if (hasTimestamp)
-            {
-                timestamp = BitConverter.ToInt64(data, index);
-                index += 8;
-            }
+            long timestamp = BitConverter.ToInt64(data, index);
+            index += 8;
 
             return new PacketHeader(isEncrypted, isCompressed, size, checksum, timestamp);
         }
