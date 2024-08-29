@@ -103,20 +103,7 @@ namespace Portal.Gh.Components.Utils
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Failed to decode. Data is corrupted.");
                 return;
             }
-
-            // if timestamp is added, calculate the elapsed time
-            if (packet.Header.HasTimestamp)
-            {
-                long currentTime = Helpers.GetTimestamp();
-                long elapse = currentTime - packet.Header.Timestamp;
-                Message = $"Updated: {elapse} ms";
-            }
-            else
-            {
-                Message = "";
-            }
             string txt = System.Text.Encoding.UTF8.GetString(data);
-
             DA.SetData(0, txt);
         }
     }

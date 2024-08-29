@@ -9,6 +9,7 @@ using Grasshopper.Kernel;
 using Portal.Core.Compression;
 using Portal.Core.DataModel;
 using Portal.Core.Encryption;
+using Portal.Core.Utils;
 
 namespace Portal.Gh.Params.Bytes
 {
@@ -21,11 +22,11 @@ namespace Portal.Gh.Params.Bytes
             Value = value;
         }
 
-        // convert string to bytes
-        public BytesGoo(string value)
-        {
-            Value = Encoding.UTF8.GetBytes(value);
-        }
+        //// convert string to bytes
+        //public BytesGoo(string value)
+        //{
+        //    Value = Encoding.UTF8.GetBytes(value);
+        //}
 
         public override IGH_Goo Duplicate()
         {
@@ -52,11 +53,6 @@ namespace Portal.Gh.Params.Bytes
                 if (header.IsEncrypted)
                 {
                     msg = $"AES({msg})";
-                }
-
-                if (header.HasTimestamp)
-                {
-                    msg = $"{msg} timestamped";
                 }
             }
             else
@@ -88,10 +84,13 @@ namespace Portal.Gh.Params.Bytes
 
         public override bool CastFrom(object source)
         {
-            
+
             if (GH_Convert.ToString(source, out var str, GH_Conversion.Primary))
             {
-                Value = Encoding.UTF8.GetBytes(str);
+                byte[] rawBytes = Encoding.UTF8.GetBytes(str);
+                ushort checksum = new Crc16().ComputeChecksum(rawBytes);
+                Packet packet = new Packet(rawBytes, false, false, checksum);
+                Value = packet.Serialize();
                 return true;
             }
 
