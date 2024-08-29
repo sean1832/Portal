@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Grasshopper.Kernel;
 using Portal.Core.Compression;
+using Portal.Core.DataModel;
 using Portal.Core.Encryption;
 
 namespace Portal.Gh.Params.Bytes
@@ -34,22 +35,55 @@ namespace Portal.Gh.Params.Bytes
         public override string ToString()
         {
             string msg;
-
-            if (Value.Length > 1024) // 1 KB
-                msg =  $"{Value.Length / 1024} KB";
-            else if (Value.Length > 1024*1024) // 1 MB
-                msg = $"{Value.Length / (1024*1024)} MB";
-            else
-                msg = $"{Value.Length} B"; // 1 B
-
-            if (GZip.IsGzipped(Value))
-                msg += " (gzip)";
-            if (Crypto.IsAesEncrypted(Value))
-            {
-                msg += " (aes)";
+            if (Value != null && Value.Length != 0) {
+                msg = FormatByteSize(Value.Length);
+            } else {
+                msg = "0 B";
+                return msg;
             }
-                
+
+            PacketHeader header = Packet.DeserializeHeader(Value);
+            if (header != null)
+            {
+                if (header.IsCompressed)
+                {
+                    msg = $"gzip({msg})";
+                }
+                if (header.IsEncrypted)
+                {
+                    msg = $"AES({msg})";
+                }
+
+                if (header.HasTimestamp)
+                {
+                    msg = $"{msg} timestamped";
+                }
+            }
+            else
+            {
+                msg = $"Invalid header | {msg}";
+            }
             return msg;
+        }
+
+        private string FormatByteSize(int length)
+        {
+            var thresholds = new Dictionary<long, string>
+            {
+                { 1024 * 1024, "MB" },
+                { 1024, "KB" },
+                { 1, "B" }
+            };
+            foreach (var threshold in thresholds)
+            {
+                if (length >= threshold.Key)
+                {
+                    return $"{length / threshold.Key} {threshold.Value}";
+                }
+            }
+
+            // fallback to bytes
+            return $"{length} B";
         }
 
         public override bool CastFrom(object source)
