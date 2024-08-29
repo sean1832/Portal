@@ -8,20 +8,10 @@ namespace Portal.Core.DataModel
 
     public class PacketHeader
     {
-        public bool IsCompressed { get; }
-        public bool IsEncrypted { get; }
-        public int Size { get; }
-        public ushort Checksum { get; }
-        public long Timestamp { get; private set; }
-
-        public PacketHeader(bool isEncrypted, bool isCompressed, int size, ushort checksum, long timestamp)
-        {
-            IsEncrypted = isEncrypted;
-            IsCompressed = isCompressed;
-            Size = size;
-            Checksum = checksum;
-            Timestamp = timestamp;
-        }
+        public bool IsCompressed { get; } // 1 byte
+        public bool IsEncrypted { get; } // 1 byte
+        public int Size { get; } // 4 bytes
+        public ushort Checksum { get; } // 2 bytes
 
         public PacketHeader(bool isEncrypted, bool isCompressed, int size, ushort checksum)
         {
@@ -31,10 +21,6 @@ namespace Portal.Core.DataModel
             Checksum = checksum;
         }
 
-        public void UpdateTimestamp(long timestamp)
-        {
-            Timestamp = timestamp;
-        }
     }
 
     public class Packet
@@ -42,16 +28,10 @@ namespace Portal.Core.DataModel
         public byte[] Data { get; }
         public PacketHeader Header { get; }
 
-        public Packet(byte[] data, int size, ushort checksum, long timestamp, bool isEncrypted, bool isCompressed)
+        public Packet(byte[] data, int size, ushort checksum, bool isEncrypted, bool isCompressed)
         {
             Data = data;
-            Header = new PacketHeader(isEncrypted, isCompressed, size, checksum, timestamp);
-        }
-
-        public Packet(byte[] data, bool isEncrypted, bool isCompressed, long timestamp, ushort checksum)
-        {
-            Data = data;
-            Header = new PacketHeader(isEncrypted, isCompressed, data.Length, checksum, timestamp);
+            Header = new PacketHeader(isEncrypted, isCompressed, size, checksum);
         }
 
         public Packet(byte[] data, bool isEncrypted, bool isCompressed, ushort checksum)
@@ -79,9 +59,6 @@ namespace Portal.Core.DataModel
 
             // adding size
             headerBytes.AddRange(BitConverter.GetBytes(Header.Size));
-
-            // adding timestamp
-            headerBytes.AddRange(BitConverter.GetBytes(Header.Timestamp));
 
             // combine header and data
             byte[] result = new byte[headerBytes.Count + Data.Length];
@@ -123,11 +100,7 @@ namespace Portal.Core.DataModel
             int size = BitConverter.ToInt32(data, index);
             index += 4;
 
-            // read timestamp
-            long timestamp = BitConverter.ToInt64(data, index);
-            index += 8;
-
-            return new PacketHeader(isEncrypted, isCompressed, size, checksum, timestamp);
+            return new PacketHeader(isEncrypted, isCompressed, size, checksum);
         }
 
         public static PacketHeader DeserializeHeader(byte[] data)
