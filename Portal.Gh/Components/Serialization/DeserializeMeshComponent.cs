@@ -59,7 +59,10 @@ namespace Portal.Gh.Components.Serialization
             List<Mesh> meshes = new List<Mesh>();
 
             List<PMesh> dataMeshes = JsonConvert.DeserializeObject<List<PMesh>>(data);
-
+            if (dataMeshes == null || dataMeshes.Count == 0)
+            {
+                return meshes;
+            }
             foreach (var dataMesh in dataMeshes)
             {
                 Mesh mesh = new Mesh();
