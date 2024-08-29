@@ -28,7 +28,7 @@ namespace Portal.Gh.Components.Utils
         public override GH_Exposure Exposure => GH_Exposure.tertiary;
         public override IEnumerable<string> Keywords => new string[] { "toBytes" };
         protected override Bitmap Icon => Icons.Encode;
-        public override Guid ComponentGuid => new Guid("01a51d94-51ea-49b8-a6ea-194dc9911c11");
+        public override Guid ComponentGuid => new Guid("3d414461-a9e7-4383-b64a-eeb7af53d8d0");
 
         #endregion
 
@@ -40,8 +40,6 @@ namespace Portal.Gh.Components.Utils
             pManager.AddTextParameter("Password", "Pass", "(Optional) Encrypt bytes with a password", GH_ParamAccess.item);
             pManager.AddBooleanParameter("Compress", "Zip", "(Optional) Compress the bytes with Gzip", GH_ParamAccess.item,
                 false);
-            pManager.AddBooleanParameter("Timestamp", "time", "(Optional) Add a timestamp to header to calculate elapse",
-                GH_ParamAccess.item, false);
             pManager[1].Optional = true;
         }
 
@@ -57,12 +55,10 @@ namespace Portal.Gh.Components.Utils
             string txt = null;
             string password = null;
             bool isCompress = false;
-            bool hasTimestamp = false;
 
             if (!DA.GetData(0, ref txt)) return;
             DA.GetData(1, ref password);
             DA.GetData(2, ref isCompress);
-            DA.GetData(3, ref hasTimestamp);
 
             bool isEncrypted = !string.IsNullOrEmpty(password);
 
@@ -94,15 +90,7 @@ namespace Portal.Gh.Components.Utils
             }
 
             // Creating a packet with an optional timestamp
-            Packet packet;
-            if (hasTimestamp)
-            {
-                packet = new Packet(payload, isEncrypted, isCompress, Helpers.GetTimestamp(), checksum);
-            }
-            else
-            {
-                packet = new Packet(payload, isEncrypted, isCompress, checksum);
-            }
+            var packet = new Packet(payload, isEncrypted, isCompress, checksum);
 
             BytesGoo bytesGoo = new BytesGoo(packet.Serialize());
             DA.SetData(0, bytesGoo);
