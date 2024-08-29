@@ -45,17 +45,33 @@ https://github.com/user-attachments/assets/070eb40c-2fe2-4cb2-8e6d-64786fcd9897
 Portal supports various communication methods, each with its own strengths and drawbacks. The choice of method depends on the specific requirements of your workflow, such as speed, reliability, and whether the communication is local or remote.
 > ⭐ Recommended methods for most use cases.
 
-| Method             | Speed | Reliability | Remote | Streamable | Description                                                                                                                                                                               |
-| ------------------ | ----- | ----------- | ------ | ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| ⭐WebSockets         | 5/10  | 9/10        | ✅      | ✅          | [Websockets](https://en.wikipedia.org/wiki/WebSocket#:~:text=WebSocket%20is%20a%20computer%20communications,as%20RFC%206455%20in%202011.) provide a stable connection capable of handling large payloads, ideal for large, content-critical data that requires cross-machine communication over a network, but can also support local communication, although not as efficiently as Named Pipes.                                                                                    |
-| UDP Sockets        | 6/10  | 7/10        | ✅      | ❌          | [UDP](https://en.wikipedia.org/wiki/User_Datagram_Protocol) offers fast, connectionless transmission, ideal for payloads under **1472 bytes** requiring quick, straightforward transmission without connection setup or integrity checks (e.g., sending small instructions), and supports cross-machine communication; however, it is [not suitable for payloads over 1472 bytes](https://stackoverflow.com/questions/1098897/what-is-the-largest-safe-udp-packet-size-on-the-internet) as data may become corrupted due to fragmentation.                                                                 |
-| ⭐Named Pipes        | 8/10  | 10/10       | ❌      | ✅          | [Named Pipes](https://en.wikipedia.org/wiki/Named_pipe) enable unidirectional communication through a pipe, suitable for fast, reliable, and ordered byte-stream-based data transfer. Limited to the local machine.                                                                                |
-| Memory Mapped File | 10/10 | 6/10        | ❌      | ❌          | [Memory-Mapped Files](https://en.wikipedia.org/wiki/Memory-mapped_file) map a portion of memory to the address space of a process for efficient inter-process communication, ideal for extremely fast read and write operations directly in shared memory; however, they are limited to the local machine and may cause data corruption, memory leaks, or program crashes if not handled properly. |
-| Local File I/O         | 1/10  | 2/10        | ❌      | ❌          | File I/O operations allow reading from and writing to files on a storage device, suitable for scenarios requiring persistent storage of data; however, they are limited to the local machine and can be slow compared to memory and network operations.                                                                                                |
+| Method             | Speed | Reliability | Remote | Streamable | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| ------------------ | ----- | ----------- | ------ | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| ⭐WebSockets        | 5/10  | 9/10        | ✅      | ✅          | [Websockets](https://en.wikipedia.org/wiki/WebSocket#:~:text=WebSocket%20is%20a%20computer%20communications,as%20RFC%206455%20in%202011.) provide a stable connection capable of handling large payloads, ideal for large, content-critical data that requires cross-machine communication over a network, but can also support local communication, although not as efficiently as Named Pipes.                                                                                                                                           |
+| UDP Sockets        | 6/10  | 7/10        | ✅      | ❌          | [UDP](https://en.wikipedia.org/wiki/User_Datagram_Protocol) offers fast, connectionless transmission, ideal for payloads under **1472 bytes** requiring quick, straightforward transmission without connection setup or integrity checks (e.g., sending small instructions), and supports cross-machine communication; however, it is [not suitable for payloads over 1472 bytes](https://stackoverflow.com/questions/1098897/what-is-the-largest-safe-udp-packet-size-on-the-internet) as data may become corrupted due to fragmentation. |
+| ⭐Named Pipes       | 8/10  | 10/10       | ❌      | ✅          | [Named Pipes](https://en.wikipedia.org/wiki/Named_pipe) enable unidirectional communication through a pipe, suitable for fast, reliable, and ordered byte-stream-based data transfer. Limited to the local machine.                                                                                                                                                                                                                                                                                                                        |
+| Memory Mapped File | 10/10 | 6/10        | ❌      | ❌          | [Memory-Mapped Files](https://en.wikipedia.org/wiki/Memory-mapped_file) map a portion of memory to the address space of a process for efficient inter-process communication, ideal for extremely fast read and write operations directly in shared memory; however, they are limited to the local machine and may cause data corruption, memory leaks, or program crashes if not handled properly.                                                                                                                                         |
+| Local File I/O     | 1/10  | 2/10        | ❌      | ❌          | File I/O operations allow reading from and writing to files on a storage device, suitable for scenarios requiring persistent storage of data; however, they are limited to the local machine and can be slow compared to memory and network operations.                                                                                                                                                                                                                                                                                    |
 
-## 📊 Data Structure and Model
 
-Portal uses a flexible data structure to facilitate communication between Grasshopper and external applications. Understanding this structure is crucial for effectively handling data transfer.
+## ⌛Example Workflow
+
+Here's an example of how you might send a mesh from Grasshopper to another application (e.g., Blender):
+
+1. In Grasshopper:
+   - Serialize the mesh into JSON
+   - Encode the JSON text into bytes
+   - Compress the bytes using GZip
+   - Send the compressed data via Named Pipe
+
+2. In the receiving application (e.g., Blender):
+   - Receive the compressed bytes
+   - Decompress the data
+   - Decode the bytes into a string
+   - Parse the JSON
+   - Deserialize and construct the mesh
+
+## ⚒️ For Developer
 
 ### Data Format
 
@@ -81,41 +97,17 @@ Portal provides JSON data models for various geometric entities. These models de
 - [Line Curve Model](/Example/data-model/line-curve.json)
 - [Nurbs Curve Model](/Example/data-model/nurbs-curve.json)
 
-### Custom Headers
-For local communication methods (Named Pipe, Memory Mapped File), Portal uses custom headers to structure the data. These headers help the receiver understand the data format, size and if it's changed from last transmission.
+### Headers
+Portal uses headers to identify properties of the data being sent. These headers are used to determine the type of data being sent, the compression status, and other relevant information.
 
-#### Named Pipe Headers
-```
-[4B: int32 size] [payload]
-```
-- The first 4 bytes contain an `int32` value indicating the payload size. This prefix allows the receiver to allocate the correct memory buffer size for the incoming data.
-- The payload contains the actual data bytes.
+| Field        | type     | Size (bytes) | Description                                                              |
+| ------------ | -------- | ------------ | ------------------------------------------------------------------------ |
+| isCompressed | `bool`   | 1            | Compression flag                                                         |
+| isEncrypted  | `bool`   | 1            | Encryption flag                                                          |
+| CRC16        | `int16`  | 2            | [CRC-16 checksum](https://en.wikipedia.org/wiki/Cyclic_redundancy_check) |
+| size         | `int32`  | 4            | Payload size                                                             |
+| payload      | `byte[]` | Variable     | Data payload                                                             |
 
-
-#### Memory Mapped File Headers
-```
-[16B: byte[] md5] [4B: int32 size] [payload]
-```
-- The first 16 bytes contain a `byte[]` of [MD5 checksum](https://en.wikipedia.org/wiki/MD5) of the payload data. This hash is used to verify data integrity and detect changes.
-- The next 4 bytes contain an `int32` value indicating the payload size.
-- The payload contains the actual data bytes.
-
-### Example Workflow
-
-Here's an example of how you might send a mesh from Grasshopper to another application (e.g., Blender):
-
-1. In Grasshopper:
-   - Serialize the mesh into JSON
-   - Encode the JSON text into bytes
-   - Compress the bytes using GZip
-   - Send the compressed data via Named Pipe
-
-2. In the receiving application (e.g., Blender):
-   - Receive the compressed bytes
-   - Decompress the data
-   - Decode the bytes into a string
-   - Parse the JSON
-   - Deserialize and construct the mesh
 
 ## 🚀 Code Examples
 
@@ -135,6 +127,3 @@ Portal is licensed under the Apache License 2.0. See the [LICENSE](LICENSE) for 
 
 If you encounter any issues or have questions, please file an issue on the GitHub repository.
 
----
-
-Made with ❤️ by [Zeke Zhang](https://github.com/sean1832)
