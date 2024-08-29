@@ -7,6 +7,7 @@ using System.Drawing;
 using System.IO;
 using System.IO.MemoryMappedFiles;
 using System.Text;
+using Portal.Core.DataModel;
 using Portal.Core.SharedMemory;
 using Portal.Gh.Common;
 using Portal.Gh.Params.Bytes;
@@ -81,19 +82,14 @@ namespace Portal.Gh.Components.Local
         private byte[] ReadFromMemory(string name)
         {
             using var smm = new SharedMemoryManager(name);
-            byte[] hash = smm.ReadRange(0, 16);
-            if (_lastHash != null && _lastHash == hash)
-            {
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Remark, "No new data is read.");
-                return _lastReadMessage;
-            }
-            _lastHash = hash;
-            byte[] lengthBuffer = smm.ReadRange(16, 4);
-            int dataLength = BitConverter.ToInt32(lengthBuffer, 0);
+            int headerSize = 8;
+            byte[] headerBytes = smm.ReadRange(0, headerSize);
+            PacketHeader header = Packet.DeserializeHeader(headerBytes);
+            int dataLength = header.Size;
             if (dataLength > 0)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Remark, $"Data Read. length: {dataLength}, mmf_name: '{name}'");
-                byte[] data = smm.ReadRange(20, dataLength);
+                byte[] data = smm.ReadRange(0, dataLength + headerSize);
                 return data;
             }
             AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "0 byte is read.");
