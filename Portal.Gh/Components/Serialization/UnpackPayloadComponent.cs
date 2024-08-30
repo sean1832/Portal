@@ -54,21 +54,49 @@ namespace Portal.Gh.Components.Serialization
 
             if (!DA.GetData(0, ref data)) return;
 
-            var payload = UnpackPayload(data);
+            if (!TryParseJson(data, out JArray jArray))
+            {
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Not a JSON Array.");
+                return;
+            }
+
+            var payload = UnpackPayload(jArray);
 
             DA.SetDataList(0, payload.Item1);
             DA.SetDataList(1, payload.Item2);
         }
 
-        private (List<JsonDictGoo>, List<JsonDictGoo>) UnpackPayload(string json)
+        private bool TryParseJson(string strInput, out JArray jArray)
+        {
+            jArray = null;
+            strInput = strInput.Trim();
+
+            if ((strInput.StartsWith("[") && strInput.EndsWith("]")))
+            {
+                try
+                {
+                    jArray = JArray.Parse(strInput);
+                    return true;
+                }
+                catch (JsonReaderException)
+                {
+                    return false;
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
+            }
+            return false;
+        }
+
+        private (List<JsonDictGoo>, List<JsonDictGoo>) UnpackPayload(JArray jArray)
         {
             var dataList = new List<JsonDictGoo>();
             var metaList = new List<JsonDictGoo>();
 
             try
             {
-                var jArray = JArray.Parse(json);
-
                 foreach (var item in jArray)
                 {
                     var dataObj = item["Data"] as JObject;
@@ -90,7 +118,7 @@ namespace Portal.Gh.Components.Serialization
             catch (Exception ex)
             {
                 // Handle parsing error
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, $"Error parsing JSON: {ex.Message}");
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, $"Error processing JSON:\n {ex.Message}");
             }
 
             return (dataList, metaList);
