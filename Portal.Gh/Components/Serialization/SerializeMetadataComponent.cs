@@ -18,13 +18,13 @@ namespace Portal.Gh.Components.Serialization
         public SerializeMetadataComponent()
             : base("Serialize Metadata", "SrMeta",
                 "Serialize payload metadata as JSON objects. This data should be pack as payload using `Pack Payload` before send over communication pipeline for data exchange.",
-                Config.Category, Config.SubCat.Utils)
+                Config.Category, Config.SubCat.Serialization)
         {
             Instances.DocumentServer.DocumentRemoved += OnDocumentClose;
         }
 
         // Metadata
-        public override GH_Exposure Exposure => GH_Exposure.primary;
+        public override GH_Exposure Exposure => GH_Exposure.septenary;
         public override IEnumerable<string> Keywords => new string[] { };
         protected override Bitmap Icon => null;
         public override Guid ComponentGuid => new Guid("c9c8fc38-4ce3-4b71-af1d-8497c9763cd0");
