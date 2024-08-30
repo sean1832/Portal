@@ -75,17 +75,21 @@ namespace Portal.Core.NamedPipe
             {
                 _receivedBehaviour.ProcessData(_server, _onMessageReceived, _onError);
             }
+            catch (ObjectDisposedException e)
+            {
+                // Ignore ObjectDisposedException
+            }
             catch (Exception e)
             {
                 _onError?.Invoke(e);
             }
             finally
             {
-                if (_isServerRunning && !_disposed && _server.IsConnected)
+                if (_isServerRunning && !_disposed)
                 {
                     try
                     {
-                        // Restart listening for new connection only if the server is still running, not disposed, and connected
+                        // Restart listening for new connection only if the server is still running and not disposed
                         _server.BeginWaitForConnection(new AsyncCallback(ConnectCallback), ar.AsyncState);
                     }
                     catch (Exception e)
