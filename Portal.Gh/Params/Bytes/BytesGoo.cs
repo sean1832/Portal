@@ -10,55 +10,78 @@ using Portal.Core.Compression;
 using Portal.Core.DataModel;
 using Portal.Core.Encryption;
 using Portal.Core.Utils;
+using Newtonsoft.Json.Linq;
 
 namespace Portal.Gh.Params.Bytes
 {
     public class BytesGoo : GH_Goo<byte[]>
     {
-        public BytesGoo() { }
+        private bool _headerIsValid = true;
+        private PacketHeader _header;
+
+        public BytesGoo()
+        {
+        }
 
         public BytesGoo(byte[] value)
         {
             Value = value;
+            ProcessHeader();
         }
 
-        //// convert string to bytes
-        //public BytesGoo(string value)
-        //{
-        //    Value = Encoding.UTF8.GetBytes(value);
-        //}
+        private void ProcessHeader()
+        {
+            if (Value == null || Value.Length == 0)
+            {
+                _headerIsValid = false;
+                return;
+            }
+
+            try
+            {
+                Packet.ValidateMagicNumber(Value);
+                _header = Packet.DeserializeHeader(Value, 2);
+                _headerIsValid = _header != null;
+            }
+            catch (Exception)
+            {
+                _headerIsValid = false;
+            }
+        }
+
 
         public override IGH_Goo Duplicate()
         {
-            return new BytesGoo(Value);
+            var cloned = new BytesGoo(Value);
+            cloned._headerIsValid = _headerIsValid; // Ensure the validity flag is copied
+            return cloned;
         }
 
         public override string ToString()
         {
-            string msg;
-            if (Value != null && Value.Length != 0) {
-                msg = FormatByteSize(Value.Length);
-            } else {
-                msg = "0 B";
-                return msg;
+            if (Value == null || Value.Length == 0)
+            {
+                return "0 B";
             }
 
-            PacketHeader header = Packet.DeserializeHeader(Value);
-            if (header != null)
+            string msg = FormatByteSize(Value.Length);
+
+            if (!_headerIsValid)
             {
-                if (header.IsCompressed)
-                {
-                    msg = $"gzip({msg})";
-                }
-                if (header.IsEncrypted)
-                {
-                    msg = $"AES({msg})";
-                }
+                return $"Invalid header | {msg}";
             }
-            else
+
+            // re-read the header
+            if (_header.IsCompressed)
             {
-                msg = $"Invalid header | {msg}";
+                msg = $"gzip({msg})";
             }
+
+            if (_header.IsEncrypted)
+            {
+                msg = $"AES({msg})";
+            }
+
             return msg;
         }
 
@@ -87,17 +110,30 @@ namespace Portal.Gh.Params.Bytes
 
             if (GH_Convert.ToString(source, out var str, GH_Conversion.Primary))
             {
-                byte[] rawBytes = Encoding.UTF8.GetBytes(str);
-                ushort checksum = new Crc16().ComputeChecksum(rawBytes);
-                Packet packet = new Packet(rawBytes, false, false, checksum);
-                Value = packet.Serialize();
+                try
+                {
+                    byte[] rawBytes = Encoding.UTF8.GetBytes(str);
+                    Packet packet = new Packet(rawBytes, false, false, new Crc16().ComputeChecksum(rawBytes));
+                    Value = packet.Serialize();
+                    _headerIsValid = true;
+                }
+                catch (Exception e)
+                {
+                    _headerIsValid = false;
+                }
+                
                 return true;
             }
 
             return false;
         }
 
-        public override bool IsValid => Value != null;
+        
+        public override bool IsValid
+        {
+            get { return Value != null && _headerIsValid; }
+        }
+
         public override string TypeName => "Bytes";
         public override string TypeDescription => "Represents a bytes array";
     }

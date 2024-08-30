@@ -63,8 +63,7 @@ namespace Portal.Gh.Components.Utils
             bool isEncrypted = !string.IsNullOrEmpty(password);
 
             byte[] payload = Encoding.UTF8.GetBytes(txt);
-            Crc16 crc16 = new Crc16();
-            ushort checksum = crc16.ComputeChecksum(payload);
+            ushort checksum = new Crc16().ComputeChecksum(payload);
 
             // compression
             if (isCompress)

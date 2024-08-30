@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.IO.Pipes;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -12,29 +13,50 @@ namespace Portal.Gh.Components.Local.Behaviour
 {
     internal class NamedPipeServerReceivedBehaviour: IReceivedBehaviour<NamedPipeServerStream>
     {
+        private bool TryReadFull(NamedPipeServerStream stream, byte[] buffer, int offset, int count)
+        {
+            int bytesRead = 0;
+            while (bytesRead < count)
+            {
+                int read = stream.Read(buffer, offset + bytesRead, count - bytesRead);
+                if (read == 0)
+                {
+                    // No more data available at this moment
+                    return false;
+                }
+                bytesRead += read;
+            }
+            return true;
+        }
+
+
         public void ProcessData(NamedPipeServerStream server, Action<byte[]> onMessageReceived, Action<Exception> onError)
         {
             try
             {
                 while (server.IsConnected)
                 {
-                    //// Read the length of the message
-                    //byte[] lengthBuffer = new byte[4];
-                    //int bytesRead = server.Read(lengthBuffer, 0, lengthBuffer.Length);
-                    //if (bytesRead == 0)
-                    //{
-                    //    break; // End of stream
-                    //}
-                    //int dataLength = BitConverter.ToInt32(lengthBuffer, 0);
+                    // Read the magic number
+                    byte[] magicNumberBuffer = new byte[Packet.MagicNumber.Length];
+                    if (!TryReadFull(server, magicNumberBuffer, 0, magicNumberBuffer.Length))
+                        break;  // Exit stream if no more data
 
-                    // read the header
-                    int headerLength = 8;
-                    byte[] headerBuffer = new byte[headerLength];
-                    int bytesRead = server.Read(headerBuffer, 0, headerBuffer.Length);
-                    if (bytesRead == 0)
+                    // Validate the magic number
+                    for (int i = 0; i < magicNumberBuffer.Length; i++)
                     {
-                        break; // End of stream
+                        if (magicNumberBuffer[i] != Packet.MagicNumber[i])
+                        {
+                            throw new InvalidDataContractException("Invalid magic number");
+                        }
                     }
+
+                    // Read the header
+                    int headerLength = PacketHeader.GetExpectedSize();
+                    byte[] headerBuffer = new byte[headerLength];
+                    if (!TryReadFull(server, headerBuffer, 0, headerLength))
+                        break;  // Exit stream if no more data
+
+                    // Deserialize the header
                     PacketHeader header = Packet.DeserializeHeader(headerBuffer);
                     if (header == null)
                     {
@@ -43,30 +65,19 @@ namespace Portal.Gh.Components.Local.Behaviour
                     int dataLength = header.Size;
 
                     // Read the data
-                    byte[] buffer = new byte[dataLength];
-                    int totalBytesRead = 0;
-                    while (totalBytesRead < dataLength)
-                    {
-                        bytesRead = server.Read(buffer, totalBytesRead, dataLength - totalBytesRead);
-                        if (bytesRead == 0)
-                        {
-                            break; // End of stream
-                        }
-                        totalBytesRead += bytesRead;
-                    }
+                    byte[] dataBuffer = new byte[dataLength];
+                    if (!TryReadFull(server, dataBuffer, 0, dataLength))
+                        break;  // Exit stream if no more data
 
-                    byte[] totalBuffer = new byte[dataLength + headerLength];
-                    Array.Copy(headerBuffer, totalBuffer, headerLength);
-                    Array.Copy(buffer, 0, totalBuffer, headerLength, dataLength);
+                    // Combine magic number, header and data into one buffer for the message
+                    byte[] totalBuffer = new byte[magicNumberBuffer.Length + headerBuffer.Length + dataBuffer.Length];
+                    Array.Copy(magicNumberBuffer, 0, totalBuffer, 0, magicNumberBuffer.Length);
+                    Array.Copy(headerBuffer, 0, totalBuffer, magicNumberBuffer.Length, headerBuffer.Length);
+                    Array.Copy(dataBuffer, 0, totalBuffer, magicNumberBuffer.Length + headerBuffer.Length, dataBuffer.Length);
+                    
 
-                    if (totalBytesRead == dataLength)
-                    {
-                        onMessageReceived?.Invoke(totalBuffer);
-                    }
-                    else
-                    {
-                        throw new Exception("Incomplete message received");
-                    }
+                    // Invoke the message received callback
+                    onMessageReceived?.Invoke(totalBuffer);
                 }
             }
             catch (Exception ex)
@@ -78,5 +89,6 @@ namespace Portal.Gh.Components.Local.Behaviour
                 server.Disconnect();
             }
         }
+
     }
 }
