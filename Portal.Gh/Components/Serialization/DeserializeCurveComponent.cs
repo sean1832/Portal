@@ -27,7 +27,7 @@ namespace Portal.Gh.Components.Serialization
         public override GH_Exposure Exposure => GH_Exposure.secondary;
         public override IEnumerable<string> Keywords => new string[] { "deserialize crv", "desrcrv" };
         protected override Bitmap Icon => Icons.DeserializeCurve;
-        public override Guid ComponentGuid => new Guid("4d71d088-84fe-48fe-9a42-8bd33c35f5b9");
+        public override Guid ComponentGuid => new Guid("4d7e374b-d447-42ab-82a5-09271e3dda67");
 
         #endregion
 
@@ -40,7 +40,7 @@ namespace Portal.Gh.Components.Serialization
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddCurveParameter("Curves", "crv", "Deserialized curves", GH_ParamAccess.list);
+            pManager.AddCurveParameter("Curves", "crv", "Deserialized curves", GH_ParamAccess.item);
         }
 
         #endregion
@@ -51,46 +51,40 @@ namespace Portal.Gh.Components.Serialization
 
             if (!DA.GetData(0, ref jsonData)) return;
 
-            DA.SetDataList(0, DeserializeCurve(jsonData));
+            var curve = DeserializeCurve(jsonData);
+            DA.SetData(0, curve);
         }
 
-        private List<Curve> DeserializeCurve(string jsonData)
+
+        private Curve DeserializeCurve(string jsonData)
         {
-            List<Curve> curves = new List<Curve>();
             var serializerSettings = new Newtonsoft.Json.JsonSerializerSettings();
             serializerSettings.Converters.Add(new PCurveConverterSettings());
-            
-            List<PCurve> pCurves = JsonConvert.DeserializeObject<List<PCurve>>(jsonData, serializerSettings);
 
-            foreach (var pCurve in pCurves)
+            PCurve pCurve = JsonConvert.DeserializeObject<PCurve>(jsonData, serializerSettings);
+
+            switch (pCurve)
             {
-                switch (pCurve)
-                {
-                    case PNurbsCurve nc:
-                        curves.Add(NurbsCurve.Create(
-                            nc is { IsPeriodic: true },
-                            nc.Degree,
-                            nc.Points.Select(point => new Point3d(point.X, point.Y, point.Z))
-                        ));
-                        break;
-                    case PLine lc:
-                        curves.Add(new LineCurve(
-                            new Point3d(lc.Points[0].X, lc.Points[0].Y, lc.Points[0].Z),
-                            new Point3d(lc.Points[1].X, lc.Points[1].Y, lc.Points[1].Z)
-                        ));
-                        break;
-                    case PPolylineCurve pc:
-                        curves.Add(new PolylineCurve(pc.Points.Select(point => new Point3d(point.X, point.Y, point.Z))));
-                        break;
-                    case PArcCurve arc:
-                        curves.Add(ConstructCurve(arc));
-                        break;
-                    default:
-                        throw new NotImplementedException($"Deserialization of {pCurve.Type} is not implemented");
-                }
+                case PNurbsCurve nc:
+                    return NurbsCurve.Create(
+                        nc is { IsPeriodic: true },
+                        nc.Degree,
+                        nc.Points.Select(point => new Point3d(point.X, point.Y, point.Z))
+                    );
+                case PLine lc:
+                    return new LineCurve(
+                        new Point3d(lc.Points[0].X, lc.Points[0].Y, lc.Points[0].Z),
+                        new Point3d(lc.Points[1].X, lc.Points[1].Y, lc.Points[1].Z)
+                    );
+                case PPolylineCurve pc:
+                    return new PolylineCurve(pc.Points.Select(point => new Point3d(point.X, point.Y, point.Z)));
+                case PArcCurve arc:
+                    return ConstructCurve(arc);
+                default:
+                    throw new NotImplementedException($"Deserialization of {pCurve.Type} is not implemented");
             }
-            return curves;
         }
+
 
         private ArcCurve ConstructCurve(PArcCurve curve)
         {

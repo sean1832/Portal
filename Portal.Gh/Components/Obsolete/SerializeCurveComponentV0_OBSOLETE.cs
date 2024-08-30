@@ -8,27 +8,25 @@ using System.Linq;
 using Newtonsoft.Json;
 using Portal.Core.DataModel;
 using Portal.Gh.Common;
-using Portal.Gh.Params.Json;
 using Circle = Rhino.Geometry.Circle;
-using System.Security.Cryptography;
 
 namespace Portal.Gh.Components.Serialization
 {
-    public class SerializeCurveComponent : GH_Component
+    public class SerializeCurveComponentV0_OBSOLETE : GH_Component
     {
         #region Metadata
 
-        public SerializeCurveComponent()
+        public SerializeCurveComponentV0_OBSOLETE()
             : base("Serialize Curve", "SrCrv",
-                "Serialize curves into a JSON representation. This data should be pack as payload using `Pack Payload` before send over communication pipeline for data exchange.",
+                "Serialize curves into a JSON representation. This data can be send over communication pipeline for data exchange.",
                 Config.Category, Config.SubCat.Serialization)
         {
         }
 
-        public override GH_Exposure Exposure => GH_Exposure.secondary;
+        public override GH_Exposure Exposure => GH_Exposure.hidden;
         public override IEnumerable<string> Keywords => new string[] { "serialize crv" };
         protected override Bitmap Icon => Icons.SerializeCurve;
-        public override Guid ComponentGuid => new Guid("d52f8a11-c326-4b31-b399-5fea8c9d3e95");
+        public override Guid ComponentGuid => new Guid("a82975a6-9d14-4fa0-90c2-57fd36b49ab6");
 
         #endregion
 
@@ -36,51 +34,54 @@ namespace Portal.Gh.Components.Serialization
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
-            pManager.AddCurveParameter("Curves", "crv", "Curve to serialize", GH_ParamAccess.item);
+            pManager.AddCurveParameter("Curves", "crv", "Curve to serialize", GH_ParamAccess.list);
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddParameter(new JsonDictParam(), "Json", "Json", "Serialized curve as JSON object", GH_ParamAccess.item);
+            pManager.AddTextParameter("Json data", "Json", "Serialized curve as JSON", GH_ParamAccess.item);
         }
 
         #endregion
 
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            Curve curves = null;
+            List<Curve> curves = new List<Curve>();
 
-            if (!DA.GetData(0, ref curves)) return;
+            if (!DA.GetDataList(0, curves)) return;
 
             DA.SetData(0, SerializeCurve(curves));
         }
 
-        private JsonDictGoo SerializeCurve(Curve curve)
+        private string SerializeCurve(List<Curve> curves)
         {
-            PCurve pCurve;
-            switch (curve)
+            List<PCurve> pCurves = new List<PCurve>();
+            foreach (var curve in curves)
             {
-                case NurbsCurve nc:
-                    pCurve = new PNurbsCurve(ConvertPVector3(nc), nc.IsPeriodic, nc.Degree);
-                    break;
-                case PolylineCurve pc:
-                    pCurve = new PPolylineCurve(ConvertPVector3(pc));
-                    break;
-                case LineCurve lc:
-                    pCurve = new PLine(ConvertPVector3(lc));
-                    break;
-                case ArcCurve arc:
-                    pCurve = ConvertPArcCurve(arc);
-                    break;
-                default:
-                    // default to nurbs curve
-                    NurbsCurve defaultNc = curve.ToNurbsCurve();
-                    pCurve = new PNurbsCurve(ConvertPVector3(defaultNc), defaultNc.IsPeriodic, defaultNc.Degree);
-                    break;
+                PCurve pCurve;
+                switch (curve)
+                {
+                    case NurbsCurve nc:
+                        pCurve = new PNurbsCurve(ConvertPVector3(nc), nc.IsPeriodic, nc.Degree);
+                        break;
+                    case PolylineCurve pc:
+                        pCurve = new PPolylineCurve(ConvertPVector3(pc));
+                        break;
+                    case LineCurve lc:
+                        pCurve = new PLine(ConvertPVector3(lc));
+                        break;
+                    case ArcCurve arc:
+                        pCurve = ConvertPArcCurve(arc);
+                        break;
+                    default:
+                        // default to nurbs curve
+                        NurbsCurve defaultNc = curve.ToNurbsCurve();
+                        pCurve = new PNurbsCurve(ConvertPVector3(defaultNc), defaultNc.IsPeriodic, defaultNc.Degree);
+                        break;
+                }
+                pCurves.Add(pCurve);
             }
-            string jsonString = JsonConvert.SerializeObject(pCurve);
-            JsonDict dict = JsonConvert.DeserializeObject<JsonDict>(jsonString);
-            return new JsonDictGoo(dict);
+            return JsonConvert.SerializeObject(pCurves);
         }
 
         private PArcCurve ConvertPArcCurve(ArcCurve arcCurve)

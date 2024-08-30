@@ -9,9 +9,13 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Security.Cryptography;
 using System.Text;
+using System.Windows.Forms;
+using GH_IO.Serialization;
 using Newtonsoft.Json;
 using Portal.Core.DataModel;
+using Portal.Gh.Params.Json;
 using Point = Rhino.Geometry.Point;
+using Rhino.Render.DataSources;
 
 namespace Portal.Gh.Components.Serialization
 {
@@ -21,7 +25,7 @@ namespace Portal.Gh.Components.Serialization
 
         public SerializePointComponent()
             : base("Serialize Points", "SrPt",
-                "Serialize points into a JSON representation. This data can be send over communication pipeline for data exchange.",
+                "Serialize points into a JSON representation. This data should be pack as payload using `Pack Payload` before send over communication pipeline for data exchange.",
                 Config.Category, Config.SubCat.Serialization)
         {
         }
@@ -29,7 +33,7 @@ namespace Portal.Gh.Components.Serialization
         public override GH_Exposure Exposure => GH_Exposure.primary;
         public override IEnumerable<string> Keywords => new string[] { };
         protected override Bitmap Icon => Icons.SerializePoint;
-        public override Guid ComponentGuid => new Guid("b29a2f0f-34a2-4207-a4ed-b597a803f7a3");
+        public override Guid ComponentGuid => new Guid("cacea36d-2987-4b63-8975-8d0f886e1454");
 
         #endregion
 
@@ -37,33 +41,30 @@ namespace Portal.Gh.Components.Serialization
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
-            pManager.AddPointParameter("Points", "Pts", "Points to serialize", GH_ParamAccess.list);
+            pManager.AddPointParameter("Points", "Pts", "Points to serialize", GH_ParamAccess.item);
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddTextParameter("JsonData", "Json", "Serialized curve as JSON", GH_ParamAccess.item);
+            pManager.AddParameter(new JsonDictParam(), "Json", "Json", "Serialized point as JSON object", GH_ParamAccess.item);
         }
 
         #endregion
 
+
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            List<Point3d> data = new List<Point3d>();
+            Point3d data = new Point3d();
 
-            if (!DA.GetDataList(0, data)) return;
+            if (!DA.GetData(0, ref data)) return;
 
-            DA.SetData(0, SerializePoints(data));
+            DA.SetData(0, SerializePoint(data));
         }
-
-        private string SerializePoints(List<Point3d> points)
+        private JsonDictGoo SerializePoint(Point3d point)
         {
-            List<PVector3D> pPoints = new List<PVector3D>();
-            foreach (var pt in points)
-            {
-                pPoints.Add(new PVector3D(pt.X, pt.Y, pt.Z));
-            }
-            return JsonConvert.SerializeObject(pPoints);
+            string jsonString = JsonConvert.SerializeObject(new PVector3D(point.X, point.Y, point.Z));
+            JsonDict dict = JsonConvert.DeserializeObject<JsonDict>(jsonString);
+            return new JsonDictGoo(dict);
         }
     }
 }
