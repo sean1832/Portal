@@ -22,7 +22,6 @@ namespace Portal.Gh.Components.Local
         public NamedPipeSenderComponent()
             : base("Pipe Sender", "<pipe>",
                 "Client that sends messages to a named pipe server.\n" +
-                "[4b: int32 size] [data]" +
                 "\n\nNamed Pipes:\n" +
                 "Provides reliable inter-process communication within the same machine, using stream-based data transfer. " +
                 "Named Pipes are highly reliable and suitable for complex data exchanges within a single local machine, " +
