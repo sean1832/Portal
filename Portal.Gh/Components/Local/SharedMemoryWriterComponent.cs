@@ -44,7 +44,7 @@ namespace Portal.Gh.Components.Local
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
-            pManager.AddTextParameter("Memory name", "name", "Unique identifier of a shared memory block", GH_ParamAccess.item);
+            pManager.AddTextParameter("Memory name", "Name", "Unique identifier of a shared memory block", GH_ParamAccess.item);
             pManager.AddParameter(new BytesParam(), "Bytes", "Bytes", "Message data in bytes to write to the shared memory block", GH_ParamAccess.item);
             pManager.AddBooleanParameter("Write", "Write", "Start writing the shared memory block", GH_ParamAccess.item);
         }
