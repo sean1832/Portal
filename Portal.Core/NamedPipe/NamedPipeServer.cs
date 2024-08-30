@@ -81,9 +81,17 @@ namespace Portal.Core.NamedPipe
             }
             finally
             {
-                if (_isServerRunning)
+                if (_isServerRunning && !_disposed && _server.IsConnected)
                 {
-                    _server.BeginWaitForConnection(new AsyncCallback(ConnectCallback), ar.AsyncState);
+                    try
+                    {
+                        // Restart listening for new connection only if the server is still running, not disposed, and connected
+                        _server.BeginWaitForConnection(new AsyncCallback(ConnectCallback), ar.AsyncState);
+                    }
+                    catch (Exception e)
+                    {
+                        _onError?.Invoke(e);
+                    }
                 }
             }
         }
