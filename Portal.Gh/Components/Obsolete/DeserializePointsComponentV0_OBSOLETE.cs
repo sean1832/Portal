@@ -10,23 +10,23 @@ using Newtonsoft.Json;
 using Portal.Core.DataModel;
 using Portal.Gh.Common;
 
-namespace Portal.Gh.Components.Serialization
+namespace Portal.Gh.Components.Obsolete
 {
-    public class DeserializePointsComponent : GH_Component
+    public class DeserializePointsComponentV0_OBSOLETE : GH_Component
     {
         #region Metadata
 
-        public DeserializePointsComponent()
+        public DeserializePointsComponentV0_OBSOLETE()
             : base("Deserialize Points", "DSrPt",
                 "Deserialize JSON string into points. This data can be read from communication pipeline for data exchange.",
                 Config.Category, Config.SubCat.Serialization)
         {
         }
 
-        public override GH_Exposure Exposure => GH_Exposure.primary;
+        public override GH_Exposure Exposure => GH_Exposure.hidden;
         public override IEnumerable<string> Keywords => new string[] { "desrpt" };
         protected override Bitmap Icon => Icons.DeserializePoint;
-        public override Guid ComponentGuid => new Guid("dbcd87fc-6aad-409f-b89b-f0c56fd9a376");
+        public override Guid ComponentGuid => new Guid("59607625-a1e4-4198-bae0-857bd4458258");
 
         #endregion
 
@@ -39,7 +39,7 @@ namespace Portal.Gh.Components.Serialization
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddPointParameter("Points", "Pts", "Deserialized points", GH_ParamAccess.item);
+            pManager.AddPointParameter("Points", "Pts", "Deserialized points", GH_ParamAccess.list);
         }
 
         #endregion
@@ -52,28 +52,31 @@ namespace Portal.Gh.Components.Serialization
 
             var points = DeserializePoints(data);
 
-            DA.SetData(0, points);
+            DA.SetDataList(0, points);
         }
 
-        private Point3d DeserializePoints(string data)
+        private List<Point3d> DeserializePoints(string data)
         {
             try
             {
-                dynamic pPoint = JsonConvert.DeserializeObject<dynamic>(data);
+                List<dynamic> pPoints = JsonConvert.DeserializeObject<List<dynamic>>(data);
+                List<Point3d> points = new List<Point3d>();
 
-                if (pPoint == null)
+                if (pPoints == null)
                 {
                     throw new JsonSerializationException("Data is null. Check JSON.");
                 }
 
-                if (!PVector3D.Validate(pPoint))
+                foreach (var pPt in pPoints)
                 {
-                    throw new JsonSerializationException("Deserialization resulted in invalid data. Check the JSON structure.");
+                    if (!PVector3D.Validate(pPt))
+                    {
+                        throw new JsonSerializationException("Deserialization resulted in invalid data. Check the JSON structure.");
+                    }
+                    points.Add(new Point3d(pPt.X, pPt.Y, pPt.Z));
                 }
 
-                Point3d point = new Point3d(pPoint.X, pPoint.Y, pPoint.Z);
-
-                return point;
+                return points;
             }
             catch (JsonSerializationException e)
             {
@@ -85,7 +88,7 @@ namespace Portal.Gh.Components.Serialization
             }
 
             // return empty list if deserialization fails
-            return new Point3d();
+            return new List<Point3d>();
         }
     }
 }

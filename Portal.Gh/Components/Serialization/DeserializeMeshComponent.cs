@@ -25,7 +25,7 @@ namespace Portal.Gh.Components.Serialization
         public override GH_Exposure Exposure => GH_Exposure.tertiary;
         public override IEnumerable<string> Keywords => new string[] { "desrmesh" };
         protected override Bitmap Icon => Icons.DeserializeMesh;
-        public override Guid ComponentGuid => new Guid("a96a0acf-54de-49cc-88d6-bf76b6844d5d");
+        public override Guid ComponentGuid => new Guid("202e2e4e-e3f6-40d5-8a5a-0b59c6ecb401");
 
         #endregion
 
@@ -38,7 +38,7 @@ namespace Portal.Gh.Components.Serialization
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddMeshParameter("Mesh", "M", "Deserialized mesh", GH_ParamAccess.list);
+            pManager.AddMeshParameter("Mesh", "M", "Deserialized mesh", GH_ParamAccess.item);
         }
 
         #endregion
@@ -49,36 +49,32 @@ namespace Portal.Gh.Components.Serialization
 
             if (!DA.GetData(0, ref data)) return;
 
-            var meshes = DeserializeMesh(data);
-
-            DA.SetDataList(0, meshes);
+            var mesh = DeserializeMesh(data);
+            DA.SetData(0, mesh);
         }
 
-        private List<Mesh> DeserializeMesh(string data)
+
+        private Mesh DeserializeMesh(string data)
         {
-            List<Mesh> meshes = new List<Mesh>();
-
-            List<PMesh> dataMeshes = JsonConvert.DeserializeObject<List<PMesh>>(data);
-            if (dataMeshes == null || dataMeshes.Count == 0)
+            PMesh dataMesh = JsonConvert.DeserializeObject<PMesh>(data);
+            if (dataMesh == null)
             {
-                return meshes;
-            }
-            foreach (var dataMesh in dataMeshes)
-            {
-                Mesh mesh = new Mesh();
-                mesh.Vertices.AddVertices(dataMesh.Vertices.Select(vertex => new Point3d(vertex.X, vertex.Y, vertex.Z)));
-                mesh.Faces.AddFaces(dataMesh.Faces.Select(face => new MeshFace(face[0], face[1], face[2], face[3])).ToArray());
-                foreach (var hexColor in dataMesh.VertexColors)
-                {
-                    PColor pColor = PColor.FromHexColor(hexColor);
-                    mesh.VertexColors.Add(pColor.R, pColor.G, pColor.B);
-                }
-                mesh.Normals.ComputeNormals();
-                mesh.FaceNormals.ComputeFaceNormals();
-                meshes.Add(mesh);
+                throw new InvalidOperationException("No meshes found in the JSON data.");
             }
 
-            return meshes;
+            Mesh mesh = new Mesh();
+            mesh.Vertices.AddVertices(dataMesh.Vertices.Select(vertex => new Point3d(vertex.X, vertex.Y, vertex.Z)));
+            mesh.Faces.AddFaces(dataMesh.Faces.Select(face => new MeshFace(face[0], face[1], face[2], face[3])).ToArray());
+            foreach (var hexColor in dataMesh.VertexColors)
+            {
+                PColor pColor = PColor.FromHexColor(hexColor);
+                mesh.VertexColors.Add(pColor.R, pColor.G, pColor.B);
+            }
+            mesh.Normals.ComputeNormals();
+            mesh.FaceNormals.ComputeFaceNormals();
+
+            return mesh;
         }
+
     }
 }
