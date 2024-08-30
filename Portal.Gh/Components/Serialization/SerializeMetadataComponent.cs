@@ -26,7 +26,7 @@ namespace Portal.Gh.Components.Serialization
         // Metadata
         public override GH_Exposure Exposure => GH_Exposure.septenary;
         public override IEnumerable<string> Keywords => new string[] { };
-        protected override Bitmap Icon => null;
+        protected override Bitmap Icon => Icons.SerializeMeta;
         public override Guid ComponentGuid => new Guid("c9c8fc38-4ce3-4b71-af1d-8497c9763cd0");
 
         // IO
