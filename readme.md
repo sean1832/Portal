@@ -102,12 +102,12 @@ Portal uses headers to identify properties of the data being sent. These headers
 
 | Field        | type     | Size (bytes) | Description                                                              |
 | ------------ | -------- | ------------ | ------------------------------------------------------------------------ |
+| MagicNumber  | `byte[]` | 2            | Header identifier. Value: `0x70, 0x6b` (ASCII: `pk`)                     |
 | isCompressed | `bool`   | 1            | Compression flag                                                         |
 | isEncrypted  | `bool`   | 1            | Encryption flag                                                          |
 | CRC16        | `int16`  | 2            | [CRC-16 checksum](https://en.wikipedia.org/wiki/Cyclic_redundancy_check) |
 | size         | `int32`  | 4            | Payload size                                                             |
-| payload      | `byte[]` | Variable     | Data payload                                                             |
-
+| **Total**    |          | **10**       | **Total header size**                                                    |
 
 ## 🚀 Code Examples
 
