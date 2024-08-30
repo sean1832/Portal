@@ -23,7 +23,6 @@ namespace Portal.Gh.Components.Local
         public SharedMemoryReaderComponent()
             : base("Shared Memory Reader", ">MMF<",
                 "Reads data once from a shared memory block.\n" +
-                "[16b: byte[] md5] [4b: int32 size] [data]" +
                 "\n\nShared Memory:\n" +
                 "Enables the fastest data exchange possible by allowing direct access to a common " +
                 "memory block between processes on the same machine. This method is unmatched in speed " +
