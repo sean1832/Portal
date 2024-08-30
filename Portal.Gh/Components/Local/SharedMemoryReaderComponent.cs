@@ -82,14 +82,26 @@ namespace Portal.Gh.Components.Local
         private byte[] ReadFromMemory(string name)
         {
             using var smm = new SharedMemoryManager(name);
-            int headerSize = 8;
-            byte[] headerBytes = smm.ReadRange(0, headerSize);
+            // validate signature
+            byte[] signature = smm.ReadRange(0, 2);
+            try
+            {
+                Packet.ValidateMagicNumber(signature);
+            }
+            catch (Exception e)
+            {
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, e.Message);
+                return Array.Empty<byte>();
+            }
+            
+            int headerSize = PacketHeader.GetExpectedSize();
+            byte[] headerBytes = smm.ReadRange(2, headerSize); // skip signature
             PacketHeader header = Packet.DeserializeHeader(headerBytes);
             int dataLength = header.Size;
             if (dataLength > 0)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Remark, $"Data Read. length: {dataLength}, mmf_name: '{name}'");
-                byte[] data = smm.ReadRange(0, dataLength + headerSize);
+                byte[] data = smm.ReadRange(0, dataLength + headerSize + 2);
                 return data;
             }
             AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "0 byte is read.");
