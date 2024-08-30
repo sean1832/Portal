@@ -24,7 +24,6 @@ namespace Portal.Gh.Components.Local
         public SharedMemoryWriterComponent()
             : base("Shared Memory Writer", "<MMF>",
                 "Writes data to a shared memory block.\n" +
-                "[16b: byte[] md5] [4b: int32 size] [data]" +
                 "\n\nShared Memory:\n" +
                 "Enables the fastest data exchange possible by allowing direct access to a common " +
                 "memory block between processes on the same machine. This method is unmatched in speed " +
@@ -45,7 +44,7 @@ namespace Portal.Gh.Components.Local
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
-            pManager.AddTextParameter("Memory name", "name", "Unique identifier of a shared memory block", GH_ParamAccess.item);
+            pManager.AddTextParameter("Memory name", "Name", "Unique identifier of a shared memory block", GH_ParamAccess.item);
             pManager.AddParameter(new BytesParam(), "Bytes", "Bytes", "Message data in bytes to write to the shared memory block", GH_ParamAccess.item);
             pManager.AddBooleanParameter("Write", "Write", "Start writing the shared memory block", GH_ParamAccess.item);
         }

@@ -26,7 +26,7 @@ namespace Portal.Gh.Components.Utils
         }
 
         public override GH_Exposure Exposure => GH_Exposure.tertiary;
-        public override IEnumerable<string> Keywords => new string[] { "fromBytes" };
+        public override IEnumerable<string> Keywords => new string[] { "fromBytes", "decode bytes" };
         protected override Bitmap Icon => Icons.Decode;
         public override Guid ComponentGuid => new Guid("54513217-ed11-4cf7-af69-f0b878432f6c");
 
@@ -57,6 +57,12 @@ namespace Portal.Gh.Components.Utils
 
             if (!DA.GetData(0, ref bytesGoo)) return;
             DA.GetData(1, ref password);
+
+            if (!bytesGoo.IsValid)
+            {
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Failed to decode. Input invalid input bytes.");
+                return;
+            }
 
             byte[] rawData = bytesGoo.Value;
             if (rawData == null || rawData.Length == 0) return;

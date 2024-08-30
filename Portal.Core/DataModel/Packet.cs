@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Runtime.CompilerServices;
 using Portal.Core.Encryption;
 using Portal.Core.Utils;
 
@@ -21,12 +23,22 @@ namespace Portal.Core.DataModel
             Checksum = checksum;
         }
 
+        public static int GetExpectedSize()
+        {
+            int result = 0;
+            result += sizeof(bool); // isCompressed
+            result += sizeof(bool); // isEncrypted
+            result += sizeof(int); // size
+            result += sizeof(ushort); // checksum
+            return result;
+        }
     }
 
     public class Packet
     {
         public byte[] Data { get; }
         public PacketHeader Header { get; }
+        public static readonly byte[] MagicNumber = { 0x70, 0x6b }; // pk
 
         public Packet(byte[] data, int size, ushort checksum, bool isEncrypted, bool isCompressed)
         {
@@ -50,6 +62,9 @@ namespace Portal.Core.DataModel
         {
             List<byte> headerBytes = new List<byte>();
 
+            // adding magic number
+            headerBytes.AddRange(MagicNumber);
+
             // adding flags 
             headerBytes.Add((byte)(Header.IsCompressed ? 1 : 0));
             headerBytes.Add((byte)(Header.IsEncrypted ? 1 : 0));
@@ -68,9 +83,29 @@ namespace Portal.Core.DataModel
             return result;
         }
 
+        public static void ValidateMagicNumber(byte[] data)
+        {
+            // minimum size of a packet is the magic number and the header
+            if (data.Length < MagicNumber.Length)
+            {
+                throw new InvalidDataException("Data is too short to be a valid packet");
+            }
+
+            // check magic number
+            for (int i = 0; i < MagicNumber.Length; i++)
+            {
+                if (data[i] != MagicNumber[i])
+                {
+                    throw new InvalidDataException("Data does not contain the magic number");
+                }
+            }
+        }
+
         public static Packet Deserialize(byte[] data)
         {
-            PacketHeader header = DeserializeHeader(data, out var index);
+            ValidateMagicNumber(data);
+            int index = MagicNumber.Length; // start after magic number
+            PacketHeader header = DeserializeHeader(data, ref index);
 
             byte[] payloadData = new byte[header.Size];
             Array.Copy(data, index, payloadData, 0, header.Size);
@@ -79,15 +114,8 @@ namespace Portal.Core.DataModel
             return packet;
         }
 
-        public static PacketHeader DeserializeHeader(byte[] data, out int index)
+        public static PacketHeader DeserializeHeader(byte[] data, ref int index)
         {
-            
-            index = 0;
-            if (data.Length == 0)
-            {
-                return null;
-            }
-
             // read flags
             bool isCompressed = data[index++] == 1;
             bool isEncrypted = data[index++] == 1;
@@ -103,9 +131,9 @@ namespace Portal.Core.DataModel
             return new PacketHeader(isEncrypted, isCompressed, size, checksum);
         }
 
-        public static PacketHeader DeserializeHeader(byte[] data)
+        public static PacketHeader DeserializeHeader(byte[] data, int startIndex = 0)
         {
-            return DeserializeHeader(data, out _);
+            return DeserializeHeader(data, ref startIndex);
         }
     }
 }

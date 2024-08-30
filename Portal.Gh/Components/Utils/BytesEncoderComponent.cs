@@ -26,7 +26,7 @@ namespace Portal.Gh.Components.Utils
         }
 
         public override GH_Exposure Exposure => GH_Exposure.tertiary;
-        public override IEnumerable<string> Keywords => new string[] { "toBytes" };
+        public override IEnumerable<string> Keywords => new string[] { "toBytes", "encode bytes" };
         protected override Bitmap Icon => Icons.Encode;
         public override Guid ComponentGuid => new Guid("3d414461-a9e7-4383-b64a-eeb7af53d8d0");
 
@@ -63,8 +63,7 @@ namespace Portal.Gh.Components.Utils
             bool isEncrypted = !string.IsNullOrEmpty(password);
 
             byte[] payload = Encoding.UTF8.GetBytes(txt);
-            Crc16 crc16 = new Crc16();
-            ushort checksum = crc16.ComputeChecksum(payload);
+            ushort checksum = new Crc16().ComputeChecksum(payload);
 
             // compression
             if (isCompress)

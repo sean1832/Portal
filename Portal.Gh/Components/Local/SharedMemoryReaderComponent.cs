@@ -23,7 +23,6 @@ namespace Portal.Gh.Components.Local
         public SharedMemoryReaderComponent()
             : base("Shared Memory Reader", ">MMF<",
                 "Reads data once from a shared memory block.\n" +
-                "[16b: byte[] md5] [4b: int32 size] [data]" +
                 "\n\nShared Memory:\n" +
                 "Enables the fastest data exchange possible by allowing direct access to a common " +
                 "memory block between processes on the same machine. This method is unmatched in speed " +
@@ -43,7 +42,7 @@ namespace Portal.Gh.Components.Local
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
-            pManager.AddTextParameter("Memory name", "name", "Unique identifier of a shared memory block", GH_ParamAccess.item);
+            pManager.AddTextParameter("Memory name", "Name", "Unique identifier of a shared memory block", GH_ParamAccess.item);
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
@@ -82,14 +81,26 @@ namespace Portal.Gh.Components.Local
         private byte[] ReadFromMemory(string name)
         {
             using var smm = new SharedMemoryManager(name);
-            int headerSize = 8;
-            byte[] headerBytes = smm.ReadRange(0, headerSize);
+            // validate signature
+            byte[] signature = smm.ReadRange(0, 2);
+            try
+            {
+                Packet.ValidateMagicNumber(signature);
+            }
+            catch (Exception e)
+            {
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, e.Message);
+                return Array.Empty<byte>();
+            }
+            
+            int headerSize = PacketHeader.GetExpectedSize();
+            byte[] headerBytes = smm.ReadRange(2, headerSize); // skip signature
             PacketHeader header = Packet.DeserializeHeader(headerBytes);
             int dataLength = header.Size;
             if (dataLength > 0)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Remark, $"Data Read. length: {dataLength}, mmf_name: '{name}'");
-                byte[] data = smm.ReadRange(0, dataLength + headerSize);
+                byte[] data = smm.ReadRange(0, dataLength + headerSize + 2);
                 return data;
             }
             AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "0 byte is read.");
