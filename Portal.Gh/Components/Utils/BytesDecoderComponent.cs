@@ -6,7 +6,9 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Security.Cryptography;
 using Portal.Core.Compression;
+using Portal.Core.DataModel;
 using Portal.Core.Encryption;
+using Portal.Core.Utils;
 using Portal.Gh.Common;
 using Portal.Gh.Params.Bytes;
 
@@ -56,11 +58,14 @@ namespace Portal.Gh.Components.Utils
             if (!DA.GetData(0, ref bytesGoo)) return;
             DA.GetData(1, ref password);
 
-            byte[] bytes = bytesGoo.Value;
+            byte[] rawData = bytesGoo.Value;
+            if (rawData == null || rawData.Length == 0) return;
 
+            Packet packet = Packet.Deserialize(rawData);
+            byte[] data = packet.Data;
 
             // decrypt if encrypted and password is provided
-            if (Crypto.IsAesEncrypted(bytes))
+            if (packet.Header.IsEncrypted)
             {
                 if (string.IsNullOrEmpty(password))
                 {
@@ -70,24 +75,35 @@ namespace Portal.Gh.Components.Utils
                 Crypto crypto = new Crypto();
                 try
                 {
-                    bytes = crypto.Decrypt(bytes, password);
+                    data = crypto.Decrypt(data, password);
                 }
                 catch (CryptographicException e)
                 {
                     AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Failed to decode. Incorrect Password.");
                     return; 
                 }
-                
             }
-
 
             // decompress if gzipped
-            if (GZip.IsGzipped(bytes))
+            if (packet.Header.IsCompressed)
             {
-                bytes = GZip.Decompress(bytes);
+                data = GZip.Decompress(data);
             }
-            string txt = System.Text.Encoding.UTF8.GetString(bytes);
 
+            // check if data is corrupted
+            if (data == null)
+            {
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Failed to decode. Data is null.");
+                return;
+            }
+            Crc16 crc16 = new Crc16();
+            ushort checksum = crc16.ComputeChecksum(data);
+            if (packet.Header.Checksum != checksum)
+            {
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Failed to decode. Data is corrupted.");
+                return;
+            }
+            string txt = System.Text.Encoding.UTF8.GetString(data);
             DA.SetData(0, txt);
         }
     }

@@ -5,6 +5,7 @@
 
 # Custom ignore rules
 .vscode/
+.experiments/
 
 # User-specific files
 *.rsuser

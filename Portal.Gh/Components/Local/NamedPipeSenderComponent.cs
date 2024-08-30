@@ -10,6 +10,7 @@ using Portal.Core.Utils;
 using Portal.Core.NamedPipe;
 using Portal.Gh.Params.Bytes;
 using System.Windows.Forms;
+using Portal.Core.DataModel;
 
 namespace Portal.Gh.Components.Local
 {
@@ -79,7 +80,6 @@ namespace Portal.Gh.Components.Local
                 {
                     using var client = new NamedPipeClient(serverName, pipeName, HandleError); // TODO: manually dispose
                     client.Connect();
-                    data = ByteManipulator.PrependBytes(data, BitConverter.GetBytes(data.Length), 4); // Add length prefix. 4 bytes
                     client.SendAsync(data).Wait();
                     UpdateMessage($@"\\{serverName}\pipe\{pipeName}");
                 }

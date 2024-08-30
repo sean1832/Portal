@@ -9,16 +9,30 @@ namespace Portal.Core.DataModel
     public class PMesh
     {
         public List<PVector3Df> Vertices { get; private set; }
-        public List<PVector3Df> Normals { get; private set; }
+        //public List<PVector3Df> Normals { get; private set; }
         public List<int[]> Faces { get; private set; }
-        public List<PVector2Df> UVs { get; private set; }
+        //public List<PVector2Df> UVs { get; private set; }
+        public List<string> VertexColors { get; private set; }
 
-        public PMesh(List<PVector3Df> vertices, List<PVector3Df> normals, List<int[]> faces, List<PVector2Df> uVs)
+        public PMesh()
+        {
+            Vertices = new List<PVector3Df>();
+            Faces = new List<int[]>();
+            VertexColors = new List<string>();
+        }
+
+        public PMesh(List<PVector3Df> vertices, List<int[]> faces)
         {
             Vertices = vertices;
-            Normals = normals;
             Faces = faces;
-            UVs = uVs;
+            VertexColors = new List<string>();
+        }
+
+        public PMesh(List<PVector3Df> vertices, List<int[]> faces, List<string> vertexColors)
+        {
+            Vertices = vertices;
+            Faces = faces;
+            VertexColors = vertexColors;
         }
     }
 }
