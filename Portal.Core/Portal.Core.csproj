@@ -52,9 +52,12 @@
     <Compile Include="Compression\GZip.cs" />
     <Compile Include="DataModel\Coordinates2D.cs" />
     <Compile Include="DataModel\Coordinates3D.cs" />
+    <Compile Include="DataModel\Packet.cs" />
+    <Compile Include="DataModel\PColor.cs" />
     <Compile Include="DataModel\PPlane.cs" />
     <Compile Include="DataModel\PMesh.cs" />
     <Compile Include="DataModel\PCurve.cs" />
+    <Compile Include="Encryption\Crc16.cs" />
     <Compile Include="Encryption\Crypto.cs" />
     <Compile Include="Interfaces\IReceivedBehaviour.cs" />
     <Compile Include="NamedPipe\DefaultNamedPipeServerReceivedBehaviour.cs" />
@@ -65,6 +68,7 @@
     <Compile Include="Udp\UdpClientManager.cs" />
     <Compile Include="Udp\UdpServerManager.cs" />
     <Compile Include="Utils\ByteManipulator.cs" />
+    <Compile Include="Utils\Helpers.cs" />
     <Compile Include="Utils\NetworkInfo.cs" />
     <Compile Include="Utils\NetworkInfoManager.cs" />
     <Compile Include="Utils\NetworkInputValidator.cs" />

@@ -59,16 +59,22 @@ namespace Portal.Gh.Components.Serialization
             List<Mesh> meshes = new List<Mesh>();
 
             List<PMesh> dataMeshes = JsonConvert.DeserializeObject<List<PMesh>>(data);
-
+            if (dataMeshes == null || dataMeshes.Count == 0)
+            {
+                return meshes;
+            }
             foreach (var dataMesh in dataMeshes)
             {
                 Mesh mesh = new Mesh();
                 mesh.Vertices.AddVertices(dataMesh.Vertices.Select(vertex => new Point3d(vertex.X, vertex.Y, vertex.Z)));
                 mesh.Faces.AddFaces(dataMesh.Faces.Select(face => new MeshFace(face[0], face[1], face[2], face[3])).ToArray());
-                mesh.TextureCoordinates.AddRange(dataMesh.UVs.Select(uv => new Point2f(uv.X, uv.Y)).ToArray());
-                mesh.Normals.AddRange(dataMesh.Normals.Select(normal => new Vector3f(normal.X, normal.Y, normal.Z))
-                    .ToArray());
-
+                foreach (var hexColor in dataMesh.VertexColors)
+                {
+                    PColor pColor = PColor.FromHexColor(hexColor);
+                    mesh.VertexColors.Add(pColor.R, pColor.G, pColor.B);
+                }
+                mesh.Normals.ComputeNormals();
+                mesh.FaceNormals.ComputeFaceNormals();
                 meshes.Add(mesh);
             }
 

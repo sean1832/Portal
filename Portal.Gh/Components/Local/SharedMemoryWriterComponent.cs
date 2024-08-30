@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Security.Cryptography;
 using System.Text;
+using Portal.Core.DataModel;
 using Portal.Core.Encryption;
 using Portal.Core.SharedMemory;
 using Portal.Gh.Common;
@@ -108,18 +109,7 @@ namespace Portal.Gh.Components.Local
                 _currentName = name;
             }
 
-            byte[] lengthPrefix = BitConverter.GetBytes(data.Length);
-
-            byte[] hash = Crypto.ComputeHash(data, MD5.Create());
-
-            // write the hash of the data at the start. Length of hash is 16 bytes.
-            _smm.Write(hash, 0, hash.Length);
-
-            // Write the length of the data. Length of lengthPrefix is 4 bytes.
-            _smm.Write(lengthPrefix, hash.Length, lengthPrefix.Length);
-
-            // Write the actual data starting from offset (4 + 16) = 20.
-            _smm.Write(data, hash.Length + lengthPrefix.Length, data.Length);
+            _smm.Write(data, 0, data.Length);
         }
 
         private void DisposeMem()
