@@ -58,6 +58,8 @@ namespace Portal.Gh.Components.Utils
             if (!DA.GetData(0, ref bytesGoo)) return;
             DA.GetData(1, ref password);
 
+            if (bytesGoo.Value.Length == 0) return;
+
             if (!bytesGoo.IsValid)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Failed to decode. Input invalid input bytes.");
