@@ -20,7 +20,7 @@ namespace Portal.Gh.Params.Json
                 Config.Category, Config.SubCat.Params)
         {
         }
-        protected override Bitmap Icon => null;
+        protected override Bitmap Icon => Icons.JsonParam;
         public override GH_Exposure Exposure => GH_Exposure.hidden;
         public override Guid ComponentGuid => new Guid("c5726694-d8eb-4eb4-aa55-ded1ca9da417");
 

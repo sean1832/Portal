@@ -59,7 +59,7 @@ namespace Portal.Gh.Params.Json
             }
         }
 
-        protected override Bitmap Icon => null;
+        protected override Bitmap Icon => Icons.JsonParam;
 
         public override Guid ComponentGuid => new Guid("c0c23e50-53d9-4aad-abbf-ad53f149cbec");
 
