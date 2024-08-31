@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Security.Cryptography;
+using Portal.Core.Binary;
 using Portal.Core.Compression;
 using Portal.Core.DataModel;
 using Portal.Core.Encryption;

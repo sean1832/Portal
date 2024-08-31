@@ -11,6 +11,7 @@ using Portal.Core.DataModel;
 using Portal.Core.Encryption;
 using Portal.Core.Utils;
 using Newtonsoft.Json.Linq;
+using Portal.Core.Binary;
 
 namespace Portal.Gh.Params.Bytes
 {

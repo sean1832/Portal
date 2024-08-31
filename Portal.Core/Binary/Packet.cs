@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.CompilerServices;
-using Portal.Core.Encryption;
-using Portal.Core.Utils;
 
-namespace Portal.Core.DataModel
+namespace Portal.Core.Binary
 {
 
     public class PacketHeader
