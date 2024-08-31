@@ -13,23 +13,23 @@ using Portal.Core.Utils;
 using Portal.Gh.Common;
 using Portal.Gh.Params.Bytes;
 
-namespace Portal.Gh.Components.Utils
+namespace Portal.Gh.Components.Obsolete
 {
-    public class BytesEncoderComponent : GH_Component
+    public class BytesEncoderComponentV1_OBSOLETE : GH_Component
     {
         #region Metadata
 
-        public BytesEncoderComponent()
+        public BytesEncoderComponentV1_OBSOLETE()
             : base("Bytes Encoder", "EnB",
                 "Encode string into bytes array",
                 Config.Category, Config.SubCat.Utils)
         {
         }
 
-        public override GH_Exposure Exposure => GH_Exposure.tertiary;
+        public override GH_Exposure Exposure => GH_Exposure.hidden;
         public override IEnumerable<string> Keywords => new string[] { "toBytes", "encode bytes" };
         protected override Bitmap Icon => Icons.Encode;
-        public override Guid ComponentGuid => new Guid("e18e28d1-fbbf-441d-9772-b865bb197aca");
+        public override Guid ComponentGuid => new Guid("3d414461-a9e7-4383-b64a-eeb7af53d8d0");
 
         #endregion
 
@@ -38,10 +38,10 @@ namespace Portal.Gh.Components.Utils
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
             pManager.AddTextParameter("Text", "Txt", "Text to encode into binary", GH_ParamAccess.item);
+            pManager.AddTextParameter("Password", "Pass", "(Optional) Encrypt bytes with a password", GH_ParamAccess.item);
             pManager.AddBooleanParameter("Compress", "Zip", "(Optional) Compress the bytes with Gzip", GH_ParamAccess.item,
                 false);
-            pManager.AddTextParameter("Password", "Pass", "(Optional) Encrypt bytes with a password", GH_ParamAccess.item);
-            pManager[2].Optional = true;
+            pManager[1].Optional = true;
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
@@ -58,9 +58,8 @@ namespace Portal.Gh.Components.Utils
             bool isCompress = false;
 
             if (!DA.GetData(0, ref txt)) return;
-            DA.GetData(1, ref isCompress);
-            DA.GetData(2, ref password);
-            
+            DA.GetData(1, ref password);
+            DA.GetData(2, ref isCompress);
 
             bool isEncrypted = !string.IsNullOrEmpty(password);
 

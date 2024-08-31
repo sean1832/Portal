@@ -11,6 +11,7 @@ using Portal.Core.DataModel;
 using Portal.Core.Encryption;
 using Portal.Core.Utils;
 using Newtonsoft.Json.Linq;
+using Portal.Core.Binary;
 
 namespace Portal.Gh.Params.Bytes
 {
@@ -69,6 +70,11 @@ namespace Portal.Gh.Params.Bytes
             if (!_headerIsValid)
             {
                 return $"Invalid header | {msg}";
+            }
+
+            if (_header == null)
+            {
+                ProcessHeader();
             }
 
             // re-read the header

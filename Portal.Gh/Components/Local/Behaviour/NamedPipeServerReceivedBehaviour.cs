@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
+using Portal.Core.Binary;
 using Portal.Core.DataModel;
 using Portal.Core.Interfaces;
 

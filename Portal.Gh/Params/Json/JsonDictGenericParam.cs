@@ -1,4 +1,6 @@
-﻿using Grasshopper.Kernel;
+﻿// reference JSwan by andrew heumann:
+// https://github.com/andrewheumann/jSwan/blob/master/jSwan/Param_JsonInput.cs
+using Grasshopper.Kernel;
 using Portal.Gh.Common;
 using Portal.Gh.Params.Bytes;
 using System;

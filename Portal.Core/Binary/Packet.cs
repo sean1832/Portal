@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.CompilerServices;
-using Portal.Core.Encryption;
-using Portal.Core.Utils;
 
-namespace Portal.Core.DataModel
+namespace Portal.Core.Binary
 {
 
     public class PacketHeader
@@ -40,7 +37,7 @@ namespace Portal.Core.DataModel
         public PacketHeader Header { get; }
         public static readonly byte[] MagicNumber = { 0x70, 0x6b }; // pk
 
-        public Packet(byte[] data, int size, ushort checksum, bool isEncrypted, bool isCompressed)
+        public Packet(byte[] data, bool isEncrypted, bool isCompressed, ushort checksum, int size)
         {
             Data = data;
             Header = new PacketHeader(isEncrypted, isCompressed, size, checksum);
