@@ -7,6 +7,7 @@ using System.Drawing;
 using System.IO;
 using System.IO.MemoryMappedFiles;
 using System.Text;
+using Portal.Core.Binary;
 using Portal.Core.DataModel;
 using Portal.Core.SharedMemory;
 using Portal.Gh.Common;
