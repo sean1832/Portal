@@ -27,6 +27,9 @@ https://github.com/user-attachments/assets/070eb40c-2fe2-4cb2-8e6d-64786fcd9897
   - Mesh
   - Curve (PolylineCurve, ArcCurve, LineCurve, NurbsCurve)
 - **Data Compression / Decompression** using GZip
+- **Metadata Support** for geometry (e.g., material, layer (not implemented yet) etc.)
+- **Vertex Color Support** for meshes 
+
 
 ## 🛠️ System Requirements
 
