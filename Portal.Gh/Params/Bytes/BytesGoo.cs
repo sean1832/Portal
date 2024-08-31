@@ -72,6 +72,11 @@ namespace Portal.Gh.Params.Bytes
                 return $"Invalid header | {msg}";
             }
 
+            if (_header == null)
+            {
+                ProcessHeader();
+            }
+
             // re-read the header
             if (_header.IsCompressed)
             {
