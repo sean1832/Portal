@@ -37,7 +37,7 @@ namespace Portal.Core.Binary
         public PacketHeader Header { get; }
         public static readonly byte[] MagicNumber = { 0x70, 0x6b }; // pk
 
-        public Packet(byte[] data, int size, ushort checksum, bool isEncrypted, bool isCompressed)
+        public Packet(byte[] data, bool isEncrypted, bool isCompressed, ushort checksum, int size)
         {
             Data = data;
             Header = new PacketHeader(isEncrypted, isCompressed, size, checksum);
