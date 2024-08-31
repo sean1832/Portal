@@ -1,3 +1,5 @@
+// reference JSwan by andrew heumann:
+// https://github.com/andrewheumann/jSwan/blob/master/jSwan/Deserialize.cs
 using Grasshopper;
 using Grasshopper.Kernel;
 using Rhino.Geometry;

@@ -1,3 +1,5 @@
+// reference JSwan by andrew heumann:
+// https://github.com/andrewheumann/jSwan/blob/master/jSwan/Serialize.cs
 using System;
 using System.Collections.Generic;
 using System.Drawing;
