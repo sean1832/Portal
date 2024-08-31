@@ -1,4 +1,6 @@
-﻿using Grasshopper.Kernel.Types;
+﻿// reference JSwan by andrew heumann:
+// https://github.com/andrewheumann/jSwan/blob/master/jSwan/JDictGoo.cs
+using Grasshopper.Kernel.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;

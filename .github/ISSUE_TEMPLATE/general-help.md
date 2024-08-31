@@ -1,6 +1,6 @@
 ---
 name: General Help
-about: General help you want to ask about the project
+about: General help you want from the developer
 title: "[HELP] "
 labels: help wanted
 assignees: ''

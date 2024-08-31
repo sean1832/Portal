@@ -1,4 +1,6 @@
-﻿using GH_IO.Serialization;
+﻿// reference JSwan by andrew heumann:
+// https://github.com/andrewheumann/jSwan/blob/master/jSwan/JTokenGoo.cs
+using GH_IO.Serialization;
 using Grasshopper.Kernel.Types;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
