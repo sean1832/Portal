@@ -25,7 +25,7 @@ def main():
     args = parse_args()
     project_file = args.project_file
     solution_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    example_file = os.path.join(solution_root, "Example/grasshopper", "portal-example.gh")
+    example_dir = os.path.join(solution_root, "Example/grasshopper")
 
     proj = builder.AssemblyBuilder(project_file)
     proj.build_zip(
@@ -53,10 +53,11 @@ def main():
         os.path.join(proj.output_folder, "yak", "manifest.yml"),
         proj.version,
     )
-    proj.copy_file(
-        example_file,
-        proj.output_folder,
-        rename=f"{proj.project_name}-example-{proj.version}.gh",
+    proj.build_zip(
+        input_dir=example_dir,
+        zip_filename=f"{proj.project_name}-examples-{proj.version}.zip",
+        exclude_patterns=[],
+        include_files=[],
     )
 
     if args.runyak:
