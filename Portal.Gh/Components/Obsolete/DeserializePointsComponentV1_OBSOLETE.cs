@@ -9,26 +9,24 @@ using System.Runtime.Serialization.Formatters.Binary;
 using Newtonsoft.Json;
 using Portal.Core.DataModel;
 using Portal.Gh.Common;
-using Portal.Gh.Params.Json;
-using Portal.Gh.Params.Payloads;
 
-namespace Portal.Gh.Components.Serialization
+namespace Portal.Gh.Components.Obsolete
 {
-    public class DeserializePointsComponent : GH_Component
+    public class DeserializePointsComponentV1_OBSOLETE : GH_Component
     {
         #region Metadata
 
-        public DeserializePointsComponent()
+        public DeserializePointsComponentV1_OBSOLETE()
             : base("Deserialize Points", "DSrPt",
                 "Deserialize JSON string into points. This data can be read from communication pipeline for data exchange.",
                 Config.Category, Config.SubCat.Serialization)
         {
         }
 
-        public override GH_Exposure Exposure => GH_Exposure.primary;
+        public override GH_Exposure Exposure => GH_Exposure.hidden;
         public override IEnumerable<string> Keywords => new string[] { "desrpt" };
         protected override Bitmap Icon => Icons.DeserializePoint;
-        public override Guid ComponentGuid => new Guid("4bdba56b-b589-4326-9683-6cbab0bddcc5");
+        public override Guid ComponentGuid => new Guid("dbcd87fc-6aad-409f-b89b-f0c56fd9a376");
 
         #endregion
 
@@ -36,32 +34,28 @@ namespace Portal.Gh.Components.Serialization
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
-            pManager.AddParameter(new PayloadParam(), "Payload", "P", "Payload packet to be deserialize", GH_ParamAccess.item);
+            pManager.AddTextParameter("Json data", "Json", "Json data to deserialize", GH_ParamAccess.item);
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddPointParameter("Point", "Pt", "Deserialized point", GH_ParamAccess.item);
-            pManager.AddParameter(new JsonDictParam(), "Metadata", "#", "Metadata that describe the geometry",
-                GH_ParamAccess.item);
+            pManager.AddPointParameter("Points", "Pts", "Deserialized points", GH_ParamAccess.item);
         }
 
         #endregion
 
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            PayloadGoo payloadGoo = new PayloadGoo();
+            string data = string.Empty;
 
-            if (!DA.GetData(0, ref payloadGoo)) return;
+            if (!DA.GetData(0, ref data)) return;
 
-            var point = DeserializePoint(payloadGoo.Value.Data.ToString());
-            var meta = new JsonDictGoo(payloadGoo.Value.Metadata);
-            
-            DA.SetData(0, point);
-            DA.SetData(1, meta);
+            var points = DeserializePoints(data);
+
+            DA.SetData(0, points);
         }
 
-        private Point3d? DeserializePoint(string data)
+        private Point3d DeserializePoints(string data)
         {
             try
             {
@@ -83,16 +77,15 @@ namespace Portal.Gh.Components.Serialization
             }
             catch (JsonSerializationException e)
             {
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, $"Error deserializing JSON data: {e.Message}");
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, $"Error deserializing JSON data: {e.Message}");
             }
             catch (Exception e)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, $"An error occurred: {e.Message}");
             }
 
-            // return empty point if deserialization fails
-            return null;
+            // return empty list if deserialization fails
+            return new Point3d();
         }
-
     }
 }

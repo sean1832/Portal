@@ -10,13 +10,12 @@ using Portal.Core.DataModel;
 using Portal.Gh.Common;
 using Portal.Gh.Params.Json;
 using System.Linq;
-using Portal.Gh.Params.Payloads;
 
-namespace Portal.Gh.Components.Serialization
+namespace Portal.Gh.Components.Obsolete
 {
-    public class UnpackPayloadComponent : GH_Component
+    public class UnpackPayloadComponentV0_OBSOLETE : GH_Component
     {
-        public UnpackPayloadComponent()
+        public UnpackPayloadComponentV0_OBSOLETE()
             : base("Unpack Payload", "Unpack",
                 "Unpack a payload into data and metadata",
                 Config.Category, Config.SubCat.Serialization)
@@ -25,10 +24,10 @@ namespace Portal.Gh.Components.Serialization
 
         #region Metadata
 
-        public override GH_Exposure Exposure => GH_Exposure.septenary;
+        public override GH_Exposure Exposure => GH_Exposure.hidden;
         public override IEnumerable<string> Keywords => new string[] { };
         protected override Bitmap Icon => Icons.UnpackPayload;
-        public override Guid ComponentGuid => new Guid("dd0744b3-c8d0-42f4-af58-a017dd6a6c30");
+        public override Guid ComponentGuid => new Guid("45c9911b-d669-4b3a-b35b-acf24c25aae2");
 
         #endregion
 
@@ -41,7 +40,10 @@ namespace Portal.Gh.Components.Serialization
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddParameter(new PayloadParam(), "Payloads", "P", "Payload packets to be deserialize", GH_ParamAccess.list);
+            pManager.AddParameter(new JsonDictParam(), "Data", "Data", "The actual data of the payload",
+                GH_ParamAccess.list);
+            pManager.AddParameter(new JsonDictParam(), "Metadata", "Meta", "Metadata of each data entry",
+                GH_ParamAccess.list);
         }
 
         #endregion
@@ -60,7 +62,8 @@ namespace Portal.Gh.Components.Serialization
 
             var payload = UnpackPayload(jArray);
 
-            DA.SetDataList(0, payload);
+            DA.SetDataList(0, payload.Item1);
+            DA.SetDataList(1, payload.Item2);
         }
 
         private bool TryParseJson(string strInput, out JArray jArray)
@@ -68,7 +71,7 @@ namespace Portal.Gh.Components.Serialization
             jArray = null;
             strInput = strInput.Trim();
 
-            if ((strInput.StartsWith("[") && strInput.EndsWith("]")))
+            if (strInput.StartsWith("[") && strInput.EndsWith("]"))
             {
                 try
                 {
@@ -87,9 +90,10 @@ namespace Portal.Gh.Components.Serialization
             return false;
         }
 
-        private List<PayloadGoo> UnpackPayload(JArray jArray)
+        private (List<JsonDictGoo>, List<JsonDictGoo>) UnpackPayload(JArray jArray)
         {
-            var payloadGoos = new List<PayloadGoo>();
+            var dataList = new List<JsonDictGoo>();
+            var metaList = new List<JsonDictGoo>();
 
             try
             {
@@ -98,20 +102,17 @@ namespace Portal.Gh.Components.Serialization
                     var dataObj = item["Data"] as JObject;
                     var metaObj = item["Metadata"] as JObject;
 
-                    JsonDict dataDict = new JsonDict();
-                    JsonDict metaDict = new JsonDict();
                     if (dataObj != null)
                     {
-                        dataDict = dataObj.ToObject<JsonDict>();
+                        var dataDict = dataObj.ToObject<JsonDict>();
+                        dataList.Add(new JsonDictGoo(dataDict));
                     }
 
                     if (metaObj != null)
                     {
-                        metaDict = metaObj.ToObject<JsonDict>();
+                        var metaDict = metaObj.ToObject<JsonDict>();
+                        metaList.Add(new JsonDictGoo(metaDict));
                     }
-
-                    var payload = new PayloadGoo(new Payload(dataDict, metaDict));
-                    payloadGoos.Add(payload);
                 }
             }
             catch (Exception ex)
@@ -120,7 +121,7 @@ namespace Portal.Gh.Components.Serialization
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, $"Error processing JSON:\n {ex.Message}");
             }
 
-            return payloadGoos;
+            return (dataList, metaList);
         }
     }
 }

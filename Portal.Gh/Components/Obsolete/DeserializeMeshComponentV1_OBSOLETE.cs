@@ -8,26 +8,24 @@ using System.Linq;
 using Newtonsoft.Json;
 using Portal.Core.DataModel;
 using Portal.Gh.Common;
-using Portal.Gh.Params.Json;
-using Portal.Gh.Params.Payloads;
 
-namespace Portal.Gh.Components.Serialization
+namespace Portal.Gh.Components.Obsolete
 {
-    public class DeserializeMeshComponent : GH_Component
+    public class DeserializeMeshComponentV1_OBSOLETE : GH_Component
     {
         #region Metadata
 
-        public DeserializeMeshComponent()
+        public DeserializeMeshComponentV1_OBSOLETE()
             : base("Deserialize Mesh", "DSrMesh",
                 "Deserialize JSON string into meshes. This data can be read from communication pipeline for data exchange.",
                 Config.Category, Config.SubCat.Serialization)
         {
         }
 
-        public override GH_Exposure Exposure => GH_Exposure.tertiary;
+        public override GH_Exposure Exposure => GH_Exposure.hidden;
         public override IEnumerable<string> Keywords => new string[] { "desrmesh" };
         protected override Bitmap Icon => Icons.DeserializeMesh;
-        public override Guid ComponentGuid => new Guid("46a68d71-9df0-4574-a9ef-4a7a9bb29b25");
+        public override Guid ComponentGuid => new Guid("202e2e4e-e3f6-40d5-8a5a-0b59c6ecb401");
 
         #endregion
 
@@ -35,29 +33,24 @@ namespace Portal.Gh.Components.Serialization
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
-            pManager.AddParameter(new PayloadParam(), "Payload", "P", "Payload packet to be deserialize", GH_ParamAccess.item);
+            pManager.AddTextParameter("Json data", "Json", "Json data to deserialize", GH_ParamAccess.item);
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
             pManager.AddMeshParameter("Mesh", "M", "Deserialized mesh", GH_ParamAccess.item);
-            pManager.AddParameter(new JsonDictParam(), "Metadata", "#", "Metadata that describe the geometry",
-                GH_ParamAccess.item);
         }
 
         #endregion
 
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            PayloadGoo payloadGoo = new PayloadGoo();
+            string data = string.Empty;
 
-            if (!DA.GetData(0, ref payloadGoo)) return;
+            if (!DA.GetData(0, ref data)) return;
 
-            var mesh = DeserializeMesh(payloadGoo.Value.Data.ToString());
-            var meta = new JsonDictGoo(payloadGoo.Value.Metadata);
-
+            var mesh = DeserializeMesh(data);
             DA.SetData(0, mesh);
-            DA.SetData(1, meta);
         }
 
 
