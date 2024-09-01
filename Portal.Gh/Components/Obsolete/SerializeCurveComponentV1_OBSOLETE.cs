@@ -11,25 +11,24 @@ using Portal.Gh.Common;
 using Portal.Gh.Params.Json;
 using Circle = Rhino.Geometry.Circle;
 using System.Security.Cryptography;
-using Portal.Gh.Params.Payloads;
 
-namespace Portal.Gh.Components.Serialization
+namespace Portal.Gh.Components.Obsolete
 {
-    public class SerializeCurveComponent : GH_Component
+    public class SerializeCurveComponentV1_OBSOLETE : GH_Component
     {
         #region Metadata
 
-        public SerializeCurveComponent()
+        public SerializeCurveComponentV1_OBSOLETE()
             : base("Serialize Curve", "SrCrv",
                 "Serialize curves into a JSON representation. This data should be pack as payload using `Pack Payload` before send over communication pipeline for data exchange.",
                 Config.Category, Config.SubCat.Serialization)
         {
         }
 
-        public override GH_Exposure Exposure => GH_Exposure.secondary;
+        public override GH_Exposure Exposure => GH_Exposure.hidden;
         public override IEnumerable<string> Keywords => new string[] { "serialize crv" };
         protected override Bitmap Icon => Icons.SerializeCurve;
-        public override Guid ComponentGuid => new Guid("bf58221b-cf92-4bb3-a9c5-32070571bc4a");
+        public override Guid ComponentGuid => new Guid("d52f8a11-c326-4b31-b399-5fea8c9d3e95");
 
         #endregion
 
@@ -38,14 +37,11 @@ namespace Portal.Gh.Components.Serialization
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
             pManager.AddCurveParameter("Curves", "crv", "Curve to serialize", GH_ParamAccess.item);
-            pManager.AddParameter(new JsonDictParam(), "Metadata", "#", "(Optional) Metadata that describe the geometry",
-                GH_ParamAccess.item);
-            pManager[1].Optional = true;
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddParameter(new PayloadParam(), "Payload", "P", "Structured packet payload", GH_ParamAccess.item);
+            pManager.AddParameter(new JsonDictParam(), "Json", "Json", "Serialized curve as JSON object", GH_ParamAccess.item);
         }
 
         #endregion
@@ -53,15 +49,13 @@ namespace Portal.Gh.Components.Serialization
         protected override void SolveInstance(IGH_DataAccess DA)
         {
             Curve curves = null;
-            JsonDictGoo metaGoo = new JsonDictGoo();
 
             if (!DA.GetData(0, ref curves)) return;
-            DA.GetData(1, ref metaGoo);
 
-            DA.SetData(0, SerializeCurve(curves, metaGoo.Value));
+            DA.SetData(0, SerializeCurve(curves));
         }
 
-        private PayloadGoo SerializeCurve(Curve curve, JsonDict meta)
+        private JsonDictGoo SerializeCurve(Curve curve)
         {
             PCurve pCurve;
             switch (curve)
@@ -86,7 +80,7 @@ namespace Portal.Gh.Components.Serialization
             }
             string jsonString = JsonConvert.SerializeObject(pCurve);
             JsonDict dict = JsonConvert.DeserializeObject<JsonDict>(jsonString);
-            return new PayloadGoo(new Payload(dict, meta));
+            return new JsonDictGoo(dict);
         }
 
         private PArcCurve ConvertPArcCurve(ArcCurve arcCurve)
