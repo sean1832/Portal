@@ -10,26 +10,24 @@ using Portal.Core.DataModel;
 using Portal.Gh.Common;
 using Newtonsoft.Json.Serialization;
 using Portal.Gh.Components.Serialization.JsonSerializerSettings;
-using Portal.Gh.Params.Json;
-using Portal.Gh.Params.Payloads;
 
-namespace Portal.Gh.Components.Serialization
+namespace Portal.Gh.Components.Obsolete
 {
-    public class DeserializeCurveComponent : GH_Component
+    public class DeserializeCurveComponentV1_OBSOLETE : GH_Component
     {
         #region Metadata
 
-        public DeserializeCurveComponent()
+        public DeserializeCurveComponentV1_OBSOLETE()
             : base("Deserialize Curve", "DSrCrv",
                 "Deserialize JSON string into curves. This data can be read from communication pipeline for data exchange.",
                 Config.Category, Config.SubCat.Serialization)
         {
         }
 
-        public override GH_Exposure Exposure => GH_Exposure.secondary;
+        public override GH_Exposure Exposure => GH_Exposure.hidden;
         public override IEnumerable<string> Keywords => new string[] { "deserialize crv", "desrcrv" };
         protected override Bitmap Icon => Icons.DeserializeCurve;
-        public override Guid ComponentGuid => new Guid("62cc044a-5d17-45a8-bdd9-96615fbd506c");
+        public override Guid ComponentGuid => new Guid("4d7e374b-d447-42ab-82a5-09271e3dda67");
 
         #endregion
 
@@ -37,34 +35,30 @@ namespace Portal.Gh.Components.Serialization
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
-            pManager.AddParameter(new PayloadParam(), "Payload", "P", "Payload packet to be deserialize", GH_ParamAccess.item);
+            pManager.AddTextParameter("Json data", "Json", "Json data to deserialize", GH_ParamAccess.item);
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddCurveParameter("Curve", "crv", "Deserialized curve", GH_ParamAccess.item);
-            pManager.AddParameter(new JsonDictParam(), "Metadata", "#", "Metadata that describe the geometry",
-                GH_ParamAccess.item);
+            pManager.AddCurveParameter("Curves", "crv", "Deserialized curves", GH_ParamAccess.item);
         }
 
         #endregion
 
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            PayloadGoo payloadGoo = new PayloadGoo();
+            string jsonData = string.Empty;
 
-            if (!DA.GetData(0, ref payloadGoo)) return;
+            if (!DA.GetData(0, ref jsonData)) return;
 
-            var curve = DeserializeCurve(payloadGoo.Value.Data.ToString());
-            var meta = new JsonDictGoo(payloadGoo.Value.Metadata);
+            var curve = DeserializeCurve(jsonData);
             DA.SetData(0, curve);
-            DA.SetData(1, meta);
         }
 
 
         private Curve DeserializeCurve(string jsonData)
         {
-            var serializerSettings = new Newtonsoft.Json.JsonSerializerSettings();
+            var serializerSettings = new JsonSerializerSettings();
             serializerSettings.Converters.Add(new PCurveConverterSettings());
 
             PCurve pCurve = JsonConvert.DeserializeObject<PCurve>(jsonData, serializerSettings);
