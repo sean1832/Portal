@@ -8,7 +8,7 @@ using Portal.Core.Interfaces;
 
 namespace Portal.Core.NamedPipe
 {
-    internal class DefaultNamedPipeServerReceivedBehaviour: IReceivedBehaviour<NamedPipeServerStream>
+    internal class DefaultPipeReceivedBehaviour: IReceivedBehaviour<NamedPipeServerStream>
     {
         public void ProcessData(NamedPipeServerStream stream, Action<byte[]> onMessageReceived, Action<Exception> onError)
         {

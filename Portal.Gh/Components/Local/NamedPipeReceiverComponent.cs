@@ -4,12 +4,12 @@ using Rhino.Geometry;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Runtime.Serialization;
 using Portal.Core;
 using Rhino;
 using System.Text;
 using Portal.Gh.Common;
 using Portal.Core.NamedPipe;
-using Portal.Gh.Components.Local.Behaviour;
 using Portal.Gh.Params.Bytes;
 
 namespace Portal.Gh.Components.Local
@@ -113,7 +113,7 @@ namespace Portal.Gh.Components.Local
 
             try
             {
-                _server = new NamedPipeServer(pipeName, bufferSize, HandleError, HandleMessage, new NamedPipeServerReceivedBehaviour());
+                _server = new NamedPipeServer(pipeName, bufferSize, HandleError, HandleMessage, new PipeReceivedPacketBehaviour());
                 _server.Start();
                 Message = "Listening";
             }

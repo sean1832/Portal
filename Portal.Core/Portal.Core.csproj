@@ -38,6 +38,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -62,9 +63,10 @@
     <Compile Include="Encryption\Crc16.cs" />
     <Compile Include="Encryption\Crypto.cs" />
     <Compile Include="Interfaces\IReceivedBehaviour.cs" />
-    <Compile Include="NamedPipe\DefaultNamedPipeServerReceivedBehaviour.cs" />
+    <Compile Include="NamedPipe\DefaultPipeReceivedBehaviour.cs" />
     <Compile Include="NamedPipe\NamedPipeClient.cs" />
     <Compile Include="NamedPipe\NamedPipeServer.cs" />
+    <Compile Include="NamedPipe\PipeReceivedPacketBehaviour.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SharedMemory\SharedMemoryManager.cs" />
     <Compile Include="Udp\UdpClientManager.cs" />
