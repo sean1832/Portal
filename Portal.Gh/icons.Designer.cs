@@ -113,6 +113,16 @@ namespace Portal.Gh {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap DeserializeGeo {
+            get {
+                object obj = ResourceManager.GetObject("DeserializeGeo", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap DeserializeMesh {
             get {
                 object obj = ResourceManager.GetObject("DeserializeMesh", resourceCulture);
@@ -236,6 +246,16 @@ namespace Portal.Gh {
         internal static System.Drawing.Bitmap SerializeCurve {
             get {
                 object obj = ResourceManager.GetObject("SerializeCurve", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap SerializeGeo {
+            get {
+                object obj = ResourceManager.GetObject("SerializeGeo", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

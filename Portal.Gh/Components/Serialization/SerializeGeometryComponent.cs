@@ -30,7 +30,7 @@ namespace Portal.Gh.Components.Serialization
 
         public override GH_Exposure Exposure => GH_Exposure.primary;
         public override IEnumerable<string> Keywords => new string[] { };
-        protected override Bitmap Icon => null;
+        protected override Bitmap Icon => Icons.SerializeGeo;
         public override Guid ComponentGuid => new Guid("9c14644b-81f5-4d7e-acdf-e2dda6fa5120");
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)

@@ -29,7 +29,7 @@ namespace Portal.Gh.Components.Serialization
 
         public override GH_Exposure Exposure => GH_Exposure.primary;
         public override IEnumerable<string> Keywords => new string[] { };
-        protected override Bitmap Icon => null;
+        protected override Bitmap Icon => Icons.DeserializeGeo;
         public override Guid ComponentGuid => new Guid("492a36d8-5074-4ec0-b632-cb1dc51dad45");
 
         #endregion
