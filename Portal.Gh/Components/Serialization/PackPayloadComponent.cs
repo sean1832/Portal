@@ -19,7 +19,7 @@ namespace Portal.Gh.Components.Serialization
     {
         public PackPayloadComponent()
             : base("Pack Payload", "Pack",
-                "Description",
+                "Pack a list of payloads into a single string with metadata",
                 Config.Category, Config.SubCat.Serialization)
         {
         }
