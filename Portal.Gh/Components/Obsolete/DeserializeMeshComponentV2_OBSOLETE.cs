@@ -11,20 +11,20 @@ using Portal.Gh.Common;
 using Portal.Gh.Params.Json;
 using Portal.Gh.Params.Payloads;
 
-namespace Portal.Gh.Components.Serialization
+namespace Portal.Gh.Components.Obsolete
 {
-    public class DeserializeMeshComponent : GH_Component
+    public class DeserializeMeshComponentV2_OBSOLETE : GH_Component
     {
         #region Metadata
 
-        public DeserializeMeshComponent()
+        public DeserializeMeshComponentV2_OBSOLETE()
             : base("Deserialize Mesh", "DSrMesh",
                 "Deserialize JSON string into meshes. This data can be read from communication pipeline for data exchange.",
                 Config.Category, Config.SubCat.Serialization)
         {
         }
 
-        public override GH_Exposure Exposure => GH_Exposure.tertiary;
+        public override GH_Exposure Exposure => GH_Exposure.hidden;
         public override IEnumerable<string> Keywords => new string[] { "desrmesh" };
         protected override Bitmap Icon => Icons.DeserializeMesh;
         public override Guid ComponentGuid => new Guid("46a68d71-9df0-4574-a9ef-4a7a9bb29b25");
