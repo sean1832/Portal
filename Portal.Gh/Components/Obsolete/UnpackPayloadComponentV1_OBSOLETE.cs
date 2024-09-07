@@ -1,34 +1,30 @@
-using Grasshopper;
-using Grasshopper.Kernel;
-using Rhino.Geometry;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using Grasshopper.Kernel;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Portal.Core.DataModel;
 using Portal.Gh.Common;
-using Portal.Gh.Params.Json;
-using System.Linq;
 using Portal.Gh.Params.Payloads;
 
-namespace Portal.Gh.Components.Serialization
+namespace Portal.Gh.Components.Obsolete
 {
-    public class UnpackPayloadComponent : GH_Component
+    public class UnpackPayloadComponentV1_OBSOLETE : GH_Component
     {
-        public UnpackPayloadComponent()
+        public UnpackPayloadComponentV1_OBSOLETE()
             : base("Unpack Payload", "Unpack",
                 "Unpack a payload into data and metadata",
                 Config.Category, Config.SubCat.Serialization)
         {
         }
 
-        #region Metadata
+        #region Meta
 
-        public override GH_Exposure Exposure => GH_Exposure.tertiary;
+        public override GH_Exposure Exposure => GH_Exposure.hidden;
         public override IEnumerable<string> Keywords => new string[] { };
         protected override Bitmap Icon => Icons.UnpackPayload;
-        public override Guid ComponentGuid => new Guid("6bebe05e-2605-4a12-9496-881d622fd731");
+        public override Guid ComponentGuid => new Guid("dd0744b3-c8d0-42f4-af58-a017dd6a6c30");
 
         #endregion
 
@@ -42,29 +38,25 @@ namespace Portal.Gh.Components.Serialization
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
             pManager.AddParameter(new PayloadParam(), "Payloads", "P", "Payload packets to be deserialize", GH_ParamAccess.list);
-            pManager.AddParameter(new JsonDictParam(), "Metadata", "#", "Metadata that describe the payload",
-                GH_ParamAccess.item);
         }
 
         #endregion
 
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            string dataStr = string.Empty;
+            string data = string.Empty;
 
-            if (!DA.GetData(0, ref dataStr)) return;
+            if (!DA.GetData(0, ref data)) return;
 
-            Payload deserializePayload = DeserializePayload(dataStr);
+            if (!TryParseJson(data, out JArray jArray))
+            {
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Not a JSON Array.");
+                return;
+            }
 
-            // access the items and metadata
-            JsonDict meta = deserializePayload.Meta;
-            JsonDictGoo metaGoo = meta == null ? new JsonDictGoo() : new JsonDictGoo(meta);
-            // convert to PayloadGoos
-            List<PayloadGoo> items = deserializePayload.Items as List<PayloadGoo>;
+            var payload = UnpackPayload(jArray);
 
-
-            DA.SetDataList(0, items);
-            DA.SetData(1, metaGoo);
+            DA.SetDataList(0, payload);
         }
 
         private bool TryParseJson(string strInput, out JArray jArray)
@@ -125,34 +117,6 @@ namespace Portal.Gh.Components.Serialization
             }
 
             return payloadGoos;
-        }
-
-        public Payload DeserializePayload(string json)
-        {
-            var payload = new Payload();
-
-            try
-            {
-                JObject rootObject = JObject.Parse(json);
-                var metaObj = rootObject["Meta"] as JObject;
-                JToken itemsToken = rootObject["Items"];
-
-                if (metaObj != null)
-                {
-                    payload.Meta = metaObj.ToObject<JsonDict>();
-                }
-
-                if (itemsToken != null && TryParseJson(itemsToken.ToString(), out JArray jArray))
-                {
-                    payload.Items = UnpackPayload(jArray);
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error deserializing JSON: {ex.Message}");
-            }
-
-            return payload;
         }
     }
 }

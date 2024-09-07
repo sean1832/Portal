@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Portal.Core.DataModel
 {
-    public class PMesh
+    public class PMesh : PEntity
     {
         public List<PVector3Df> Vertices { get; private set; }
         //public List<PVector3Df> Normals { get; private set; }
@@ -14,21 +14,21 @@ namespace Portal.Core.DataModel
         //public List<PVector2Df> UVs { get; private set; }
         public List<string> VertexColors { get; private set; }
 
-        public PMesh()
+        public PMesh() : base(PType.Mesh)
         {
             Vertices = new List<PVector3Df>();
             Faces = new List<int[]>();
             VertexColors = new List<string>();
         }
 
-        public PMesh(List<PVector3Df> vertices, List<int[]> faces)
+        public PMesh(List<PVector3Df> vertices, List<int[]> faces) : base(PType.Mesh)
         {
             Vertices = vertices;
             Faces = faces;
             VertexColors = new List<string>();
         }
 
-        public PMesh(List<PVector3Df> vertices, List<int[]> faces, List<string> vertexColors)
+        public PMesh(List<PVector3Df> vertices, List<int[]> faces, List<string> vertexColors) : base(PType.Mesh)
         {
             Vertices = vertices;
             Faces = faces;

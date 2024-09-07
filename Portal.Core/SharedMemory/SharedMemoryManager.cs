@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Portal.Core.Binary;
+using System;
 using System.IO;
 using System.IO.MemoryMappedFiles;
 using System.Threading;
@@ -25,7 +26,7 @@ namespace Portal.Core.SharedMemory
             {
                 OpenMemoryMappedFile();
             }
-            
+
         }
 
         private void CreateOrOpenMemoryMappedFile(long capacity)
@@ -100,6 +101,24 @@ namespace Portal.Core.SharedMemory
             {
                 _mutex.ReleaseMutex();
             }
+        }
+
+        public byte[] ReadPacket()
+        {
+            // validate signature
+            byte[] signature = ReadRange(0, 2);
+            Packet.ValidateMagicNumber(signature);
+
+            int headerSize = PacketHeader.GetExpectedSize();
+            byte[] headerBytes = ReadRange(2, headerSize); // skip signature
+            PacketHeader header = Packet.DeserializeHeader(headerBytes);
+            int dataLength = header.Size;
+            if (dataLength > 0)
+            {
+                byte[] data = ReadRange(0, dataLength + headerSize + 2);
+                return data;
+            }
+            return Array.Empty<byte>();
         }
 
         private void EnsureCapacity(long requiredSize)

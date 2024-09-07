@@ -38,6 +38,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -56,15 +57,18 @@
     <Compile Include="DataModel\JsonDict.cs" />
     <Compile Include="DataModel\Payload.cs" />
     <Compile Include="DataModel\PColor.cs" />
+    <Compile Include="DataModel\PEntity.cs" />
     <Compile Include="DataModel\PPlane.cs" />
     <Compile Include="DataModel\PMesh.cs" />
     <Compile Include="DataModel\PCurve.cs" />
+    <Compile Include="DataModel\PType.cs" />
     <Compile Include="Encryption\Crc16.cs" />
     <Compile Include="Encryption\Crypto.cs" />
     <Compile Include="Interfaces\IReceivedBehaviour.cs" />
-    <Compile Include="NamedPipe\DefaultNamedPipeServerReceivedBehaviour.cs" />
+    <Compile Include="NamedPipe\DefaultPipeReceivedBehaviour.cs" />
     <Compile Include="NamedPipe\NamedPipeClient.cs" />
     <Compile Include="NamedPipe\NamedPipeServer.cs" />
+    <Compile Include="NamedPipe\PipeReceivedPacketBehaviour.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SharedMemory\SharedMemoryManager.cs" />
     <Compile Include="Udp\UdpClientManager.cs" />
@@ -80,8 +84,6 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="SharedMemory\Behavior\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

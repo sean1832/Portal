@@ -6,16 +6,16 @@ using System.Threading.Tasks;
 
 namespace Portal.Core.DataModel
 {
-    public class PColor
+    public class PColor: PEntity
     {
         public Byte R { get;}
         public Byte G { get;}
         public Byte B { get;}
         public Byte A { get;}
 
-        public PColor() { }
+        public PColor():base(PType.Color) {  }
 
-        public PColor(Byte r, Byte g, Byte b, Byte a)
+        public PColor(Byte r, Byte g, Byte b, Byte a) : base(PType.Color)
         {
             R = r;
             G = g;
@@ -23,7 +23,7 @@ namespace Portal.Core.DataModel
             A = a;
         }
 
-        public PColor(Byte r, Byte g, Byte b)
+        public PColor(Byte r, Byte g, Byte b) : base(PType.Color)
         {
             R = r;
             G = g;
@@ -31,7 +31,7 @@ namespace Portal.Core.DataModel
             A = 255;
         }
 
-        public PColor(byte[] array)
+        public PColor(byte[] array) : base(PType.Color)
         {
             if (array.Length != 4)
             {

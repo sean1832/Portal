@@ -19,17 +19,17 @@ namespace Portal.Gh.Components.Serialization
     {
         public PackPayloadComponent()
             : base("Pack Payload", "Pack",
-                "Description",
+                "Pack a list of payloads into a single string with metadata",
                 Config.Category, Config.SubCat.Serialization)
         {
         }
 
         #region Metadata
 
-        public override GH_Exposure Exposure => GH_Exposure.septenary;
+        public override GH_Exposure Exposure => GH_Exposure.tertiary;
         public override IEnumerable<string> Keywords => new string[] { };
         protected override Bitmap Icon => Icons.PackPayload;
-        public override Guid ComponentGuid => new Guid("3ae8f342-1397-4f68-a15a-859a48bb3316");
+        public override Guid ComponentGuid => new Guid("1d0759eb-5dc5-4951-a429-3cfea458fd36");
 
         #endregion
 
@@ -38,6 +38,10 @@ namespace Portal.Gh.Components.Serialization
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
             pManager.AddParameter(new PayloadParam(), "Payloads", "P", "Payloads to be pack into a JSON string", GH_ParamAccess.list);
+            pManager.AddParameter(new JsonDictParam(), "Metadata", "#", "(Optional) Metadata that describe the payload.",
+                GH_ParamAccess.item);
+
+            pManager[1].Optional = true;
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
@@ -89,14 +93,18 @@ namespace Portal.Gh.Components.Serialization
         protected override void SolveInstance(IGH_DataAccess DA)
         {
             var payloadGoos = new List<PayloadGoo>();
+            var metadataGoo = new JsonDictGoo();
+
 
             if (!DA.GetDataList(0, payloadGoos)) return;
+            DA.GetData(1, ref metadataGoo);
 
             var payloads = payloadGoos.Select(payloadGoo => payloadGoo.Value).ToList();
+            Payload collection = new Payload(payloads, metadataGoo.Value);
 
             string json = _isBeautify
-                ? JsonConvert.SerializeObject(payloads, Formatting.Indented)
-                : JsonConvert.SerializeObject(payloads);
+                ? JsonConvert.SerializeObject(collection, Formatting.Indented)
+                : JsonConvert.SerializeObject(collection);
 
             DA.SetData(0, json);
         }

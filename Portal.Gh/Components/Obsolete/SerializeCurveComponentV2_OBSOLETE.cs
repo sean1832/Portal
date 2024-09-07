@@ -13,20 +13,20 @@ using Circle = Rhino.Geometry.Circle;
 using System.Security.Cryptography;
 using Portal.Gh.Params.Payloads;
 
-namespace Portal.Gh.Components.Serialization
+namespace Portal.Gh.Components.Obsolete
 {
-    public class SerializeCurveComponent : GH_Component
+    public class SerializeCurveComponentV2_OBSOLETE : GH_Component
     {
         #region Metadata
 
-        public SerializeCurveComponent()
+        public SerializeCurveComponentV2_OBSOLETE()
             : base("Serialize Curve", "SrCrv",
                 "Serialize curves into a JSON representation. This data should be pack as payload using `Pack Payload` before send over communication pipeline for data exchange.",
                 Config.Category, Config.SubCat.Serialization)
         {
         }
 
-        public override GH_Exposure Exposure => GH_Exposure.secondary;
+        public override GH_Exposure Exposure => GH_Exposure.hidden;
         public override IEnumerable<string> Keywords => new string[] { "serialize crv" };
         protected override Bitmap Icon => Icons.SerializeCurve;
         public override Guid ComponentGuid => new Guid("bf58221b-cf92-4bb3-a9c5-32070571bc4a");

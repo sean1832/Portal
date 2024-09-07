@@ -20,7 +20,7 @@ namespace Portal.Gh.Components.Local
         {
         }
 
-        public override GH_Exposure Exposure => GH_Exposure.primary;
+        public override GH_Exposure Exposure => GH_Exposure.tertiary;
         public override IEnumerable<string> Keywords => new string[] { };
         protected override Bitmap Icon => Icons.FileRead;
         public override Guid ComponentGuid => new Guid("94cca7d1-589e-4a52-ab6d-82b6325cad67");

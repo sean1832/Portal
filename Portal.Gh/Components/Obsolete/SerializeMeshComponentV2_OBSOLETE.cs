@@ -12,20 +12,20 @@ using Portal.Gh.Params.Json;
 using Portal.Gh.Params.Payloads;
 using Rhino.Geometry.Collections;
 
-namespace Portal.Gh.Components.Serialization
+namespace Portal.Gh.Components.Obsolete
 {
-    public class SerializeMeshComponent : GH_Component
+    public class SerializeMeshComponentV2_OBSOLETE : GH_Component
     {
         #region Metadata
 
-        public SerializeMeshComponent()
+        public SerializeMeshComponentV2_OBSOLETE()
             : base("Serialize Mesh", "SrMesh",
                 "Serialize meshes into a payload. This payload should be pack using `Pack Payload` before send over communication pipeline for data exchange.",
                 Config.Category, Config.SubCat.Serialization)
         {
         }
 
-        public override GH_Exposure Exposure => GH_Exposure.tertiary;
+        public override GH_Exposure Exposure => GH_Exposure.hidden;
         public override IEnumerable<string> Keywords => new string[] { };
         protected override Bitmap Icon => Icons.SerializeMesh;
         public override Guid ComponentGuid => new Guid("a6d957ac-89ae-420d-ad0f-3c0fa516251f");

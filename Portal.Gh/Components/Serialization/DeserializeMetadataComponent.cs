@@ -22,14 +22,14 @@ namespace Portal.Gh.Components.Serialization
         Dictionary<string, Type> uniqueChildProperties;
         public DeserializeMetadataComponent()
             : base("Deserialize Metadata", "DSrMeta",
-                "Description",
+                "Deserialize metadata into individual field",
                 Config.Category, Config.SubCat.Serialization)
         {
         }
 
         #region Metadata
 
-        public override GH_Exposure Exposure => GH_Exposure.septenary;
+        public override GH_Exposure Exposure => GH_Exposure.secondary;
         public override IEnumerable<string> Keywords => new string[] { };
         protected override Bitmap Icon => Icons.DeserializeMeta;
         public override Guid ComponentGuid => new Guid("473c030c-856b-4551-9ac6-65c9ccfbd3e6");

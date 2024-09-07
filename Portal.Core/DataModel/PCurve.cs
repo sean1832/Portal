@@ -6,19 +6,20 @@ using System.Threading.Tasks;
 
 namespace Portal.Core.DataModel
 {
-    public abstract class PCurve
+    public abstract class PCurve : PEntity
     {
-        public string Type { get; protected set; }
         public List<PVector3D> Points { get; protected set; }
+        public CurveType CurveType { get; protected set; }
+        protected PCurve(PType type) : base(type) { }
     }
 
     public class PNurbsCurve : PCurve {
         public bool IsPeriodic { get; }
         public int Degree { get; }
 
-        public PNurbsCurve(List<PVector3D> points, bool isPeriodic, int degree)
+        public PNurbsCurve(List<PVector3D> points, bool isPeriodic, int degree) : base(PType.Curve)
         {
-            Type = nameof(PNurbsCurve);
+            CurveType = CurveType.Nurbs;
             Points = points;
             IsPeriodic = isPeriodic;
             Degree = degree;
@@ -27,28 +28,26 @@ namespace Portal.Core.DataModel
 
     public class PLine: PCurve {
 
-        public PLine(PVector3D start, PVector3D end)
+        public PLine(PVector3D start, PVector3D end): base(PType.Curve)
         {
-            Type = nameof(PLine);
+            CurveType = CurveType.Line;
             Points[0] = start;
             Points[1] = end;
         }
 
-        public PLine(List<PVector3D> points)
+        public PLine(List<PVector3D> points) : base(PType.Curve)
         {
             if (points == null) throw new ArgumentNullException(nameof(points));
             if (points.Count != 2) throw new ArgumentException("Line must have exactly 2 points");
-
-            Type = nameof(PLine);
             Points = points;
         }
     }
 
     public class PPolylineCurve : PCurve
     {
-        public PPolylineCurve(List<PVector3D> points)
+        public PPolylineCurve(List<PVector3D> points) : base(PType.Curve)
         {
-            Type = nameof(PPolylineCurve);
+            CurveType = CurveType.Polyline;
             Points = points;
         }
     }
@@ -58,9 +57,17 @@ namespace Portal.Core.DataModel
         public PPlane Plane { get; set; }
         public double Radius { get; set; }
 
-        public PCircle(PPlane plane, double radius)
+        public PCircle(PPlane plane, double radius) : base(PType.Curve)
         {
-            Type = nameof(PCircle);
+            CurveType = CurveType.Circle;
+            Plane = plane;
+            Radius = radius;
+        }
+
+        protected PCircle(PPlane plane, double radius, PType type)
+            : base(type)
+        {
+            CurveType = CurveType.Circle;
             Plane = plane;
             Radius = radius;
         }
@@ -70,9 +77,9 @@ namespace Portal.Core.DataModel
     {
         public double AngleRadiant { get; set; }
 
-        public PArcCurve(PPlane plane, double radius, double angleRadiant) : base(plane, radius)
+        public PArcCurve(PPlane plane, double radius, double angleRadiant) : base(plane, radius, PType.Curve)
         {
-            Type = nameof(PArcCurve);
+            CurveType = CurveType.Arc;
             AngleRadiant = angleRadiant;
         }
     }

@@ -13,20 +13,20 @@ using Portal.Gh.Components.Serialization.JsonSerializerSettings;
 using Portal.Gh.Params.Json;
 using Portal.Gh.Params.Payloads;
 
-namespace Portal.Gh.Components.Serialization
+namespace Portal.Gh.Components.Obsolete
 {
-    public class DeserializeCurveComponent : GH_Component
+    public class DeserializeCurveComponentV2_OBSOLETE : GH_Component
     {
         #region Metadata
 
-        public DeserializeCurveComponent()
+        public DeserializeCurveComponentV2_OBSOLETE()
             : base("Deserialize Curve", "DSrCrv",
                 "Deserialize JSON string into curves. This data can be read from communication pipeline for data exchange.",
                 Config.Category, Config.SubCat.Serialization)
         {
         }
 
-        public override GH_Exposure Exposure => GH_Exposure.secondary;
+        public override GH_Exposure Exposure => GH_Exposure.hidden;
         public override IEnumerable<string> Keywords => new string[] { "deserialize crv", "desrcrv" };
         protected override Bitmap Icon => Icons.DeserializeCurve;
         public override Guid ComponentGuid => new Guid("62cc044a-5d17-45a8-bdd9-96615fbd506c");
@@ -55,8 +55,8 @@ namespace Portal.Gh.Components.Serialization
 
             if (!DA.GetData(0, ref payloadGoo)) return;
 
-            var curve = DeserializeCurve(payloadGoo.Value.Data.ToString());
-            var meta = new JsonDictGoo(payloadGoo.Value.Metadata);
+            var curve = DeserializeCurve(payloadGoo.Value.Items.ToString());
+            var meta = new JsonDictGoo(payloadGoo.Value.Meta);
             DA.SetData(0, curve);
             DA.SetData(1, meta);
         }
@@ -64,7 +64,7 @@ namespace Portal.Gh.Components.Serialization
 
         private Curve DeserializeCurve(string jsonData)
         {
-            var serializerSettings = new Newtonsoft.Json.JsonSerializerSettings();
+            var serializerSettings = new JsonSerializerSettings();
             serializerSettings.Converters.Add(new PCurveConverterSettings());
 
             PCurve pCurve = JsonConvert.DeserializeObject<PCurve>(jsonData, serializerSettings);

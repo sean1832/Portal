@@ -4,30 +4,32 @@ using Rhino.Geometry;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using Portal.Gh.Common;
 using Newtonsoft.Json;
 using Portal.Core.DataModel;
 using Portal.Gh.Params.Json;
 using GH_IO.Serialization;
 using System.Windows.Forms;
+using Portal.Gh.Params.Payloads;
 
-namespace Portal.Gh.Components.Obsolete
+namespace Portal.Gh.Components.Serialization
 {
-    public class PackPayloadComponentV0_OBSOLETE : GH_Component
+    public class PackPayloadComponentV1_OBSOLETE : GH_Component
     {
-        public PackPayloadComponentV0_OBSOLETE()
+        public PackPayloadComponentV1_OBSOLETE()
             : base("Pack Payload", "Pack",
                 "Description",
                 Config.Category, Config.SubCat.Serialization)
         {
         }
 
-        #region Metadata
+        #region Meta
 
         public override GH_Exposure Exposure => GH_Exposure.hidden;
         public override IEnumerable<string> Keywords => new string[] { };
         protected override Bitmap Icon => Icons.PackPayload;
-        public override Guid ComponentGuid => new Guid("7e14058d-78cd-4565-923a-d261f0b45e68");
+        public override Guid ComponentGuid => new Guid("3ae8f342-1397-4f68-a15a-859a48bb3316");
 
         #endregion
 
@@ -35,17 +37,12 @@ namespace Portal.Gh.Components.Obsolete
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
-            pManager.AddParameter(new JsonDictParam(), "Data", "Data", "The actual data",
-                GH_ParamAccess.list);
-            pManager.AddParameter(new JsonDictParam(), "Metadata", "Meta", "Extra information about each entry of the serialized data",
-                GH_ParamAccess.list);
-
-            pManager[1].Optional = true;
+            pManager.AddParameter(new PayloadParam(), "Payloads", "P", "Payloads to be pack into a JSON string", GH_ParamAccess.list);
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddTextParameter("Json String", "Txt", "Serialized JSON String", GH_ParamAccess.item);
+            pManager.AddTextParameter("JsonString", "Txt", "Serialized JSON String", GH_ParamAccess.item);
         }
 
         #endregion
@@ -91,45 +88,17 @@ namespace Portal.Gh.Components.Obsolete
 
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            var dataGoo = new List<JsonDictGoo>();
-            var metadataGoo = new List<JsonDictGoo>();
+            var payloadGoos = new List<PayloadGoo>();
 
-            if (!DA.GetDataList(0, dataGoo)) return;
-            DA.GetDataList(1, metadataGoo);
+            if (!DA.GetDataList(0, payloadGoos)) return;
 
-            DA.SetData(0, PackPayload(dataGoo, metadataGoo));
-        }
-
-        private string PackPayload(List<JsonDictGoo> data, List<JsonDictGoo> metadataGoos)
-        {
-            List<Payload> payloads = new List<Payload>();
-            JsonDict lastMetadata = null;
-            for (int i = 0; i < data.Count; i++)
-            {
-                JsonDict metadata;
-                try
-                {
-                    metadata = metadataGoos[i].Value;
-                    lastMetadata = metadata;
-                }
-                catch (Exception e)
-                {
-                    metadata = lastMetadata;
-                }
-
-                var payload = new Payload
-                {
-                    Items = data[i].Value,
-                    Meta = metadata
-                };
-                payloads.Add(payload);
-            }
-
+            var payloads = payloadGoos.Select(payloadGoo => payloadGoo.Value).ToList();
 
             string json = _isBeautify
                 ? JsonConvert.SerializeObject(payloads, Formatting.Indented)
                 : JsonConvert.SerializeObject(payloads);
-            return json;
+
+            DA.SetData(0, json);
         }
     }
 }

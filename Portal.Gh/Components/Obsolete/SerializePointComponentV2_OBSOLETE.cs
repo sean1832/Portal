@@ -9,20 +9,20 @@ using Portal.Core.DataModel;
 using Portal.Gh.Params.Json;
 using Portal.Gh.Params.Payloads;
 
-namespace Portal.Gh.Components.Serialization
+namespace Portal.Gh.Components.Obsolete
 {
-    public class SerializePointComponent : GH_Component
+    public class SerializePointComponentV2_OBSOLETE : GH_Component
     {
         #region Metadata
 
-        public SerializePointComponent()
+        public SerializePointComponentV2_OBSOLETE()
             : base("Serialize Points", "SrPt",
                 "Serialize points into a JSON representation. This data should be pack as payload using `Pack Payload` before send over communication pipeline for data exchange.",
                 Config.Category, Config.SubCat.Serialization)
         {
         }
 
-        public override GH_Exposure Exposure => GH_Exposure.primary;
+        public override GH_Exposure Exposure => GH_Exposure.hidden;
         public override IEnumerable<string> Keywords => new string[] { };
         protected override Bitmap Icon => Icons.SerializePoint;
         public override Guid ComponentGuid => new Guid("3c9bdd0a-ae6b-49ed-b95d-e1f98c3e5eeb");

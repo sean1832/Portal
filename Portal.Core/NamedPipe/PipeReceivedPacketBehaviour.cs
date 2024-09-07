@@ -1,18 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
 using System.IO.Pipes;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 using Portal.Core.Binary;
-using Portal.Core.DataModel;
 using Portal.Core.Interfaces;
+using System.Runtime.Serialization;
 
-namespace Portal.Gh.Components.Local.Behaviour
+namespace Portal.Core.NamedPipe
 {
-    internal class NamedPipeServerReceivedBehaviour: IReceivedBehaviour<NamedPipeServerStream>
+    public class PipeReceivedPacketBehaviour: IReceivedBehaviour<NamedPipeServerStream>
     {
         private bool TryReadFull(NamedPipeServerStream stream, byte[] buffer, int offset, int count)
         {

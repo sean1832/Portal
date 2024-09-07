@@ -20,7 +20,7 @@ namespace Portal.Core.NamedPipe
         {
             _onError = onError;
             _onMessageReceived = onMessageReceived;
-            _receivedBehaviour = receivedBehaviour ?? new DefaultNamedPipeServerReceivedBehaviour();
+            _receivedBehaviour = receivedBehaviour ?? new DefaultPipeReceivedBehaviour();
             try
             {
                 _server = new NamedPipeServerStream(
