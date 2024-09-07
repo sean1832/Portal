@@ -57,6 +57,7 @@
     <Compile Include="DataModel\JsonDict.cs" />
     <Compile Include="DataModel\Payload.cs" />
     <Compile Include="DataModel\PColor.cs" />
+    <Compile Include="DataModel\PEntity.cs" />
     <Compile Include="DataModel\PPlane.cs" />
     <Compile Include="DataModel\PMesh.cs" />
     <Compile Include="DataModel\PCurve.cs" />

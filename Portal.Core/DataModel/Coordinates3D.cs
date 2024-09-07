@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace Portal.Core.DataModel
 {
-    public abstract class Coordinates3D<T>
+    public abstract class Coordinates3D<T> : PEntity
     {
         public T X { get; set; }
         public T Y { get; set; }
         public T Z { get; set; }
 
-        protected Coordinates3D(T x, T y, T z)
+        protected Coordinates3D(T x, T y, T z, string type) : base(type)
         {
             X = x;
             Y = y;
@@ -22,7 +22,7 @@ namespace Portal.Core.DataModel
 
     public class PVector3Df : Coordinates3D<float>
     {
-        public PVector3Df(float x, float y, float z) : base(x, y, z)
+        public PVector3Df(float x, float y, float z) : base(x, y, z, nameof(PVector3Df))
         {
         }
 
@@ -45,7 +45,7 @@ namespace Portal.Core.DataModel
 
     public class PVector3D : Coordinates3D<double>
     {
-        public PVector3D(double x, double y, double z) : base(x, y, z)
+        public PVector3D(double x, double y, double z) : base(x, y, z, nameof(PVector3Df))
         {
         }
 

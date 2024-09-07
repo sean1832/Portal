@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace Portal.Core.DataModel
 {
-    public class PPlane
+    public class PPlane : PEntity
     {
         public PVector3D Origin { get; set; }
         public PVector3D XAxis { get; set; }
         public PVector3D YAxis { get; set; }
 
-        public PPlane(PVector3D origin, PVector3D xAxis, PVector3D yAxis)
+        public PPlane(PVector3D origin, PVector3D xAxis, PVector3D yAxis): base(nameof(PPlane))
         {
             Origin = origin;
             XAxis = xAxis;

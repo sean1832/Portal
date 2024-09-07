@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace Portal.Core.DataModel
 {
-    public abstract class Coordinates2D<T>
+    public abstract class Coordinates2D<T> : PEntity
     {
         public T X { get; set; }
         public T Y { get; set; }
 
-        protected Coordinates2D() { }
+        protected Coordinates2D(string type):base(type) { }
 
-        protected Coordinates2D(T x, T y)
+        protected Coordinates2D(T x, T y, string type) : base(type)
         {
             X = x;
             Y = y;
@@ -22,7 +22,7 @@ namespace Portal.Core.DataModel
 
     public class PVector2Df:Coordinates2D<float>
     {
-        public PVector2Df(float x, float y) : base(x, y)
+        public PVector2Df(float x, float y) : base(x, y, nameof(PVector2Df))
         {
         }
     }
