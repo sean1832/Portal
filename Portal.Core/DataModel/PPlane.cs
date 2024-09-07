@@ -12,7 +12,7 @@ namespace Portal.Core.DataModel
         public PVector3D XAxis { get; set; }
         public PVector3D YAxis { get; set; }
 
-        public PPlane(PVector3D origin, PVector3D xAxis, PVector3D yAxis): base(nameof(PPlane))
+        public PPlane(PVector3D origin, PVector3D xAxis, PVector3D yAxis): base(PType.Plane)
         {
             Origin = origin;
             XAxis = xAxis;

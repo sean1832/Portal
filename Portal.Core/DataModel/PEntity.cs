@@ -8,9 +8,9 @@ namespace Portal.Core.DataModel
 {
     public abstract class PEntity
     {
-        public string Type { get; }
+        public PType Type { get; }
 
-        protected PEntity(string type)
+        protected PEntity(PType type)
         {
             Type = type;
         }

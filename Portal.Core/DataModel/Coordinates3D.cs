@@ -12,7 +12,7 @@ namespace Portal.Core.DataModel
         public T Y { get; set; }
         public T Z { get; set; }
 
-        protected Coordinates3D(T x, T y, T z, string type) : base(type)
+        protected Coordinates3D(T x, T y, T z, PType type) : base(type)
         {
             X = x;
             Y = y;
@@ -22,7 +22,7 @@ namespace Portal.Core.DataModel
 
     public class PVector3Df : Coordinates3D<float>
     {
-        public PVector3Df(float x, float y, float z) : base(x, y, z, nameof(PVector3Df))
+        public PVector3Df(float x, float y, float z) : base(x, y, z, PType.Vector3D)
         {
         }
 
@@ -45,7 +45,7 @@ namespace Portal.Core.DataModel
 
     public class PVector3D : Coordinates3D<double>
     {
-        public PVector3D(double x, double y, double z) : base(x, y, z, nameof(PVector3Df))
+        public PVector3D(double x, double y, double z) : base(x, y, z, PType.Vector3D)
         {
         }
 

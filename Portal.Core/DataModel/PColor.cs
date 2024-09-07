@@ -13,9 +13,9 @@ namespace Portal.Core.DataModel
         public Byte B { get;}
         public Byte A { get;}
 
-        public PColor():base(nameof(PColor)) {  }
+        public PColor():base(PType.Color) {  }
 
-        public PColor(Byte r, Byte g, Byte b, Byte a) : base(nameof(PColor))
+        public PColor(Byte r, Byte g, Byte b, Byte a) : base(PType.Color)
         {
             R = r;
             G = g;
@@ -23,7 +23,7 @@ namespace Portal.Core.DataModel
             A = a;
         }
 
-        public PColor(Byte r, Byte g, Byte b) : base(nameof(PColor))
+        public PColor(Byte r, Byte g, Byte b) : base(PType.Color)
         {
             R = r;
             G = g;
@@ -31,7 +31,7 @@ namespace Portal.Core.DataModel
             A = 255;
         }
 
-        public PColor(byte[] array) : base(nameof(PColor))
+        public PColor(byte[] array) : base(PType.Color)
         {
             if (array.Length != 4)
             {

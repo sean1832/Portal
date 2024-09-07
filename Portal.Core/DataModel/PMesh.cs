@@ -14,21 +14,21 @@ namespace Portal.Core.DataModel
         //public List<PVector2Df> UVs { get; private set; }
         public List<string> VertexColors { get; private set; }
 
-        public PMesh() : base(nameof(PMesh))
+        public PMesh() : base(PType.Mesh)
         {
             Vertices = new List<PVector3Df>();
             Faces = new List<int[]>();
             VertexColors = new List<string>();
         }
 
-        public PMesh(List<PVector3Df> vertices, List<int[]> faces) : base(nameof(PMesh))
+        public PMesh(List<PVector3Df> vertices, List<int[]> faces) : base(PType.Mesh)
         {
             Vertices = vertices;
             Faces = faces;
             VertexColors = new List<string>();
         }
 
-        public PMesh(List<PVector3Df> vertices, List<int[]> faces, List<string> vertexColors) : base(nameof(PMesh))
+        public PMesh(List<PVector3Df> vertices, List<int[]> faces, List<string> vertexColors) : base(PType.Mesh)
         {
             Vertices = vertices;
             Faces = faces;
