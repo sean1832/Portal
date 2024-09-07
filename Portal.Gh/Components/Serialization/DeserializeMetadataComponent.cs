@@ -22,7 +22,7 @@ namespace Portal.Gh.Components.Serialization
         Dictionary<string, Type> uniqueChildProperties;
         public DeserializeMetadataComponent()
             : base("Deserialize Metadata", "DSrMeta",
-                "Description",
+                "Deserialize metadata into individual field",
                 Config.Category, Config.SubCat.Serialization)
         {
         }
