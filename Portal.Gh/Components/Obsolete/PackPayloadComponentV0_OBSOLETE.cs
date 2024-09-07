@@ -119,8 +119,8 @@ namespace Portal.Gh.Components.Obsolete
 
                 var payload = new Payload
                 {
-                    Data = data[i].Value,
-                    Metadata = metadata
+                    Items = data[i].Value,
+                    Meta = metadata
                 };
                 payloads.Add(payload);
             }

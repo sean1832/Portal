@@ -55,8 +55,8 @@ namespace Portal.Gh.Components.Serialization
 
             if (!DA.GetData(0, ref payloadGoo)) return;
 
-            var curve = DeserializeCurve(payloadGoo.Value.Data.ToString());
-            var meta = new JsonDictGoo(payloadGoo.Value.Metadata);
+            var curve = DeserializeCurve(payloadGoo.Value.Items.ToString());
+            var meta = new JsonDictGoo(payloadGoo.Value.Meta);
             DA.SetData(0, curve);
             DA.SetData(1, meta);
         }

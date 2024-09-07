@@ -54,8 +54,8 @@ namespace Portal.Gh.Components.Serialization
 
             if (!DA.GetData(0, ref payloadGoo)) return;
 
-            var point = DeserializePoint(payloadGoo.Value.Data.ToString());
-            var meta = new JsonDictGoo(payloadGoo.Value.Metadata);
+            var point = DeserializePoint(payloadGoo.Value.Items.ToString());
+            var meta = new JsonDictGoo(payloadGoo.Value.Meta);
             
             DA.SetData(0, point);
             DA.SetData(1, meta);

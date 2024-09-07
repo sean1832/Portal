@@ -53,8 +53,8 @@ namespace Portal.Gh.Components.Serialization
 
             if (!DA.GetData(0, ref payloadGoo)) return;
 
-            var mesh = DeserializeMesh(payloadGoo.Value.Data.ToString());
-            var meta = new JsonDictGoo(payloadGoo.Value.Metadata);
+            var mesh = DeserializeMesh(payloadGoo.Value.Items.ToString());
+            var meta = new JsonDictGoo(payloadGoo.Value.Meta);
 
             DA.SetData(0, mesh);
             DA.SetData(1, meta);

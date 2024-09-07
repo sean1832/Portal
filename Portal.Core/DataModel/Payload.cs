@@ -9,19 +9,19 @@ namespace Portal.Core.DataModel
 {
     public class Payload
     {
-        public object Data { get; set; }
-        public JsonDict Metadata { get; set; }
+        public object Items { get; set; }
+        public JsonDict Meta { get; set; }
 
         public Payload() { }
 
-        public Payload(object data)
+        public Payload(object items)
         {
-            Data = data;
+            Items = items;
         }
-        public Payload(object data, JsonDict metadata)
+        public Payload(object items, JsonDict meta)
         {
-            Data = data;
-            Metadata = metadata;
+            Items = items;
+            Meta = meta;
         }
 
         public override string ToString()
