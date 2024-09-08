@@ -60,9 +60,11 @@
     <Compile Include="DataModel\PCamera.cs" />
     <Compile Include="DataModel\PColor.cs" />
     <Compile Include="DataModel\PEntity.cs" />
+    <Compile Include="DataModel\PMaterial.cs" />
     <Compile Include="DataModel\PPlane.cs" />
     <Compile Include="DataModel\PMesh.cs" />
     <Compile Include="DataModel\PCurve.cs" />
+    <Compile Include="DataModel\PTexture.cs" />
     <Compile Include="DataModel\PType.cs" />
     <Compile Include="Encryption\Crc16.cs" />
     <Compile Include="Encryption\Crypto.cs" />

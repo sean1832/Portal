@@ -15,7 +15,9 @@ using Rhino.DocObjects;
 using Point = Rhino.Geometry.Point;
 using Grasshopper.Kernel.Types;
 using Eto.Drawing;
+using Rhino;
 using Bitmap = System.Drawing.Bitmap;
+using PTextureType = Portal.Core.DataModel.TextureType;
 
 namespace Portal.Gh.Components.Serialization
 {
@@ -70,16 +72,16 @@ namespace Portal.Gh.Components.Serialization
                 return;
             }
 
-            DA.SetData(0, new PayloadGoo(SerializeGeometry(geometry, metaGoo.Value)));
+            DA.SetData(0, new PayloadGoo(SerializeGeometry(geometry, metaGoo.Value, inputGoo.ReferenceID)));
         }
 
-        private Payload SerializeGeometry(GeometryBase geo, JsonDict meta)
+        private Payload SerializeGeometry(GeometryBase geo, JsonDict meta, Guid referenceId)
         {
             string dataItem;
             switch (geo.ObjectType)
             {
                 case ObjectType.Mesh:
-                    dataItem = JsonConvert.SerializeObject(SerializeMesh((Mesh)geo));
+                    dataItem = JsonConvert.SerializeObject(SerializeMesh((Mesh)geo, referenceId));
                     break;
                 case ObjectType.Curve:
                     dataItem = JsonConvert.SerializeObject(SerializeCurve((Curve)geo));
@@ -99,7 +101,7 @@ namespace Portal.Gh.Components.Serialization
             return new Payload(dict, meta);
         }
 
-        private PMesh SerializeMesh(Mesh mesh)
+        private PMesh SerializeMesh(Mesh mesh, Guid referenceId)
         {
             var vertices = mesh.Vertices.Select(vertex => new PVector3Df(vertex.X, vertex.Y, vertex.Z)).ToList();
             var faces = mesh.Faces.Select(face => new[] { face.A, face.B, face.C, face.D }).ToList();
@@ -108,7 +110,49 @@ namespace Portal.Gh.Components.Serialization
                 var pColor = new PColor(color.R, color.G, color.B, color.A);
                 return pColor.ToHex();
             }).ToList();
-            return new PMesh(vertices, faces, vertexColors);
+            List<PVector2Df> uvs = mesh.TextureCoordinates.Select(uv => new PVector2Df(uv.X, uv.Y)).ToList();
+
+            if (referenceId == Guid.Empty)
+            {
+                return new PMesh(vertices, faces, vertexColors, uvs);
+            }
+
+            // Attempt to get material from the document
+            int matIndex = TryGetMeshMaterialIndex(referenceId);
+            if (matIndex < 0)
+            {
+                // No material found, return mesh without material
+                return new PMesh(vertices, faces, vertexColors, uvs);
+            }
+            Material mat = RhinoDoc.ActiveDoc.Materials[matIndex];
+            if (mat == null)
+            {
+                // Material not found, return mesh without material
+                return new PMesh(vertices, faces, vertexColors, uvs);
+            }
+
+            Texture[] textures = mat.GetTextures();
+            List<PTexture> pTextures = new List<PTexture>();
+            foreach (var texture in textures)
+            {
+                pTextures.Add(new PTexture(texture.FileName, (PTextureType)texture.TextureType));
+            }
+
+            PMaterial pMaterial = new PMaterial(mat.Name, new PColor(mat.AmbientColor), pTextures);
+            return new PMesh(vertices, faces, vertexColors, uvs, pMaterial);
+        }
+
+        private int TryGetMeshMaterialIndex(Guid referenceId)
+        {
+            var doc = RhinoDoc.ActiveDoc;
+            var obj = doc.Objects.Find(referenceId);
+            if (obj == null)
+            {
+                return -1;
+            }
+
+            int index = obj.Attributes.MaterialIndex;
+            return index;
         }
 
         private PCurve SerializeCurve(Curve curve)
