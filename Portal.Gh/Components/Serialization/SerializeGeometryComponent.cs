@@ -15,7 +15,9 @@ using Rhino.DocObjects;
 using Point = Rhino.Geometry.Point;
 using Grasshopper.Kernel.Types;
 using Eto.Drawing;
+using Rhino;
 using Bitmap = System.Drawing.Bitmap;
+using PTextureType = Portal.Core.DataModel.TextureType;
 
 namespace Portal.Gh.Components.Serialization
 {
@@ -108,8 +110,11 @@ namespace Portal.Gh.Components.Serialization
                 var pColor = new PColor(color.R, color.G, color.B, color.A);
                 return pColor.ToHex();
             }).ToList();
-            return new PMesh(vertices, faces, vertexColors);
+            List<PVector2Df> uvs = mesh.TextureCoordinates.Select(uv => new PVector2Df(uv.X, uv.Y)).ToList();
+
+            return new PMesh(vertices, faces, vertexColors, uvs);
         }
+
 
         private PCurve SerializeCurve(Curve curve)
         {

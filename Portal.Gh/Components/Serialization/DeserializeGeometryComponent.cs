@@ -128,8 +128,12 @@ namespace Portal.Gh.Components.Serialization
                 PColor pColor = PColor.FromHexColor(hexColor);
                 mesh.VertexColors.Add(pColor.R, pColor.G, pColor.B);
             }
+
+            if (dataMesh.UVs != null && dataMesh.UVs.Count > 0)
+            {
+                mesh.TextureCoordinates.AddRange(dataMesh.UVs.Select(uv => new Point2f(uv.X, uv.Y)).ToArray());
+            }
             mesh.Normals.ComputeNormals();
-            mesh.FaceNormals.ComputeFaceNormals();
 
             return mesh;
         }
