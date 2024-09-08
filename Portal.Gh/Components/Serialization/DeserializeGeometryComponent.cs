@@ -134,7 +134,6 @@ namespace Portal.Gh.Components.Serialization
                 mesh.TextureCoordinates.AddRange(dataMesh.UVs.Select(uv => new Point2f(uv.X, uv.Y)).ToArray());
             }
             mesh.Normals.ComputeNormals();
-            mesh.FaceNormals.ComputeFaceNormals();
 
             return mesh;
         }
