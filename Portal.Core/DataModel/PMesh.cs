@@ -13,7 +13,6 @@ namespace Portal.Core.DataModel
         public List<int[]> Faces { get; private set; }
         public List<string> VertexColors { get; private set; }
         public List<PVector2Df> UVs { get; private set; }
-        public PMaterial Material { get; private set; }
 
         public PMesh() : base(PType.Mesh)
         {
@@ -44,15 +43,6 @@ namespace Portal.Core.DataModel
             Faces = faces;
             VertexColors = vertexColors;
             UVs = uvs;
-        }
-
-        public PMesh(List<PVector3Df> vertices, List<int[]> faces, List<string> vertexColors, List<PVector2Df> uvs, PMaterial material) : base(PType.Mesh)
-        {
-            Vertices = vertices;
-            Faces = faces;
-            VertexColors = vertexColors;
-            UVs = uvs;
-            Material = material;
         }
     }
 }

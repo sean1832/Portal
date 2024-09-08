@@ -72,16 +72,16 @@ namespace Portal.Gh.Components.Serialization
                 return;
             }
 
-            DA.SetData(0, new PayloadGoo(SerializeGeometry(geometry, metaGoo.Value, inputGoo.ReferenceID)));
+            DA.SetData(0, new PayloadGoo(SerializeGeometry(geometry, metaGoo.Value)));
         }
 
-        private Payload SerializeGeometry(GeometryBase geo, JsonDict meta, Guid referenceId)
+        private Payload SerializeGeometry(GeometryBase geo, JsonDict meta)
         {
             string dataItem;
             switch (geo.ObjectType)
             {
                 case ObjectType.Mesh:
-                    dataItem = JsonConvert.SerializeObject(SerializeMesh((Mesh)geo, referenceId));
+                    dataItem = JsonConvert.SerializeObject(SerializeMesh((Mesh)geo));
                     break;
                 case ObjectType.Curve:
                     dataItem = JsonConvert.SerializeObject(SerializeCurve((Curve)geo));
@@ -101,7 +101,7 @@ namespace Portal.Gh.Components.Serialization
             return new Payload(dict, meta);
         }
 
-        private PMesh SerializeMesh(Mesh mesh, Guid referenceId)
+        private PMesh SerializeMesh(Mesh mesh)
         {
             var vertices = mesh.Vertices.Select(vertex => new PVector3Df(vertex.X, vertex.Y, vertex.Z)).ToList();
             var faces = mesh.Faces.Select(face => new[] { face.A, face.B, face.C, face.D }).ToList();
@@ -112,48 +112,9 @@ namespace Portal.Gh.Components.Serialization
             }).ToList();
             List<PVector2Df> uvs = mesh.TextureCoordinates.Select(uv => new PVector2Df(uv.X, uv.Y)).ToList();
 
-            if (referenceId == Guid.Empty)
-            {
-                return new PMesh(vertices, faces, vertexColors, uvs);
-            }
-
-            // Attempt to get material from the document
-            int matIndex = TryGetMeshMaterialIndex(referenceId);
-            if (matIndex < 0)
-            {
-                // No material found, return mesh without material
-                return new PMesh(vertices, faces, vertexColors, uvs);
-            }
-            Material mat = RhinoDoc.ActiveDoc.Materials[matIndex];
-            if (mat == null)
-            {
-                // Material not found, return mesh without material
-                return new PMesh(vertices, faces, vertexColors, uvs);
-            }
-
-            Texture[] textures = mat.GetTextures();
-            List<PTexture> pTextures = new List<PTexture>();
-            foreach (var texture in textures)
-            {
-                pTextures.Add(new PTexture(texture.FileName, (PTextureType)texture.TextureType));
-            }
-
-            PMaterial pMaterial = new PMaterial(mat.Name, new PColor(mat.AmbientColor), pTextures);
-            return new PMesh(vertices, faces, vertexColors, uvs, pMaterial);
+            return new PMesh(vertices, faces, vertexColors, uvs);
         }
 
-        private int TryGetMeshMaterialIndex(Guid referenceId)
-        {
-            var doc = RhinoDoc.ActiveDoc;
-            var obj = doc.Objects.Find(referenceId);
-            if (obj == null)
-            {
-                return -1;
-            }
-
-            int index = obj.Attributes.MaterialIndex;
-            return index;
-        }
 
         private PCurve SerializeCurve(Curve curve)
         {
