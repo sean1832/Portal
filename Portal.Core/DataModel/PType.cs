@@ -6,18 +6,15 @@ using System.Threading.Tasks;
 
 namespace Portal.Core.DataModel
 {
-    public enum PType
+    public enum PGeoType
     {
         Undefined,
         Mesh,
         Curve,
-        Vector3D,
-        Vector2D,
-        Color,
         Plane
     }
 
-    public enum CurveType
+    public enum PCurveType
     {
         Base,
         Line,
@@ -27,7 +24,7 @@ namespace Portal.Core.DataModel
         Nurbs,
     }
 
-    public enum TextureType
+    public enum PTextureType
     {
         None = 0,
         Bitmap = 1,

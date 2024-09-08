@@ -17,7 +17,6 @@ using Grasshopper.Kernel.Types;
 using Eto.Drawing;
 using Rhino;
 using Bitmap = System.Drawing.Bitmap;
-using PTextureType = Portal.Core.DataModel.TextureType;
 
 namespace Portal.Gh.Components.Serialization
 {

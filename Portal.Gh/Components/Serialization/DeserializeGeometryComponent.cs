@@ -56,37 +56,44 @@ namespace Portal.Gh.Components.Serialization
 
             if (!DA.GetData(0, ref payloadGoo)) return;
 
-            PType type = TryGetType(payloadGoo.Value);
+            PGeoType geoGeoType = TryGetType(payloadGoo.Value);
 
-            switch (type)
+            switch (geoGeoType)
             {
-                case PType.Mesh:
+                case PGeoType.Mesh:
                     var mesh = DeserializeMesh(payloadGoo.Value.Items.ToString());
                     var meta = new JsonDictGoo(payloadGoo.Value.Meta);
                     DA.SetData(0, mesh);
                     DA.SetData(1, meta);
                     break;
-                case PType.Curve:
+                case PGeoType.Curve:
                     var curve = DeserializeCurve(payloadGoo.Value.Items.ToString());
                     var metaCurve = new JsonDictGoo(payloadGoo.Value.Meta);
                     DA.SetData(0, curve);
                     DA.SetData(1, metaCurve);
                     break;
-                case PType.Vector3D:
-                    var point = DeserializePoint(payloadGoo.Value.Items.ToString());
-                    var metaPoint = new JsonDictGoo(payloadGoo.Value.Meta);
-                    DA.SetData(0, point);
-                    DA.SetData(1, metaPoint);
+                default:
+                    try
+                    {
+                        var point = DeserializePoint(payloadGoo.Value.Items.ToString());
+                        var metaPoint = new JsonDictGoo(payloadGoo.Value.Meta);
+                        DA.SetData(0, point);
+                        DA.SetData(1, metaPoint);
+                    }
+                    catch (Exception e)
+                    {
+                        AddRuntimeMessage(GH_RuntimeMessageLevel.Error, $"Failed to deserialize geometry: {e.Message}");
+                    }
                     break;
             }
         }
 
-        private PType TryGetType(Payload payload)
+        private PGeoType TryGetType(Payload payload)
         {
             if (payload == null || payload.Items == null)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Payload is null or empty.");
-                return PType.Undefined; // Ensure payload is not null
+                return PGeoType.Undefined; // Ensure payload is not null
             }
 
             string payloadJson = JsonConvert.SerializeObject(payload.Items);
@@ -95,21 +102,21 @@ namespace Portal.Gh.Components.Serialization
             if (parsedObject["Type"] == null)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "Type property is missing from the payload item.");
-                return PType.Undefined; // Early exit if no 'Type' could be identified
+                return PGeoType.Undefined; // Early exit if no 'Type' could be identified
             }
 
-            PType itemType;
+            PGeoType itemGeoGeoType;
             try
             {
-                itemType = parsedObject["Type"].ToObject<PType>();
+                itemGeoGeoType = parsedObject["Type"].ToObject<PGeoType>();
             }
             catch (Exception ex)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, $"Failed to parse item type: {ex.Message}");
-                return PType.Undefined;
+                return PGeoType.Undefined;
             }
 
-            return itemType;
+            return itemGeoGeoType;
         }
 
         private Mesh DeserializeMesh(string data)
@@ -196,7 +203,7 @@ namespace Portal.Gh.Components.Serialization
                 case PArcCurve arc:
                     return ConstructCurve(arc);
                 default:
-                    throw new NotImplementedException($"Deserialization of {pCurve.Type} is not implemented");
+                    throw new NotImplementedException($"Deserialization of {pCurve.GeoGeoType} is not implemented");
             }
         }
 

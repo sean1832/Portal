@@ -13,7 +13,6 @@ using Portal.Core.DataModel;
 using Portal.Gh.Params.Json;
 using Rhino;
 using Rhino.DocObjects;
-using TextureType = Portal.Core.DataModel.TextureType;
 
 namespace Portal.Gh.Components.Serialization
 {
@@ -74,7 +73,7 @@ namespace Portal.Gh.Components.Serialization
                     Texture[] textures = GetTexture(mat);
 
                     PMaterial pMat = new PMaterial(mat.Name, new PColor(mat.DiffuseColor));
-                    List<PTexture> pTextures = textures.Select(tex => new PTexture(tex.FileName, (TextureType)tex.TextureType)).ToList();
+                    List<PTexture> pTextures = textures.Select(tex => new PTexture(tex.FileName, (PTextureType)tex.TextureType)).ToList();
                     pMat.Textures = pTextures;
 
                     string matString = JsonConvert.SerializeObject(pMat);
