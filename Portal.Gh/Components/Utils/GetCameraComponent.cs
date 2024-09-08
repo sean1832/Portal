@@ -12,20 +12,20 @@ using Rhino;
 
 namespace Portal.Gh.Components.Utils
 {
-    public class GetViewportInfoComponent : GH_Component
+    public class GetCameraComponent : GH_Component
     {
-        public GetViewportInfoComponent()
-            : base("Get Viewport Info", "ViewInfo",
-                "Description",
-                Config.Category, Config.SubCat.Utils)
+        public GetCameraComponent()
+            : base("Get Camera", "Camera",
+                "Get Rhino viewport camera information",
+                Config.Category, Config.SubCat.Serialization)
         {
         }
 
         #region Metadata
 
-        public override GH_Exposure Exposure => GH_Exposure.primary;
+        public override GH_Exposure Exposure => GH_Exposure.septenary;
         public override IEnumerable<string> Keywords => new string[] { };
-        protected override Bitmap Icon => null;
+        protected override Bitmap Icon => Icons.GetCamera;
         public override Guid ComponentGuid => new Guid("595ccdf0-2918-41fd-a0d9-00a9ab921d60");
 
         #endregion
@@ -46,8 +46,6 @@ namespace Portal.Gh.Components.Utils
         protected override void SolveInstance(IGH_DataAccess DA)
         {
             float sensorWidth = 36.0f; // Standard width of a 35mm film camera sensor in mm
-            int interval = 10; // Interval in ms
-
 
             RhinoDoc doc = Rhino.RhinoDoc.ActiveDoc;
             if (doc == null) return;
@@ -59,7 +57,7 @@ namespace Portal.Gh.Components.Utils
                 sensorWidth,
                 new PVector2Di(viewport.Size)
             );
-
+            
             string camStr = JsonConvert.SerializeObject(cam);
             JsonDict camDict = JsonConvert.DeserializeObject<JsonDict>(camStr);
 
