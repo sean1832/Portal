@@ -9,13 +9,18 @@ using Portal.Gh.Params.Json;
 using Grasshopper.Kernel.Types;
 using Portal.Core.DataModel;
 using Rhino;
+using Rhino.DocObjects;
+using WebSocketSharp;
+using Newtonsoft.Json;
+using System.Linq;
+using Rhino.UI;
 
 namespace Portal.Gh.Components.Serialization
 {
     public class GetObjectComponent : GH_Component
     {
         public GetObjectComponent()
-            : base("Get Object", "RhObj",
+            : base("Get Rhino Object", "RhObj",
                 "Get information about the rhino object.\nAttach a `trigger` component for dynamic update.",
                 Config.Category, Config.SubCat.Serialization)
         {
@@ -39,7 +44,9 @@ namespace Portal.Gh.Components.Serialization
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddParameter(new JsonDictParam(), "Object", "O", "Rhino object information in JSON format", GH_ParamAccess.item);
+            pManager.AddParameter(new JsonDictParam(), "Id", "I", "Rhino object basic identification information in JSON format", GH_ParamAccess.item);
+            pManager.AddParameter(new JsonDictParam(), "Layers", "L", "Layer information in JSON format", GH_ParamAccess.item);
+            pManager.AddParameter(new JsonDictParam(), "Material", "M", "Material information in JSON format", GH_ParamAccess.item);
         }
 
         #endregion
@@ -55,18 +62,88 @@ namespace Portal.Gh.Components.Serialization
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "Object is not referenced.");
                 return;
             }
-
             var doc = RhinoDoc.ActiveDoc;
             var obj = doc.Objects.Find(inputGoo.ReferenceID);
             if (obj == null) return;
 
+            JsonDict objDict = GetObjectInfoDict(obj);
+            JsonDict matDict = GetMaterialDict(obj, doc);
+            JsonDict layerDict = GetLayerInfoDict(obj, doc);
+
+
+            DA.SetData(0, new JsonDictGoo(objDict));
+            DA.SetData(1, new JsonDictGoo(layerDict));
+            DA.SetData(2, new JsonDictGoo(matDict));
+        }
+
+
+        private JsonDict GetObjectInfoDict(RhinoObject obj)
+        {
             var objDict = new JsonDict()
             {
                 {"Id", obj.Id},
                 {"Name", obj.Name},
             };
 
-            DA.SetData(0, new JsonDictGoo(objDict));
+            return objDict;
+        }
+
+        private JsonDict GetLayerInfoDict(RhinoObject obj, RhinoDoc doc)
+        {
+            var layer = doc.Layers.FindIndex(obj.Attributes.LayerIndex);
+            JsonDict layerDict = new JsonDict
+            {
+                { "Id", layer.Id},
+                { "FullPath", layer.FullPath},
+                { "Color", new PColor(layer.Color).ToHex() },
+                { "IsVisible", layer.IsVisible },
+                { "IsLocked", layer.IsLocked }
+            };
+            return layerDict;
+        }
+
+        private JsonDict GetMaterialDict(RhinoObject obj, RhinoDoc doc)
+        {
+            Material mat = GetMaterial(obj, doc);
+            if (mat == null)
+            {
+                return null;
+            }
+            Texture[] textures = GetTexture(mat);
+
+            PMaterial pMat = new PMaterial(mat.Name, new PColor(mat.DiffuseColor));
+            List<PTexture> pTextures = textures.Select(tex => new PTexture(tex.FileName, (PTextureType)tex.TextureType)).ToList();
+            pMat.Textures = pTextures;
+
+            string matString = JsonConvert.SerializeObject(pMat);
+            JsonDict matDict = JsonConvert.DeserializeObject<JsonDict>(matString);
+            return matDict;
+        }
+
+        private Material GetMaterial(RhinoObject obj, RhinoDoc doc)
+        {
+            int index = TryGetMeshMaterialIndex(obj);
+            if (index < 0)
+            {
+                return null;
+            }
+            return doc.Materials[index];
+        }
+
+        private Texture[] GetTexture(Material mat)
+        {
+            return mat.GetTextures();
+        }
+
+        private int TryGetMeshMaterialIndex(RhinoObject obj)
+        {
+            if (obj == null)
+            {
+                return -1;
+            }
+
+            int index = obj.Attributes.MaterialIndex;
+            return index;
         }
     }
 }
