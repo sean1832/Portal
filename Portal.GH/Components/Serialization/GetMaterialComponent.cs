@@ -13,6 +13,7 @@ using Portal.Core.DataModel;
 using Portal.Gh.Params.Json;
 using Rhino;
 using Rhino.DocObjects;
+using WebSocketSharp;
 
 namespace Portal.Gh.Components.Serialization
 {
@@ -70,6 +71,11 @@ namespace Portal.Gh.Components.Serialization
                     return;
                 default:
                     Material mat = GetMaterial(inputGoo.ReferenceID);
+                    if (mat == null)
+                    {
+                        DA.SetData(0, null);
+                        return;
+                    }
                     Texture[] textures = GetTexture(mat);
 
                     PMaterial pMat = new PMaterial(mat.Name, new PColor(mat.DiffuseColor));
@@ -91,11 +97,14 @@ namespace Portal.Gh.Components.Serialization
             if (obj == null)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, $"Object not found.");
+                return null;
             }
             int index = TryGetMeshMaterialIndex(obj);
             if (index < 0)
             {
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, $"Object has no material assigned.");
+                string objName = obj.Name.IsNullOrEmpty() ? "" : $" {obj.Name}";
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, $"Object{objName} has no material assigned.");
+                return null;
             }
             return doc.Materials[index];
         }
