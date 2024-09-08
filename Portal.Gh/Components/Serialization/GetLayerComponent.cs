@@ -68,7 +68,7 @@ namespace Portal.Gh.Components.Serialization
             var layer = doc.Layers.FindIndex(obj.Attributes.LayerIndex);
             JsonDict layerDict = new JsonDict
             {
-                { "Name", layer.Name },
+                { "Id", layer.Id},
                 { "FullPath", layer.FullPath},
                 { "Color", new PColor(layer.Color).ToHex() },
                 { "IsVisible", layer.IsVisible },
