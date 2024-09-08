@@ -8,11 +8,11 @@ namespace Portal.Core.DataModel
 {
     public abstract class PEntity
     {
-        public PType Type { get; }
+        public PGeoType GeoGeoType { get; }
 
-        protected PEntity(PType type)
+        protected PEntity(PGeoType geoGeoType)
         {
-            Type = type;
+            GeoGeoType = geoGeoType;
         }
     }
 }

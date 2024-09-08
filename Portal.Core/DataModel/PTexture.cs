@@ -9,8 +9,8 @@ namespace Portal.Core.DataModel
     public class PTexture
     {
         public string Path { get; }
-        public TextureType Type { get; }
-        public PTexture(string path, TextureType type)
+        public PTextureType Type { get; }
+        public PTexture(string path, PTextureType type)
         {
             Path = path;
             Type = type;

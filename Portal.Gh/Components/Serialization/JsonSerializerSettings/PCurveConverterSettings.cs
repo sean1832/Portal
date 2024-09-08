@@ -20,18 +20,18 @@ namespace Portal.Gh.Components.Serialization.JsonSerializerSettings
         {
             JObject obj = JObject.Load(reader);
             Int64 typeInt = (obj["CurveType"] ?? throw new InvalidOperationException(@"Type is not defined")).Value<Int64>();
-            CurveType type = (CurveType)typeInt;
+            PCurveType type = (PCurveType)typeInt;
             switch (type)
             {
-                case CurveType.Nurbs:
+                case PCurveType.Nurbs:
                     return obj.ToObject<PNurbsCurve>(serializer);
-                case CurveType.Polyline:
+                case PCurveType.Polyline:
                     return obj.ToObject<PPolylineCurve>(serializer);
-                case CurveType.Line:
+                case PCurveType.Line:
                     return obj.ToObject<PLine>(serializer);
-                case CurveType.Arc:
+                case PCurveType.Arc:
                     return obj.ToObject<PArcCurve>(serializer);
-                case CurveType.Base:
+                case PCurveType.Base:
                     return obj.ToObject<PCurve>(serializer);
                 default:
                     throw new NotImplementedException($"Deserialization of {type} is not supported");

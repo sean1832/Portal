@@ -14,7 +14,7 @@ namespace Portal.Core.DataModel
         public List<string> VertexColors { get; private set; }
         public List<PVector2Df> UVs { get; private set; }
 
-        public PMesh() : base(PType.Mesh)
+        public PMesh() : base(PGeoType.Mesh)
         {
             Vertices = new List<PVector3Df>();
             Faces = new List<int[]>();
@@ -22,7 +22,7 @@ namespace Portal.Core.DataModel
             UVs = new List<PVector2Df>();
         }
 
-        public PMesh(List<PVector3Df> vertices, List<int[]> faces) : base(PType.Mesh)
+        public PMesh(List<PVector3Df> vertices, List<int[]> faces) : base(PGeoType.Mesh)
         {
             Vertices = vertices;
             Faces = faces;
@@ -30,14 +30,14 @@ namespace Portal.Core.DataModel
             UVs = new List<PVector2Df>();
         }
 
-        public PMesh(List<PVector3Df> vertices, List<int[]> faces, List<string> vertexColors) : base(PType.Mesh)
+        public PMesh(List<PVector3Df> vertices, List<int[]> faces, List<string> vertexColors) : base(PGeoType.Mesh)
         {
             Vertices = vertices;
             Faces = faces;
             VertexColors = vertexColors;
             UVs = new List<PVector2Df>();
         }
-        public PMesh(List<PVector3Df> vertices, List<int[]> faces, List<string> vertexColors, List<PVector2Df> uvs) : base(PType.Mesh)
+        public PMesh(List<PVector3Df> vertices, List<int[]> faces, List<string> vertexColors, List<PVector2Df> uvs) : base(PGeoType.Mesh)
         {
             Vertices = vertices;
             Faces = faces;
