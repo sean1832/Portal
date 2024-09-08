@@ -157,6 +157,9 @@
   <data name="GetCamera" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\GetCamera.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="GetMaterial" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\GetMaterial.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="JsonParam" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\JsonParam.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>

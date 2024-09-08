@@ -30,7 +30,7 @@ namespace Portal.Gh.Components.Serialization
 
         public override GH_Exposure Exposure => GH_Exposure.septenary;
         public override IEnumerable<string> Keywords => new string[] { };
-        protected override Bitmap Icon => null;
+        protected override Bitmap Icon => Icons.GetMaterial;
         public override Guid ComponentGuid => new Guid("4a47e371-b922-43fc-a5cb-8cd2137819ee");
 
         #endregion
