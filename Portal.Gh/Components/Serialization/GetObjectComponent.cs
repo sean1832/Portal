@@ -20,15 +20,15 @@ namespace Portal.Gh.Components.Serialization
     public class GetObjectComponent : GH_Component
     {
         public GetObjectComponent()
-            : base("Get Rhino Object", "RhObj",
-                "Get information about the rhino object.\nAttach a `trigger` component for dynamic update.",
+            : base("Object Meta", "ObjMeta",
+                "Get meta attributes about the referenced rhino object.\nAttach a `trigger` component for dynamic update.",
                 Config.Category, Config.SubCat.Serialization)
         {
         }
 
         #region Metadata
 
-        public override GH_Exposure Exposure => GH_Exposure.primary;
+        public override GH_Exposure Exposure => GH_Exposure.septenary;
         public override IEnumerable<string> Keywords => new string[] { };
         protected override Bitmap Icon => null;
         public override Guid ComponentGuid => new Guid("00cc6587-c5b2-4215-846a-64b19225c8b4");
@@ -45,7 +45,7 @@ namespace Portal.Gh.Components.Serialization
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
             pManager.AddParameter(new JsonDictParam(), "Id", "I", "Rhino object basic identification information in JSON format", GH_ParamAccess.item);
-            pManager.AddParameter(new JsonDictParam(), "Layers", "L", "Layer information in JSON format", GH_ParamAccess.item);
+            pManager.AddParameter(new JsonDictParam(), "Layer", "L", "Layer information in JSON format", GH_ParamAccess.item);
             pManager.AddParameter(new JsonDictParam(), "Material", "M", "Material information in JSON format", GH_ParamAccess.item);
         }
 
@@ -96,8 +96,6 @@ namespace Portal.Gh.Components.Serialization
                 { "Id", layer.Id},
                 { "FullPath", layer.FullPath},
                 { "Color", new PColor(layer.Color).ToHex() },
-                { "IsVisible", layer.IsVisible },
-                { "IsLocked", layer.IsLocked }
             };
             return layerDict;
         }
