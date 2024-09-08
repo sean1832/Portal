@@ -223,6 +223,16 @@ namespace Portal.Gh {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap ObjectMeta {
+            get {
+                object obj = ResourceManager.GetObject("ObjectMeta", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap PackPayload {
             get {
                 object obj = ResourceManager.GetObject("PackPayload", resourceCulture);

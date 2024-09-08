@@ -17,9 +17,9 @@ using Rhino.UI;
 
 namespace Portal.Gh.Components.Serialization
 {
-    public class GetObjectComponent : GH_Component
+    public class ObjectMetaComponent : GH_Component
     {
-        public GetObjectComponent()
+        public ObjectMetaComponent()
             : base("Object Meta", "ObjMeta",
                 "Get meta attributes about the referenced rhino object.\nAttach a `trigger` component for dynamic update.",
                 Config.Category, Config.SubCat.Serialization)
@@ -30,7 +30,7 @@ namespace Portal.Gh.Components.Serialization
 
         public override GH_Exposure Exposure => GH_Exposure.septenary;
         public override IEnumerable<string> Keywords => new string[] { };
-        protected override Bitmap Icon => null;
+        protected override Bitmap Icon => Icons.ObjectMeta;
         public override Guid ComponentGuid => new Guid("00cc6587-c5b2-4215-846a-64b19225c8b4");
 
         #endregion
