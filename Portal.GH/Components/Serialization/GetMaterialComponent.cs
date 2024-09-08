@@ -21,7 +21,7 @@ namespace Portal.Gh.Components.Serialization
     {
         public GetMaterialComponent()
             : base("Get Material", "Material",
-                "Get reference object material information.\nAttach a `trigger` component for continues update.",
+                "Get reference object material information.\nAttach a `trigger` component for dynamic update.",
                 Config.Category, Config.SubCat.Serialization)
         {
         }

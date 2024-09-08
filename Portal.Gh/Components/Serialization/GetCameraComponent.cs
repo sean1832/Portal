@@ -16,7 +16,7 @@ namespace Portal.Gh.Components.Utils
     {
         public GetCameraComponent()
             : base("Get Camera", "Camera",
-                "Get Rhino viewport camera information",
+                "Get Rhino viewport camera information. \nAttach a `trigger` component for dynamic update.",
                 Config.Category, Config.SubCat.Serialization)
         {
         }
