@@ -24,7 +24,7 @@ namespace Portal.Gh.Components.Utils
         #region Metadata
 
         public override GH_Exposure Exposure => GH_Exposure.septenary;
-        public override IEnumerable<string> Keywords => new string[] { };
+        public override IEnumerable<string> Keywords => new string[] { "getcamera" };
         protected override Bitmap Icon => Icons.GetCamera;
         public override Guid ComponentGuid => new Guid("595ccdf0-2918-41fd-a0d9-00a9ab921d60");
 
