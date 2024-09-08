@@ -38,6 +38,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -56,6 +57,7 @@
     <Compile Include="Binary\Packet.cs" />
     <Compile Include="DataModel\JsonDict.cs" />
     <Compile Include="DataModel\Payload.cs" />
+    <Compile Include="DataModel\PCamera.cs" />
     <Compile Include="DataModel\PColor.cs" />
     <Compile Include="DataModel\PEntity.cs" />
     <Compile Include="DataModel\PPlane.cs" />
