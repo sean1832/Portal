@@ -1,4 +1,4 @@
-# Portal
+# Portal.GH
 ![GitHub Release](https://img.shields.io/github/v/release/sean1832/portal)
 ![Static Badge](https://img.shields.io/badge/Grasshopper-7.13%2B-blue)
 ![GitHub License](https://img.shields.io/github/license/sean1832/portal)
@@ -6,7 +6,7 @@
 
 Portal is a Grasshopper3D plugin designed to facilitate [Inter-Process Communication (IPC)](https://en.wikipedia.org/wiki/Inter-process_communication), enabling seamless data exchange between Grasshopper and external applications or processes. By extending workflow capabilities beyond Grasshopper3D and Rhino3D, Portal opens up new possibilities for integrated, multi-platform design processes.
 
-## Adaptors
+## 🔌Adaptors
 - [Portal.blender](https://github.com/sean1832/Portal.blender)
 - Portal.unity (Coming Soon)
 - Portal.revit (Coming Soon)
@@ -29,6 +29,20 @@ https://github.com/user-attachments/assets/070eb40c-2fe2-4cb2-8e6d-64786fcd9897
 - **Data Compression / Decompression** using GZip
 - **Metadata Support** for geometry (e.g., material, layer (not implemented yet) etc.)
 - **Vertex Color Support** for meshes 
+
+> [!NOTE]
+> Due to the fact that I am working on this project alone in my free time, the development process maybe slow. I will try to implement features as soon as possible. If you have any feature requests, please let me know by creating a [feature request](https://github.com/sean1832/Portal/issues).
+
+## 🗺️ Roadmap
+### **0.4.0**:
+- [x] Nested `Payload` data structure [#12](https://github.com/sean1832/Portal/pull/12)
+- [x] Serialization of rhino viewport camera [#13](https://github.com/sean1832/Portal/pull/13)
+- [x] Serialization of mesh UV [#14](https://github.com/sean1832/Portal/pull/14)
+- [x] Serialization of Material, texture and object layer for referenced geometry [#14](https://github.com/sean1832/Portal/pull/14), [#15](https://github.com/sean1832/Portal/pull/15)
+- [ ] Update Adaptors to support new features
+
+### **0.5.0**:
+- [feature request](https://github.com/sean1832/Portal/issues) are welcome.
 
 
 ## 🛠️ System Requirements
