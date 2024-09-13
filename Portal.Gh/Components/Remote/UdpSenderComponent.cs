@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Text;
 using Portal.Gh.Common;
 using Portal.Core;
+using Portal.Core.Binary;
 using Portal.Core.Udp;
 using Portal.Core.Utils;
 using Portal.Gh.Params.Bytes;
@@ -53,6 +54,8 @@ namespace Portal.Gh.Components.Remote
 
         #endregion
 
+        private ushort _lastChecksum;
+
         protected override void SolveInstance(IGH_DataAccess DA)
         {
             string ip = null;
@@ -82,6 +85,9 @@ namespace Portal.Gh.Components.Remote
             if (!send) return;
             try
             {
+                ushort checksum = Packet.Deserialize(message.Value).Header.Checksum;
+                if (checksum != 0 && checksum == _lastChecksum) return; // Skip if the message is the same
+
                 using (var udpClient = new UdpClientManager(ip, port))
                 {
                     udpClient.Send(message.Value);
@@ -91,6 +97,7 @@ namespace Portal.Gh.Components.Remote
                         AddRuntimeMessage(GH_RuntimeMessageLevel.Error, e.Message);
                         Message = "Error";
                     };
+                    _lastChecksum = checksum;
                 } // properly dispose the client after sending the message
             }
             catch (Exception e)

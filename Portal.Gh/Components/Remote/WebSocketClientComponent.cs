@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Threading.Tasks;
+using Portal.Core.Binary;
 using Portal.Gh.Common;
 using Portal.Core.Utils;
 using Portal.Core.WebSocket;
@@ -76,6 +77,8 @@ namespace Portal.Gh.Components.Remote
             Dispose();
         }
 
+        private ushort _lastChecksum;
+
         protected override void SolveInstance(IGH_DataAccess DA)
         {
             string hostIp = "";
@@ -108,6 +111,9 @@ namespace Portal.Gh.Components.Remote
             string uri = $"ws://{hostIp}:{port}{route}";
             Message = uri;
 
+            ushort checksum = Packet.Deserialize(msg.Value).Header.Checksum;
+            if (checksum != 0 && checksum == _lastChecksum) return; // Skip if the message is the same
+
             if (connect && !_socketClient.IsConnected)
             {
                 _socketClient.Connect(uri);
@@ -117,9 +123,10 @@ namespace Portal.Gh.Components.Remote
                 _socketClient.Disconnect();
             }
 
-            if (msg != null && msg.Value.Length != 0)
+            if (msg.Value.Length != 0)
             {
                 _socketClient.Send(msg.Value);
+                _lastChecksum = checksum;
             }
         }
 

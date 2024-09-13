@@ -4,6 +4,7 @@ using Rhino.Geometry;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using Portal.Core.Binary;
 using Portal.Gh.Common;
 using Portal.Gh.Params.Bytes;
 
@@ -42,6 +43,8 @@ namespace Portal.Gh.Components.Local
 
         #endregion
 
+        private ushort _lastChecksum;
+
         protected override void SolveInstance(IGH_DataAccess DA)
         {
             BytesGoo data = null;
@@ -54,7 +57,11 @@ namespace Portal.Gh.Components.Local
 
             if (write)
             {
+                ushort checksum = Packet.Deserialize(data.Value).Header.Checksum;
+                if (_lastChecksum != 0 && _lastChecksum  == checksum) return; // // Skip if the message is the same
+
                 System.IO.File.WriteAllBytes(path, data.Value);
+                _lastChecksum = checksum;
                 Message = "Written";
             }
         }

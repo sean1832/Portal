@@ -10,6 +10,7 @@ using Portal.Core.Utils;
 using Portal.Core.NamedPipe;
 using Portal.Gh.Params.Bytes;
 using System.Windows.Forms;
+using Portal.Core.Binary;
 using Portal.Core.DataModel;
 
 namespace Portal.Gh.Components.Local
@@ -52,7 +53,7 @@ namespace Portal.Gh.Components.Local
         }
 
         #endregion
-
+        private ushort _lastChecksum;
         protected override void SolveInstance(IGH_DataAccess DA)
         {
             string pipeName = null;
@@ -64,11 +65,14 @@ namespace Portal.Gh.Components.Local
             if (!DA.GetData(2, ref send)) return;
 
             string serverName = "."; // Local machine
+            
+            if (!send) return;
+            ushort checksum = Packet.Deserialize(message.Value).Header.Checksum;
+            if (checksum != 0 && checksum == _lastChecksum) return; // Skip if the message is the same
 
-            if (send)
-            {
-                SendMessage(message.Value, serverName, pipeName);
-            }
+            SendMessage(message.Value, serverName, pipeName);
+            _lastChecksum = checksum;
+            
         }
 
         private void SendMessage(byte[] data, string serverName, string pipeName)
