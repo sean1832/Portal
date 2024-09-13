@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Security.Cryptography;
 using System.Text;
+using Portal.Core.Binary;
 using Portal.Core.DataModel;
 using Portal.Core.Encryption;
 using Portal.Core.SharedMemory;
@@ -70,6 +71,7 @@ namespace Portal.Gh.Components.Local
         }
         #endregion
 
+        private ushort _lastChecksum;
         private void OnDocumentClose(GH_DocumentServer sender, GH_Document doc)
         {
             DisposeMem();
@@ -85,17 +87,19 @@ namespace Portal.Gh.Components.Local
             if (!DA.GetData(1, ref message)) return;
             if (!DA.GetData(2, ref write)) return;
 
-            if (write)
+            if (!write) return;
+            ushort checksum = Packet.Deserialize(message.Value).Header.Checksum;
+            if (checksum != 0 && checksum == _lastChecksum) return; // Skip if the message is the same
+
+            try
             {
-                try
-                {
-                    WriteToMemory(name, message.Value);
-                }
-                catch (Exception e)
-                {
-                    DisposeMem();
-                    AddRuntimeMessage(GH_RuntimeMessageLevel.Error, e.Message);
-                }
+                WriteToMemory(name, message.Value);
+                _lastChecksum = checksum;
+            }
+            catch (Exception e)
+            {
+                DisposeMem();
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, e.Message);
             }
         }
 
