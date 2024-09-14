@@ -66,7 +66,11 @@ namespace Portal.Gh.Components.Local
 
             string serverName = "."; // Local machine
             
-            if (!send) return;
+            if (!send)
+            {
+                _lastChecksum = 0; // Reset checksum
+                return;
+            }
             ushort checksum = Packet.Deserialize(message.Value).Header.Checksum;
             if (checksum != 0 && checksum == _lastChecksum) return; // Skip if the message is the same
 

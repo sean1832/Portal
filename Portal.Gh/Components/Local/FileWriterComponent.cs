@@ -55,15 +55,17 @@ namespace Portal.Gh.Components.Local
             if (!DA.GetData(1, ref path)) return;
             if (!DA.GetData(2, ref write)) return;
 
-            if (write)
+            if (!write)
             {
-                ushort checksum = Packet.Deserialize(data.Value).Header.Checksum;
-                if (_lastChecksum != 0 && _lastChecksum  == checksum) return; // // Skip if the message is the same
-
-                System.IO.File.WriteAllBytes(path, data.Value);
-                _lastChecksum = checksum;
-                Message = "Written";
+                _lastChecksum = 0; // Reset checksum
+                return;
             }
+            ushort checksum = Packet.Deserialize(data.Value).Header.Checksum;
+            if (_lastChecksum != 0 && _lastChecksum  == checksum) return; // // Skip if the message is the same
+
+            System.IO.File.WriteAllBytes(path, data.Value);
+            _lastChecksum = checksum;
+            Message = "Written";
         }
     }
 }
