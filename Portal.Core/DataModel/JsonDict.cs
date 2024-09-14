@@ -10,6 +10,11 @@ namespace Portal.Core.DataModel
         {
             return JsonConvert.SerializeObject(this, Formatting.Indented);
         }
+
+        public string ToString(bool indented)
+        {
+            return JsonConvert.SerializeObject(this);
+        }
         public void Dispose()
         {
             Clear();
