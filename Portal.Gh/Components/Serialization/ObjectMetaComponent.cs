@@ -91,13 +91,43 @@ namespace Portal.Gh.Components.Serialization
         private JsonDict GetLayerInfoDict(RhinoObject obj, RhinoDoc doc)
         {
             var layer = doc.Layers.FindIndex(obj.Attributes.LayerIndex);
+            
             JsonDict layerDict = new JsonDict
             {
                 { "Id", layer.Id},
                 { "FullPath", layer.FullPath},
                 { "Color", new PColor(layer.Color).ToHex() },
             };
+
+            int layerMaterialIndex = layer.RenderMaterialIndex;
+
+            if (layerMaterialIndex >= 0)
+            {
+                var mat = doc.Materials[layerMaterialIndex];
+                var matDict = GetMaterialDictForLayer(mat, doc);
+                layerDict.Add("Material", matDict);
+            }
+
+
             return layerDict;
+        }
+
+        private JsonDict GetMaterialDictForLayer(Material mat, RhinoDoc doc)
+        {
+            if (mat == null)
+            {
+                return null;
+            }
+
+            Texture[] textures = GetTexture(mat);
+
+            PMaterial pMat = new PMaterial(mat.Name, new PColor(mat.DiffuseColor));
+            List<PTexture> pTextures = textures.Select(tex => new PTexture(tex.FileName, (PTextureType)tex.TextureType)).ToList();
+            pMat.Textures = pTextures;
+
+            string matString = JsonConvert.SerializeObject(pMat);
+            JsonDict matDict = JsonConvert.DeserializeObject<JsonDict>(matString);
+            return matDict;
         }
 
         private JsonDict GetMaterialDict(RhinoObject obj, RhinoDoc doc)
