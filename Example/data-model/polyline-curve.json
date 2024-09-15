@@ -1,6 +1,7 @@
-[
-    {
-        "Type": "PPolylineCurve",
+{
+    "Items": {
+        "Type": 2,
+        "PCurveType": 4,
         "Points": [
             {
                 "X": -6.244722801561397,
@@ -28,5 +29,8 @@
                 "Z": 0
             }
         ]
+    },
+    "Meta": {
+        "CustomData": "This is a custom data"
     }
-]
+}

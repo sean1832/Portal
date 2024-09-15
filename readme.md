@@ -22,27 +22,27 @@ https://github.com/user-attachments/assets/070eb40c-2fe2-4cb2-8e6d-64786fcd9897
   - Named Pipes
   - Memory Mapped File
   - Local File
-- **Data Serialization / Deserialization** for various geometry types:
+- **Geometry Serialization / Deserialization** :
   - Point
   - Mesh
+    - UV Coordinates
+    - Vertex colors
   - Curve (PolylineCurve, ArcCurve, LineCurve, NurbsCurve)
+- **Viewport Camera Serialization**
+- **Referenced Object Serialization**
+  - Layer full path
+  - Layer / Object material and texture
 - **Data Compression / Decompression** using GZip
-- **Metadata Support** for geometry (e.g., material, layer (not implemented yet) etc.)
-- **Vertex Color Support** for meshes 
+- **Metadata Support** for geometry
+
 
 > [!NOTE]
 > Due to the fact that I am working on this project alone in my free time, the development process maybe slow. I will try to implement features as soon as possible. If you have any feature requests, please let me know by creating a [feature request](https://github.com/sean1832/Portal/issues).
 
 ## 🗺️ Roadmap
-### **0.4.0**:
-- [x] Nested `Payload` data structure [#12](https://github.com/sean1832/Portal/pull/12)
-- [x] Serialization of rhino viewport camera [#13](https://github.com/sean1832/Portal/pull/13), [#18](https://github.com/sean1832/Portal/pull/18)
-- [x] Serialization of mesh UV [#14](https://github.com/sean1832/Portal/pull/14)
-- [x] Serialization of Material, texture and object layer for referenced geometry [#14](https://github.com/sean1832/Portal/pull/14), [#15](https://github.com/sean1832/Portal/pull/15)
-- [x] Sender optimization by ckecking if the data is changed [#19](https://github.com/sean1832/Portal/pull/19)
-- [ ] Update Adaptors to support new features
-
 ### **0.5.0**:
+- [ ] base64 encoding / decoding
+- [ ] More material properties (transparency, roughness, etc.)
 - [feature request](https://github.com/sean1832/Portal/issues) are welcome.
 
 
@@ -108,12 +108,17 @@ Here's an example of how you might send a mesh from Grasshopper to another appli
 
 Portal provides JSON data models for various geometric entities. These models define the structure for serializing and deserializing geometric data:
 
+#### Geometry Data Models
 - [Point Data Model](/Example/data-model/point.json)
 - [Mesh Data Model](/Example/data-model/mesh.json)
 - [Polyline Curve Model](/Example/data-model/polyline-curve.json)
 - [Arc Curve Model](/Example/data-model/arc-curve.json)
 - [Line Curve Model](/Example/data-model/line-curve.json)
 - [Nurbs Curve Model](/Example/data-model/nurbs-curve.json)
+
+#### Packet Data Model
+Packet is a generic model that wraps the data being sent. It includes the data itself and metadata about the data.
+- [Packet Data Model](/Example/data-model/packet-points.json)
 
 ### Headers
 Portal uses headers to identify properties of the data being sent. These headers are used to determine the type of data being sent, the compression status, and other relevant information.

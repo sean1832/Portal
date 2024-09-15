@@ -1,5 +1,7 @@
-[
-    {
+{
+    "Items":{
+        "Type": 2,
+        "PCurveType": 2,
         "AngleRadiant": 1.3159002635187897,
         "Plane": {
             "Origin": {
@@ -19,7 +21,9 @@
             }
         },
         "Radius": 9.554347673562509,
-        "Type": "PArcCurve",
         "Points": null
+    },
+    "Meta": {
+        "CustomData": "This is a custom data"
     }
-]
+}

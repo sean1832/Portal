@@ -1,6 +1,7 @@
-[
-    {
-        "Type": "PLine",
+{
+    "Items":{
+        "Type": 2,
+        "PCurveType": 1,
         "Points": [
             {
                 "X": -12.638129479350445,
@@ -13,5 +14,8 @@
                 "Z": 0
             }
         ]
+    },
+    "Meta": {
+        "CustomData": "This is a custom data"
     }
-]
+}

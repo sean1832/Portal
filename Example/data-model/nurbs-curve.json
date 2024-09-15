@@ -1,8 +1,9 @@
-[
-    {
+{
+    "Items": {
+        "Type": 2,
+        "PCurveType": 5,
         "IsPeriodic": false,
         "Degree": 3,
-        "Type": "PNurbsCurve",
         "Points": [
             {
                 "X": -3.813110569183122,
@@ -30,5 +31,8 @@
                 "Z": 0
             }
         ]
+    },
+    "Meta": {
+        "CustomData": "This is a custom data"
     }
-]
+}
