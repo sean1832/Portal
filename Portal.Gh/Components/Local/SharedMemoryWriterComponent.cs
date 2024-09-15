@@ -87,7 +87,11 @@ namespace Portal.Gh.Components.Local
             if (!DA.GetData(1, ref message)) return;
             if (!DA.GetData(2, ref write)) return;
 
-            if (!write) return;
+            if (!write)
+            {
+                _lastChecksum = 0; // Reset checksum
+                return;
+            }
             ushort checksum = Packet.Deserialize(message.Value).Header.Checksum;
             if (checksum != 0 && checksum == _lastChecksum) return; // Skip if the message is the same
 

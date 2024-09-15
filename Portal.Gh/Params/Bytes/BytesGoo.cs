@@ -12,6 +12,7 @@ using Portal.Core.Encryption;
 using Portal.Core.Utils;
 using Newtonsoft.Json.Linq;
 using Portal.Core.Binary;
+using Portal.Gh.Params.Json;
 
 namespace Portal.Gh.Params.Bytes
 {
@@ -128,6 +129,23 @@ namespace Portal.Gh.Params.Bytes
                     _headerIsValid = false;
                 }
                 
+                return true;
+            }
+
+            if (source is JsonDictGoo jsonGoo)
+            {
+                var json = jsonGoo.Value;
+                try
+                {
+                    byte[] rawBytes = Encoding.UTF8.GetBytes(json.ToString(true));
+                    Packet packet = new Packet(rawBytes, false, false, new Crc16().ComputeChecksum(rawBytes));
+                    Value = packet.Serialize();
+                    _headerIsValid = true;
+                }
+                catch (Exception e)
+                {
+                    _headerIsValid = false;
+                }
                 return true;
             }
 

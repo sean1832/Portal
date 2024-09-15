@@ -82,7 +82,11 @@ namespace Portal.Gh.Components.Remote
             }
 
 
-            if (!send) return;
+            if (!send)
+            {
+                _lastChecksum = 0; // Reset checksum
+                return;
+            }
             try
             {
                 ushort checksum = Packet.Deserialize(message.Value).Header.Checksum;

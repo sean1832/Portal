@@ -111,14 +111,20 @@ namespace Portal.Gh.Components.Remote
             string uri = $"ws://{hostIp}:{port}{route}";
             Message = uri;
 
+            if (!connect)
+            {
+                _lastChecksum = 0; // Reset checksum
+                return;
+            }
+
             ushort checksum = Packet.Deserialize(msg.Value).Header.Checksum;
             if (checksum != 0 && checksum == _lastChecksum) return; // Skip if the message is the same
 
-            if (connect && !_socketClient.IsConnected)
+            if (!_socketClient.IsConnected)
             {
                 _socketClient.Connect(uri);
             }
-            else if (!connect && _socketClient.IsConnected)
+            else if (_socketClient.IsConnected)
             {
                 _socketClient.Disconnect();
             }
