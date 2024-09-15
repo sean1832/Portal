@@ -22,27 +22,27 @@ https://github.com/user-attachments/assets/070eb40c-2fe2-4cb2-8e6d-64786fcd9897
   - Named Pipes
   - Memory Mapped File
   - Local File
-- **Data Serialization / Deserialization** for various geometry types:
+- **Geometry Serialization / Deserialization** :
   - Point
   - Mesh
+    - UV Coordinates
+    - Vertex colors
   - Curve (PolylineCurve, ArcCurve, LineCurve, NurbsCurve)
+- **Viewport Camera Serialization**
+- **Referenced Object Serialization**
+  - Layer full path
+  - Layer / Object material and texture
 - **Data Compression / Decompression** using GZip
-- **Metadata Support** for geometry (e.g., material, layer (not implemented yet) etc.)
-- **Vertex Color Support** for meshes 
+- **Metadata Support** for geometry
+
 
 > [!NOTE]
 > Due to the fact that I am working on this project alone in my free time, the development process maybe slow. I will try to implement features as soon as possible. If you have any feature requests, please let me know by creating a [feature request](https://github.com/sean1832/Portal/issues).
 
 ## 🗺️ Roadmap
-### **0.4.0**:
-- [x] Nested `Payload` data structure [#12](https://github.com/sean1832/Portal/pull/12)
-- [x] Serialization of rhino viewport camera [#13](https://github.com/sean1832/Portal/pull/13), [#18](https://github.com/sean1832/Portal/pull/18)
-- [x] Serialization of mesh UV [#14](https://github.com/sean1832/Portal/pull/14)
-- [x] Serialization of Material, texture and object layer for referenced geometry [#14](https://github.com/sean1832/Portal/pull/14), [#15](https://github.com/sean1832/Portal/pull/15)
-- [x] Sender optimization by ckecking if the data is changed [#19](https://github.com/sean1832/Portal/pull/19)
-- [ ] Update Adaptors to support new features
-
 ### **0.5.0**:
+- [ ] base64 encoding / decoding
+- [ ] More material properties (transparency, roughness, etc.)
 - [feature request](https://github.com/sean1832/Portal/issues) are welcome.
 
 
