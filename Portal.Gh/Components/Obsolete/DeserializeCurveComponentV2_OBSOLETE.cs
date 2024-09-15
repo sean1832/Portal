@@ -87,7 +87,7 @@ namespace Portal.Gh.Components.Obsolete
                 case PArcCurve arc:
                     return ConstructCurve(arc);
                 default:
-                    throw new NotImplementedException($"Deserialization of {pCurve.GeoGeoType} is not implemented");
+                    throw new NotImplementedException($"Deserialization of {pCurve.Type} is not implemented");
             }
         }
 

@@ -19,7 +19,7 @@ namespace Portal.Gh.Components.Serialization.JsonSerializerSettings
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             JObject obj = JObject.Load(reader);
-            Int64 typeInt = (obj["CurveType"] ?? throw new InvalidOperationException(@"Type is not defined")).Value<Int64>();
+            Int64 typeInt = (obj["PCurveType"] ?? throw new InvalidOperationException(@"Type is not defined")).Value<Int64>();
             PCurveType type = (PCurveType)typeInt;
             switch (type)
             {

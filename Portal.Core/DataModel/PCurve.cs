@@ -10,7 +10,7 @@ namespace Portal.Core.DataModel
     {
         public List<PVector3D> Points { get; protected set; }
         public PCurveType PCurveType { get; protected set; }
-        protected PCurve(PGeoType geoGeoType) : base(geoGeoType) { }
+        protected PCurve(PGeoType type) : base(type) { }
     }
 
     public class PNurbsCurve : PCurve {
@@ -64,8 +64,8 @@ namespace Portal.Core.DataModel
             Radius = radius;
         }
 
-        protected PCircle(PPlane plane, double radius, PGeoType geoGeoType)
-            : base(geoGeoType)
+        protected PCircle(PPlane plane, double radius, PGeoType type)
+            : base(type)
         {
             PCurveType = PCurveType.Circle;
             Plane = plane;

@@ -56,9 +56,9 @@ namespace Portal.Gh.Components.Serialization
 
             if (!DA.GetData(0, ref payloadGoo)) return;
 
-            PGeoType geoGeoType = TryGetType(payloadGoo.Value);
+            PGeoType geoType = TryGetType(payloadGoo.Value);
 
-            switch (geoGeoType)
+            switch (geoType)
             {
                 case PGeoType.Mesh:
                     var mesh = DeserializeMesh(payloadGoo.Value.Items.ToString());
@@ -101,14 +101,14 @@ namespace Portal.Gh.Components.Serialization
 
             if (parsedObject["Type"] == null)
             {
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "Type property is missing from the payload item.");
+                //AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "Type property is missing from the payload item.");
                 return PGeoType.Undefined; // Early exit if no 'Type' could be identified
             }
 
-            PGeoType itemGeoGeoType;
+            PGeoType itemType;
             try
             {
-                itemGeoGeoType = parsedObject["Type"].ToObject<PGeoType>();
+                itemType = parsedObject["Type"].ToObject<PGeoType>();
             }
             catch (Exception ex)
             {
@@ -116,7 +116,7 @@ namespace Portal.Gh.Components.Serialization
                 return PGeoType.Undefined;
             }
 
-            return itemGeoGeoType;
+            return itemType;
         }
 
         private Mesh DeserializeMesh(string data)
@@ -203,7 +203,7 @@ namespace Portal.Gh.Components.Serialization
                 case PArcCurve arc:
                     return ConstructCurve(arc);
                 default:
-                    throw new NotImplementedException($"Deserialization of {pCurve.GeoGeoType} is not implemented");
+                    throw new NotImplementedException($"Deserialization of {pCurve.Type} is not implemented");
             }
         }
 

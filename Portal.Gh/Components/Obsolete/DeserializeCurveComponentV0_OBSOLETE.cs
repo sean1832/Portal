@@ -86,7 +86,7 @@ namespace Portal.Gh.Components.Obsolete
                         curves.Add(ConstructCurve(arc));
                         break;
                     default:
-                        throw new NotImplementedException($"Deserialization of {pCurve.GeoGeoType} is not implemented");
+                        throw new NotImplementedException($"Deserialization of {pCurve.Type} is not implemented");
                 }
             }
             return curves;
