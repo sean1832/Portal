@@ -33,8 +33,18 @@
     <LangVersion>8</LangVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="GH_IO">
+      <HintPath>C:\Users\M3\.nuget\packages\grasshopper\7.13.21348.13001\lib\net48\GH_IO.dll</HintPath>
+    </Reference>
+    <Reference Include="Grasshopper">
+      <HintPath>C:\Users\M3\.nuget\packages\grasshopper\7.13.21348.13001\lib\net48\Grasshopper.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="RhinoCommon, Version=7.34.23267.11001, Culture=neutral, PublicKeyToken=552281e97c755530, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\.nuget\packages\rhinocommon\7.13.21348.13001\lib\net48\RhinoCommon.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -61,6 +71,7 @@
     <Compile Include="DataModel\PColor.cs" />
     <Compile Include="DataModel\PEntity.cs" />
     <Compile Include="DataModel\PMaterial.cs" />
+    <Compile Include="DataModel\PLight.cs" />
     <Compile Include="DataModel\PPlane.cs" />
     <Compile Include="DataModel\PMesh.cs" />
     <Compile Include="DataModel\PCurve.cs" />

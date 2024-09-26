@@ -66,6 +66,12 @@ namespace Portal.Core.DataModel
             return $"R:{R}, G:{G}, B:{B}, A:{A}";
         }
 
+        //add 0925
+        public Color ToARGB()
+        {
+            return Color.FromArgb(A, R, G, B);
+        }
+
         public override int GetHashCode() {
             return R.GetHashCode() ^ G.GetHashCode() ^ B.GetHashCode() ^ A.GetHashCode();
         }

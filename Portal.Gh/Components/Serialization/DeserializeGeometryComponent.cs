@@ -88,7 +88,7 @@ namespace Portal.Gh.Components.Serialization
             }
         }
 
-        private PGeoType TryGetType(Payload payload)
+        private PGeoType TryGetType(Payload payload)//TODO 0926
         {
             if (payload == null || payload.Items == null)
             {
@@ -204,6 +204,51 @@ namespace Portal.Gh.Components.Serialization
                     return ConstructCurve(arc);
                 default:
                     throw new NotImplementedException($"Deserialization of {pCurve.Type} is not implemented");
+            }
+        }
+
+        private Light DeserializeLight(string jsonData)
+        {
+            var serializerSettings = new Newtonsoft.Json.JsonSerializerSettings();
+            serializerSettings.Converters.Add(new PLightConverterSettings());
+
+            PLight pLight = JsonConvert.DeserializeObject<PLight>(jsonData, serializerSettings);
+
+            switch (pLight)
+            {
+                case PPointLight pl:
+                    return new Light()
+                    {
+                        Diffuse = pl.LightDiffuseColor.ToARGB(),
+                        AttenuationType = pl.LightAttenuationType,
+                        Location = new Point3d(pl.LightLocation.X, pl.LightLocation.Y, pl.LightLocation.Z),
+                        Intensity = pl.LightIntensity,
+                    };
+                case PRectangularLight rl:
+                    return new Light()
+                    {
+                        Diffuse = rl.LightDiffuseColor.ToARGB(),
+                        AttenuationType = rl.LightAttenuationType,
+                        Location = new Point3d(rl.LightLocation.X, rl.LightLocation.Y, rl.LightLocation.Z),
+                        Direction = new Vector3d(rl.LightDirection.X, rl.LightDirection.Y, rl.LightDirection.Z),
+                        Intensity = rl.LightIntensity,
+                        Length = new Vector3d(rl.LightLength.X, rl.LightLength.Y, rl.LightLength.Z),
+                        Width = new Vector3d(rl.LightWidth.X, rl.LightWidth.Y, rl.LightWidth.Z),
+                    };
+                case PSpotLight sl:
+                    return new Light()
+                    {
+                        Diffuse = sl.LightDiffuseColor.ToARGB(),
+                        AttenuationType = sl.LightAttenuationType,
+                        Location = new Point3d(sl.LightLocation.X, sl.LightLocation.Y, sl.LightLocation.Z),
+                        Direction = new Vector3d(sl.LightDirection.X, sl.LightDirection.Y, sl.LightDirection.Z),
+                        Intensity = sl.LightIntensity,
+                        SpotAngleRadians = sl.LightSpotAngleRadians,
+                        HotSpot = sl.LightHotSpot,
+                        ShadowIntensity = sl.LightShadowIntensity
+                    };
+                default:
+                    throw new NotImplementedException($"Deserialization of {pLight.Type} is not implemented");
             }
         }
 
