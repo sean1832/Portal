@@ -88,7 +88,7 @@ namespace Portal.Gh.Components.Serialization
             }
         }
 
-        private PGeoType TryGetType(Payload payload)//TODO 0926
+        private PGeoType TryGetType(Payload payload)
         {
             if (payload == null || payload.Items == null)
             {
