@@ -25,6 +25,8 @@ namespace Portal.Gh.Components.Serialization.JsonSerializerSettings
             {
                 case PGeoType.PointLight:
                     return obj.ToObject<PPointLight>(serializer);
+                case PGeoType.SunLight:
+                    return obj.ToObject<PSunLight>(serializer);
                 case PGeoType.RectangularLight:
                     return obj.ToObject<PRectangularLight>(serializer);
                 case PGeoType.SpotLight:

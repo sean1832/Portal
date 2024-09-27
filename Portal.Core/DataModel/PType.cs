@@ -14,7 +14,8 @@ namespace Portal.Core.DataModel
         Plane,
         PointLight,
         RectangularLight,
-        SpotLight
+        SpotLight,
+        SunLight
     }
 
     public enum PCurveType
