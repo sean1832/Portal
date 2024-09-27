@@ -11,7 +11,7 @@ namespace Portal.Core.DataModel
 {
     public abstract class PLight : PEntity
     {
-        public string LightBlenderType { get; set; }
+        public string LightBlenderType { get; protected set; }
         public PColor LightDiffuseColor { get; protected set; }
         public Light.Attenuation LightAttenuationType { get; protected set; }
         public PVector3D LightLocation { get; protected set; }
