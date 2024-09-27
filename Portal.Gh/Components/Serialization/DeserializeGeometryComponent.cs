@@ -216,37 +216,49 @@ namespace Portal.Gh.Components.Serialization
 
             switch (pLight)
             {
-                case PPointLight pl:
+                case PPointLight pointLight:
                     return new Light()
                     {
-                        Diffuse = pl.LightDiffuseColor.ToARGB(),
-                        AttenuationType = pl.LightAttenuationType,
-                        Location = new Point3d(pl.LightLocation.X, pl.LightLocation.Y, pl.LightLocation.Z),
-                        Intensity = pl.LightIntensity,
+                        Diffuse = pointLight.LightDiffuseColor.ToARGB(),
+                        AttenuationType = pointLight.LightAttenuationType,
+                        Location = new Point3d(pointLight.LightLocation.X, pointLight.LightLocation.Y, pointLight.LightLocation.Z),
+                        Intensity = pointLight.LightIntensity,
                     };
-                case PRectangularLight rl:
+                
+                case PRectangularLight rectLight:
                     return new Light()
                     {
-                        Diffuse = rl.LightDiffuseColor.ToARGB(),
-                        AttenuationType = rl.LightAttenuationType,
-                        Location = new Point3d(rl.LightLocation.X, rl.LightLocation.Y, rl.LightLocation.Z),
-                        Direction = new Vector3d(rl.LightDirection.X, rl.LightDirection.Y, rl.LightDirection.Z),
-                        Intensity = rl.LightIntensity,
-                        Length = new Vector3d(rl.LightLength.X, rl.LightLength.Y, rl.LightLength.Z),
-                        Width = new Vector3d(rl.LightWidth.X, rl.LightWidth.Y, rl.LightWidth.Z),
+                        Diffuse = rectLight.LightDiffuseColor.ToARGB(),
+                        AttenuationType = rectLight.LightAttenuationType,
+                        Location = new Point3d(rectLight.LightLocation.X, rectLight.LightLocation.Y, rectLight.LightLocation.Z),
+                        Direction = new Vector3d(rectLight.LightDirection.X, rectLight.LightDirection.Y, rectLight.LightDirection.Z),
+                        Intensity = rectLight.LightIntensity,
+                        Length = new Vector3d(rectLight.LightLength.X, rectLight.LightLength.Y, rectLight.LightLength.Z),
+                        Width = new Vector3d(rectLight.LightWidth.X, rectLight.LightWidth.Y, rectLight.LightWidth.Z),
                     };
-                case PSpotLight sl:
+
+                case PSpotLight spotLight:
                     return new Light()
                     {
-                        Diffuse = sl.LightDiffuseColor.ToARGB(),
-                        AttenuationType = sl.LightAttenuationType,
-                        Location = new Point3d(sl.LightLocation.X, sl.LightLocation.Y, sl.LightLocation.Z),
-                        Direction = new Vector3d(sl.LightDirection.X, sl.LightDirection.Y, sl.LightDirection.Z),
-                        Intensity = sl.LightIntensity,
-                        SpotAngleRadians = sl.LightSpotAngleRadians,
-                        HotSpot = sl.LightHotSpot,
-                        ShadowIntensity = sl.LightShadowIntensity
+                        Diffuse = spotLight.LightDiffuseColor.ToARGB(),
+                        AttenuationType = spotLight.LightAttenuationType,
+                        Location = new Point3d(spotLight.LightLocation.X, spotLight.LightLocation.Y, spotLight.LightLocation.Z),
+                        Direction = new Vector3d(spotLight.LightDirection.X, spotLight.LightDirection.Y, spotLight.LightDirection.Z),
+                        Intensity = spotLight.LightIntensity,
+                        SpotAngleRadians = spotLight.LightSpotAngleRadians,
+                        HotSpot = spotLight.LightHotSpot,
+                        ShadowIntensity = spotLight.LightShadowIntensity
                     };
+
+                case PSunLight sunLight:
+                    return new Light()
+                    {
+                        Diffuse = sunLight.LightDiffuseColor.ToARGB(),
+                        AttenuationType = sunLight.LightAttenuationType,
+                        Location = new Point3d(sunLight.LightLocation.X, sunLight.LightLocation.Y, sunLight.LightLocation.Z),
+                        Intensity = sunLight.LightIntensity,
+                    };
+
                 default:
                     throw new NotImplementedException($"Deserialization of {pLight.Type} is not implemented");
             }

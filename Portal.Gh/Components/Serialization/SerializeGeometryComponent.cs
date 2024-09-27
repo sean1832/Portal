@@ -121,8 +121,17 @@ namespace Portal.Gh.Components.Serialization
         {
             return light switch
             {
+                var l when l.IsPointLight => new PPointLight
+                (
+                    "POINT",
+                    l.Diffuse,
+                    l.AttenuationType,
+                    new PVector3D(l.Location.X, l.Location.Y, l.Location.Z),
+                    l.Intensity
+                ),
                 var l when l.IsRectangularLight => new PRectangularLight
                 (
+                    "AREA",
                     l.Diffuse,
                     l.AttenuationType,
                     new PVector3D(l.Location.X, l.Location.Y, l.Location.Z),
@@ -131,15 +140,9 @@ namespace Portal.Gh.Components.Serialization
                     new PVector3D(l.Length.X, l.Length.Y, l.Length.Z),
                     new PVector3D(l.Width.X, l.Width.Y, l.Width.Z)
                 ),
-                var l when l.IsPointLight => new PPointLight
-                (
-                    l.Diffuse,
-                    l.AttenuationType,
-                    new PVector3D(l.Location.X, l.Location.Y, l.Location.Z),
-                    l.Intensity
-                ),
                 var l when l.IsSpotLight => new PSpotLight
                 (
+                    "SPOT",
                     l.Diffuse,
                     l.AttenuationType,
                     new PVector3D(l.Location.X, l.Location.Y, l.Location.Z),
@@ -148,6 +151,14 @@ namespace Portal.Gh.Components.Serialization
                     l.SpotAngleRadians,
                     l.HotSpot, 
                     l.ShadowIntensity
+                ),
+                var l when l.IsSunLight => new PSunLight
+                (
+                    "SUN",
+                    l.Diffuse,
+                    l.AttenuationType,
+                    new PVector3D(l.Location.X, l.Location.Y, l.Location.Z),
+                    l.Intensity
                 ),
             };
         }
