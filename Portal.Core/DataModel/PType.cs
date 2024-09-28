@@ -11,7 +11,11 @@ namespace Portal.Core.DataModel
         Undefined,
         Mesh,
         Curve,
-        Plane
+        Plane,
+        PointLight,
+        RectangularLight,
+        SpotLight,
+        SunLight
     }
 
     public enum PCurveType
