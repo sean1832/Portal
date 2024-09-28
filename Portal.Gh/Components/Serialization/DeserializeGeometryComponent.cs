@@ -243,7 +243,7 @@ namespace Portal.Gh.Components.Serialization
                     return new Light()
                     {
                         Diffuse = pointLight.LightDiffuseColor.ToARGB(),
-                        AttenuationType = pointLight.LightAttenuationType,
+                        AttenuationType = (Light.Attenuation)pointLight.LightAttenuationType,
                         Location = new Point3d(pointLight.LightLocation.X, pointLight.LightLocation.Y, pointLight.LightLocation.Z),
                         Intensity = pointLight.LightIntensity,
                     };
@@ -252,7 +252,7 @@ namespace Portal.Gh.Components.Serialization
                     return new Light()
                     {
                         Diffuse = rectLight.LightDiffuseColor.ToARGB(),
-                        AttenuationType = rectLight.LightAttenuationType,
+                        AttenuationType = (Light.Attenuation)rectLight.LightAttenuationType,
                         Location = new Point3d(rectLight.LightLocation.X, rectLight.LightLocation.Y, rectLight.LightLocation.Z),
                         Direction = new Vector3d(rectLight.LightDirection.X, rectLight.LightDirection.Y, rectLight.LightDirection.Z),
                         Intensity = rectLight.LightIntensity,
@@ -264,7 +264,7 @@ namespace Portal.Gh.Components.Serialization
                     return new Light()
                     {
                         Diffuse = spotLight.LightDiffuseColor.ToARGB(),
-                        AttenuationType = spotLight.LightAttenuationType,
+                        AttenuationType = (Light.Attenuation)spotLight.LightAttenuationType,
                         Location = new Point3d(spotLight.LightLocation.X, spotLight.LightLocation.Y, spotLight.LightLocation.Z),
                         Direction = new Vector3d(spotLight.LightDirection.X, spotLight.LightDirection.Y, spotLight.LightDirection.Z),
                         Intensity = spotLight.LightIntensity,
@@ -277,7 +277,7 @@ namespace Portal.Gh.Components.Serialization
                     return new Light()
                     {
                         Diffuse = sunLight.LightDiffuseColor.ToARGB(),
-                        AttenuationType = sunLight.LightAttenuationType,
+                        AttenuationType = (Light.Attenuation)sunLight.LightAttenuationType,
                         Location = new Point3d(sunLight.LightLocation.X, sunLight.LightLocation.Y, sunLight.LightLocation.Z),
                         Intensity = sunLight.LightIntensity,
                     };

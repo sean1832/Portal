@@ -12,10 +12,7 @@ namespace Portal.Core.DataModel
         Mesh,
         Curve,
         Plane,
-        PointLight,
-        RectangularLight,
-        SpotLight,
-        SunLight
+        Light
     }
 
     public enum PCurveType
@@ -26,6 +23,21 @@ namespace Portal.Core.DataModel
         Circle,
         Polyline,
         Nurbs,
+    }
+
+    public enum PLightType
+    {
+        PointLight,
+        RectangularLight,
+        SpotLight,
+        SunLight
+    }
+
+    public enum PAttenuation
+    {
+        Constant,
+        Linear,
+        InverseSquared
     }
 
     public enum PTextureType

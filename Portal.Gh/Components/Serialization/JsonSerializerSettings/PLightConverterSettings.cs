@@ -20,16 +20,16 @@ namespace Portal.Gh.Components.Serialization.JsonSerializerSettings
         {
             JObject obj = JObject.Load(reader);
             Int64 typeInt = (obj["PLightType"] ?? throw new InvalidOperationException(@"Type is not defined")).Value<Int64>();
-            PGeoType type = (PGeoType)typeInt;
+            PLightType type = (PLightType)typeInt;
             switch (type)
             {
-                case PGeoType.PointLight:
+                case PLightType.PointLight:
                     return obj.ToObject<PPointLight>(serializer);
-                case PGeoType.SunLight:
+                case PLightType.SunLight:
                     return obj.ToObject<PSunLight>(serializer);
-                case PGeoType.RectangularLight:
+                case PLightType.RectangularLight:
                     return obj.ToObject<PRectangularLight>(serializer);
-                case PGeoType.SpotLight:
+                case PLightType.SpotLight:
                     return obj.ToObject<PSpotLight>(serializer);
                 default:
                     throw new NotImplementedException($"Deserialization of {type} is not supported");

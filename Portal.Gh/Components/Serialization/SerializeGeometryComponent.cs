@@ -125,7 +125,7 @@ namespace Portal.Gh.Components.Serialization
                 (
                     "POINT",
                     l.Diffuse,
-                    l.AttenuationType,
+                    (PAttenuation)l.AttenuationType,
                     new PVector3D(l.Location.X, l.Location.Y, l.Location.Z),
                     l.Intensity
                 ),
@@ -133,7 +133,7 @@ namespace Portal.Gh.Components.Serialization
                 (
                     "AREA",
                     l.Diffuse,
-                    l.AttenuationType,
+                    (PAttenuation)l.AttenuationType,
                     new PVector3D(l.Location.X, l.Location.Y, l.Location.Z),
                     new PVector3D(l.Direction.X, l.Direction.Y, l.Direction.Z),
                     l.Intensity,
@@ -144,7 +144,7 @@ namespace Portal.Gh.Components.Serialization
                 (
                     "SPOT",
                     l.Diffuse,
-                    l.AttenuationType,
+                    (PAttenuation)l.AttenuationType,
                     new PVector3D(l.Location.X, l.Location.Y, l.Location.Z),
                     new PVector3D(l.Direction.X, l.Direction.Y, l.Direction.Z),
                     l.Intensity, 
@@ -156,7 +156,7 @@ namespace Portal.Gh.Components.Serialization
                 (
                     "SUN",
                     l.Diffuse,
-                    l.AttenuationType,
+                    (PAttenuation)l.AttenuationType,
                     new PVector3D(l.Location.X, l.Location.Y, l.Location.Z),
                     l.Intensity
                 ),
