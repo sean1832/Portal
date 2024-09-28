@@ -9,87 +9,124 @@ namespace Portal.Core.DataModel
 {
     public abstract class PLight : PEntity
     {
-        public PLightType PLightType { get; protected set; }
-        public string LightBlenderType { get; protected set; }
-        public PColor LightDiffuseColor { get; protected set; }
-        public PAttenuation LightAttenuationType { get; protected set; }
-        public PVector3D LightLocation { get; protected set; }
-        public double LightIntensity { get; protected set; }
-        public PVector3D LightDirection { get; protected set; }
+        public string Name { get; protected set; }
+        public string LightType { get; protected set; }
+        public string Color { get; protected set; }
+        public string Attenuation { get; protected set; }
+        public PVector3D AttenuationVector { get; protected set; }
+        public PVector3D Position { get; protected set; }
+        public double Intensity { get; protected set; }
+        public double ShadowIntensity { get; protected set; }
+        public PVector3D Direction { get; protected set; }
 
         protected PLight(PLightType lightType) : base(PGeoType.Light)
         {
-            PLightType = lightType;
+            LightType = lightType.ToString();
         }
     }
 
     public class PPointLight : PLight
     {
-        
-        public PPointLight(string lightBlenderType,Color diffuseColor, PAttenuation lightAttenuationType,
-            PVector3D lightLocation, double lightIntensity) : base(PLightType.PointLight)
+        public PPointLight(string name, Color diffuseColor, PAttenuation attenuation, PVector3D attenuationVector,
+            PVector3D position, double intensity, double shadowIntensity) : base(PLightType.Point)
         {
-            LightBlenderType = lightBlenderType;
-            LightDiffuseColor = new PColor(diffuseColor);
-            LightAttenuationType = lightAttenuationType;
-            LightLocation = lightLocation;
-            LightIntensity = lightIntensity;
+            Name = name;
+            Color = new PColor(diffuseColor).ToHex();
+            Attenuation = attenuation.ToString();
+            AttenuationVector = attenuationVector;
+            Position = position;
+            Intensity = intensity;
+            ShadowIntensity = shadowIntensity;
         }
     }
 
-    public class PSunLight : PLight
+    public class PDirectionalLight : PLight
     {
-
-        public PSunLight(string lightBlenderType, Color diffuseColor, PAttenuation lightAttenuationType,
-            PVector3D lightLocation, double lightIntensity) : base(PLightType.SunLight)
+        public PDirectionalLight(string name, Color diffuseColor, PAttenuation attenuation, PVector3D attenuationVector,
+            PVector3D position, PVector3D direction, double intensity, double shadowIntensity) : base(PLightType.Directional)
         {
-            LightBlenderType = lightBlenderType;
-            LightDiffuseColor = new PColor(diffuseColor);
-            LightAttenuationType = lightAttenuationType;
-            LightLocation = lightLocation;
-            LightIntensity = lightIntensity;
+            Name = name;
+            Color = new PColor(diffuseColor).ToHex();
+            Attenuation = attenuation.ToString();
+            AttenuationVector = attenuationVector;
+            Position = position;
+            Direction = direction;
+            Intensity = intensity;
+            ShadowIntensity = shadowIntensity;
         }
     }
 
     public class PRectangularLight : PLight
     {
-        public PVector3D LightLength { get; private set; }
-        public PVector3D LightWidth { get; private set; }
+        public PVector3D Length { get; private set; }
+        public PVector3D Width { get; private set; }
 
-        public PRectangularLight(string lightBlenderType,Color diffuseColor, PAttenuation lightAttenuationType,
-            PVector3D lightLocation, PVector3D lightDirection, double lightIntensity,
-            PVector3D lightLength, PVector3D lightWidth) : base(PLightType.RectangularLight)
+        public PRectangularLight(string name, Color diffuseColor, PAttenuation attenuation, PVector3D attenuationVector,
+            PVector3D position, PVector3D direction, double intensity, double shadowIntensity,
+            PVector3D length, PVector3D width) : base(PLightType.Rectangular)
         {
-            LightBlenderType = lightBlenderType;
-            LightDiffuseColor = new PColor(diffuseColor);
-            LightAttenuationType = lightAttenuationType;
-            LightLocation = lightLocation;
-            LightDirection = lightDirection;
-            LightIntensity = lightIntensity;
-            LightLength = lightLength;
-            LightWidth = lightWidth;
+            Name = name;
+            Color = new PColor(diffuseColor).ToHex();
+            Attenuation = attenuation.ToString();
+            AttenuationVector = attenuationVector;
+            Position = position;
+            Direction = direction;
+            Intensity = intensity;
+            ShadowIntensity = shadowIntensity;
+            Length = length;
+            Width = width;
         }
     }
 
+    public class PSpotRadii
+    {
+        public double Inner { get; set; }
+        public double Outer { get; set; }
+
+        public PSpotRadii(double inner, double outer)
+        {
+            Inner = inner;
+            Outer = outer;
+        }
+    }
     public class PSpotLight : PLight
     {
-        public double LightSpotAngleRadians { get; private set; }
-        public double LightHotSpot { get; private set; }
-        public double LightShadowIntensity { get; private set; }
+        public double SpotAngleRadians { get; private set; }
+        public PSpotRadii SpotRadii { get; private set; }
+        public double HotSpot { get; private set; }
 
-        public PSpotLight(string lightBlenderType, Color diffuseColor, PAttenuation lightAttenuationType,
-            PVector3D lightLocation, PVector3D lightDirection, double lightIntensity,
-            double lightSpotAngleRadians, double lightHotSpot, double lightShadowIntensity) : base(PLightType.SpotLight)
+        public PSpotLight(string name, Color diffuseColor, PAttenuation attenuation, PVector3D attenuationVector,
+            PVector3D position, PVector3D direction, double intensity,
+            double spotAngleRadians, double hotSpot, double shadowIntensity, PSpotRadii spotRadii) : base(PLightType.Spot)
         {
-            LightBlenderType = lightBlenderType;
-            LightDiffuseColor = new PColor(diffuseColor);
-            LightAttenuationType = lightAttenuationType;
-            LightLocation = lightLocation;
-            LightDirection = lightDirection;
-            LightIntensity = lightIntensity;
-            LightSpotAngleRadians = lightSpotAngleRadians;
-            LightHotSpot = lightHotSpot;
-            LightShadowIntensity = lightShadowIntensity;
+            Name = name;
+            Color = new PColor(diffuseColor).ToHex();
+            Attenuation = attenuation.ToString();
+            AttenuationVector = attenuationVector;
+            Position = position;
+            Direction = direction;
+            Intensity = intensity;
+            SpotAngleRadians = spotAngleRadians * 2; // Convert from half angle to full angle
+            HotSpot = hotSpot;
+            ShadowIntensity = shadowIntensity;
+            SpotRadii = spotRadii;
         }
     }
+
+    public class PLinearLight : PLight
+    {
+        public PLinearLight(string name, Color diffuseColor, PAttenuation attenuation, PVector3D attenuationVector,
+            PVector3D position, PVector3D direction, double intensity, double shadowIntensity) : base(PLightType.Linear)
+        {
+            Name = name;
+            Color = new PColor(diffuseColor).ToHex();
+            Attenuation = attenuation.ToString();
+            AttenuationVector = attenuationVector;
+            Position = position;
+            Direction = direction;
+            Intensity = intensity;
+            ShadowIntensity = shadowIntensity;
+        }
+    }
+
 }

@@ -27,10 +27,11 @@ namespace Portal.Core.DataModel
 
     public enum PLightType
     {
-        PointLight,
-        RectangularLight,
-        SpotLight,
-        SunLight
+        Point,
+        Linear,
+        Directional,
+        Rectangular,
+        Spot
     }
 
     public enum PAttenuation

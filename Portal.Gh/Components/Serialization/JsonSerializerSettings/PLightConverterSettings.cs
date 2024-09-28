@@ -23,14 +23,16 @@ namespace Portal.Gh.Components.Serialization.JsonSerializerSettings
             PLightType type = (PLightType)typeInt;
             switch (type)
             {
-                case PLightType.PointLight:
+                case PLightType.Point:
                     return obj.ToObject<PPointLight>(serializer);
-                case PLightType.SunLight:
-                    return obj.ToObject<PSunLight>(serializer);
-                case PLightType.RectangularLight:
+                case PLightType.Directional:
+                    return obj.ToObject<PDirectionalLight>(serializer);
+                case PLightType.Rectangular:
                     return obj.ToObject<PRectangularLight>(serializer);
-                case PLightType.SpotLight:
+                case PLightType.Spot:
                     return obj.ToObject<PSpotLight>(serializer);
+                case PLightType.Linear:
+                    return obj.ToObject<PLinearLight>(serializer);
                 default:
                     throw new NotImplementedException($"Deserialization of {type} is not supported");
             }
