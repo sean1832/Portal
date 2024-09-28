@@ -129,7 +129,25 @@ namespace Portal.Gh.Components.Serialization
 
             Mesh mesh = new Mesh();
             mesh.Vertices.AddVertices(dataMesh.Vertices.Select(vertex => new Point3d(vertex.X, vertex.Y, vertex.Z)));
-            mesh.Faces.AddFaces(dataMesh.Faces.Select(face => new MeshFace(face[0], face[1], face[2], face[3])).ToArray());
+
+            foreach (var face in dataMesh.Faces)
+            {
+                if (face.Length == 3)
+                {
+                    // If the face is a triangle
+                    mesh.Faces.AddFace(face[0], face[1], face[2]);
+                }
+                else if (face.Length == 4)
+                {
+                    // If the face is a quad
+                    mesh.Faces.AddFace(face[0], face[1], face[2], face[3]);
+                }
+                else
+                {
+                    throw new InvalidOperationException("Invalid face data.");
+                }
+            }
+
             foreach (var hexColor in dataMesh.VertexColors)
             {
                 PColor pColor = PColor.FromHexColor(hexColor);
@@ -140,7 +158,12 @@ namespace Portal.Gh.Components.Serialization
             {
                 mesh.TextureCoordinates.AddRange(dataMesh.UVs.Select(uv => new Point2f(uv.X, uv.Y)).ToArray());
             }
-            mesh.Normals.ComputeNormals();
+
+            // fix invalid mesh
+            // see: https://discourse.mcneel.com/t/fixing-invalid-mesh-in-grasshopper/118308/2
+            mesh.Faces.CullDegenerateFaces();
+            mesh.RebuildNormals();
+            mesh.Compact();
 
             return mesh;
         }
