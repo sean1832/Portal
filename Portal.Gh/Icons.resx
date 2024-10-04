@@ -154,6 +154,9 @@
   <data name="FileWrite" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\FileWrite.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="FromB64" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\FromB64.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="GetCamera" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\GetCamera.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -207,6 +210,9 @@
   </data>
   <data name="SharedMemoryWriter" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\SharedMemoryWriter.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ToB64" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\ToB64.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="UDPReceiver" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\UDPReceiver.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
