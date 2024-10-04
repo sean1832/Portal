@@ -41,8 +41,8 @@ https://github.com/user-attachments/assets/070eb40c-2fe2-4cb2-8e6d-64786fcd9897
 
 ## 🗺️ Roadmap
 ### **0.5.0**:
-- [ ] base64 encoding / decoding
-- [ ] More material properties (transparency, roughness, etc.)
+- [x] base64 encoding / decoding
+- [x] More material properties (transparency, roughness, etc.)
 - [feature request](https://github.com/sean1832/Portal/issues) are welcome.
 
 
