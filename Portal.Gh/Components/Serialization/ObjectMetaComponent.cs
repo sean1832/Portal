@@ -124,6 +124,8 @@ namespace Portal.Gh.Components.Serialization
             PMaterial pMat = new PMaterial(mat.Name, new PColor(mat.DiffuseColor));
             List<PTexture> pTextures = textures.Select(tex => new PTexture(tex.FileName, (PTextureType)tex.TextureType)).ToList();
             pMat.Textures = pTextures;
+            pMat.Reflectivity = mat.Reflectivity;
+            pMat.Transparency = mat.Transparency;
 
             string matString = JsonConvert.SerializeObject(pMat);
             JsonDict matDict = JsonConvert.DeserializeObject<JsonDict>(matString);
@@ -142,6 +144,8 @@ namespace Portal.Gh.Components.Serialization
             PMaterial pMat = new PMaterial(mat.Name, new PColor(mat.DiffuseColor));
             List<PTexture> pTextures = textures.Select(tex => new PTexture(tex.FileName, (PTextureType)tex.TextureType)).ToList();
             pMat.Textures = pTextures;
+            pMat.Reflectivity = mat.Reflectivity;
+            pMat.Transparency = mat.Transparency;
 
             string matString = JsonConvert.SerializeObject(pMat);
             JsonDict matDict = JsonConvert.DeserializeObject<JsonDict>(matString);
