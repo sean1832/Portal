@@ -114,7 +114,6 @@ namespace Portal.Gh.Components.Serialization
             return new PMesh(vertices, faces, vertexColors, uvs);
         }
 
-
         private PCurve SerializeCurve(Curve curve)
         {
             return curve switch

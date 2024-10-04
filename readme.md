@@ -6,18 +6,12 @@
 
 Portal is a Grasshopper3D plugin designed to facilitate [Inter-Process Communication (IPC)](https://en.wikipedia.org/wiki/Inter-process_communication), enabling seamless data exchange between Grasshopper and external applications or processes. By extending workflow capabilities beyond Grasshopper3D and Rhino3D, Portal opens up new possibilities for integrated, multi-platform design processes.
 
-> *⭐️ Like this repo? please consider a star!*
-
 ## 🔌Adaptors
 - [Portal.blender](https://github.com/sean1832/Portal.blender)
 - Portal.unity (Coming Soon)
 - Portal.revit (Coming Soon)
 
-
-
-https://github.com/user-attachments/assets/ce5de081-a58e-41b7-b8ff-387d8ef42015
-
-
+https://github.com/user-attachments/assets/070eb40c-2fe2-4cb2-8e6d-64786fcd9897
 
 
 

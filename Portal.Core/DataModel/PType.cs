@@ -11,7 +11,8 @@ namespace Portal.Core.DataModel
         Undefined,
         Mesh,
         Curve,
-        Plane
+        Plane,
+        Light
     }
 
     public enum PCurveType
@@ -22,6 +23,22 @@ namespace Portal.Core.DataModel
         Circle,
         Polyline,
         Nurbs,
+    }
+
+    public enum PLightType
+    {
+        Point,
+        Linear,
+        Directional,
+        Rectangular,
+        Spot
+    }
+
+    public enum PAttenuation
+    {
+        Constant,
+        Linear,
+        InverseSquared
     }
 
     public enum PTextureType

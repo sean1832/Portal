@@ -230,7 +230,6 @@ namespace Portal.Gh.Components.Serialization
             }
         }
 
-
         private ArcCurve ConstructCurve(PArcCurve curve)
         {
             Plane plane = new Plane(
