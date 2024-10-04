@@ -36,7 +36,7 @@ namespace Portal.Gh.Components.Serialization
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
-            pManager.AddTextParameter("Light GUID", "GUID", "The GUID of the Rhino light object", GH_ParamAccess.item);
+            pManager.AddTextParameter("Light GUID", "GUID", "The GUID of the Rhino light object", GH_ParamAccess.list);
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
@@ -49,41 +49,51 @@ namespace Portal.Gh.Components.Serialization
         protected override void SolveInstance(IGH_DataAccess DA)
         {
             // Retrieve the GUID input
-            string lightGuidString = string.Empty;
-            if (!DA.GetData(0, ref lightGuidString)) return;
+            List<string> guids = new List<string>();
+            if (!DA.GetDataList(0, guids)) return;
 
-            // Parse GUID
-            if (!Guid.TryParse(lightGuidString, out var lightGuid))
+            List<PLight> lights = new List<PLight>();
+
+            foreach (string guid in guids)
             {
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid GUID");
-                return;
-            }
+                // Parse GUID
+                if (!Guid.TryParse(guid, out var lightGuid))
+                {
+                    AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid GUID");
+                    return;
+                }
 
-            // Retrieve the light object from the Rhino document
-            RhinoObject obj = Rhino.RhinoDoc.ActiveDoc.Objects.FindId(lightGuid);
-            if (obj == null)
-            {
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "Object not found");
-                return;
-            }
+                // Retrieve the light object from the Rhino document
+                RhinoObject obj = Rhino.RhinoDoc.ActiveDoc.Objects.FindId(lightGuid);
+                if (obj == null)
+                {
+                    AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "Object not found");
+                    return;
+                }
 
-            // Check if the object is a light
-            if (obj.ObjectType != ObjectType.Light)
-            {
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, $"Object {obj.ObjectType.ToString()} is not a light.");
-                return;
-            }
+                // Check if the object is a light
+                if (obj.ObjectType != ObjectType.Light)
+                {
+                    AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, $"Object {obj.ObjectType.ToString()} is not a light.");
+                    return;
+                }
 
-            // Retrieve the light object
-            LightObject light = obj as LightObject;
-            if (light == null) {
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "Light object is null");
-                return;
-            }
+                // Retrieve the light object
+                LightObject light = obj as LightObject;
+                if (light == null)
+                {
+                    AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "Light object is null");
+                    return;
+                }
 
+                lights.Add(SerializeLight(light.LightGeometry));
+            }
+            
             // Serialize the light object
-            var dataItem = JsonConvert.SerializeObject(SerializeLight(light.LightGeometry));
-            JsonDict dict = JsonConvert.DeserializeObject<JsonDict>(dataItem);
+            var dict = new JsonDict()
+            {
+                { "Lights", lights}
+            };
 
             DA.SetData(0, new JsonDictGoo(dict));
         }
