@@ -32,6 +32,12 @@ https://github.com/user-attachments/assets/070eb40c-2fe2-4cb2-8e6d-64786fcd9897
 - **Referenced Object Serialization**
   - Layer full path
   - Layer / Object material and texture
+- **Light Serialization**
+  - Point Light
+  - Spot Light
+  - Directional Light
+  - Rectangular Light
+  - Linear Light
 - **Data Compression / Decompression** using GZip
 - **Metadata Support** for geometry
 
@@ -40,9 +46,7 @@ https://github.com/user-attachments/assets/070eb40c-2fe2-4cb2-8e6d-64786fcd9897
 > Due to the fact that I am working on this project alone in my free time, the development process maybe slow. I will try to implement features as soon as possible. If you have any feature requests, please let me know by creating a [feature request](https://github.com/sean1832/Portal/issues).
 
 ## 🗺️ Roadmap
-### **0.5.0**:
-- [x] base64 encoding / decoding
-- [x] More material properties (transparency, roughness, etc.)
+### **0.6.0**:
 - [feature request](https://github.com/sean1832/Portal/issues) are welcome.
 
 
