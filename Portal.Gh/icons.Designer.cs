@@ -183,6 +183,16 @@ namespace Portal.Gh {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap FromB64 {
+            get {
+                object obj = ResourceManager.GetObject("FromB64", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap GetCamera {
             get {
                 object obj = ResourceManager.GetObject("GetCamera", resourceCulture);
@@ -356,6 +366,16 @@ namespace Portal.Gh {
         internal static System.Drawing.Bitmap SharedMemoryWriter {
             get {
                 object obj = ResourceManager.GetObject("SharedMemoryWriter", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap ToB64 {
+            get {
+                object obj = ResourceManager.GetObject("ToB64", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
