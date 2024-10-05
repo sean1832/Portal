@@ -60,21 +60,26 @@ namespace Portal.Core.DataModel
     {
         public PVector3D Length { get; private set; }
         public PVector3D Width { get; private set; }
+        public PVector3D Perpendicular { get; private set; }
 
         public PRectangularLight(string name, Color diffuseColor, PAttenuation attenuation, PVector3D attenuationVector,
-            PVector3D position, PVector3D direction, double intensity, double shadowIntensity,
+            PVector3D location, PVector3D perpendicular, PVector3D direction, double intensity, double shadowIntensity,
             PVector3D length, PVector3D width) : base(PLightType.Rectangular)
         {
             Name = name;
             Color = new PColor(diffuseColor).ToHex();
             Attenuation = attenuation.ToString();
             AttenuationVector = attenuationVector;
-            Position = position;
+            Perpendicular = perpendicular;
             Direction = direction;
             Intensity = intensity;
             ShadowIntensity = shadowIntensity;
             Length = length;
             Width = width;
+
+            // since rectangular lights location in Rhino is at the corner of the rectangle, we need to calculate the center
+            PVector3D center = location + (length * 0.5) + (width * 0.5);
+            Position = center;
         }
     }
 

@@ -110,6 +110,7 @@ namespace Portal.Gh.Components.Serialization
                     return new PRectangularLight(l.Name, l.Diffuse, (PAttenuation)l.AttenuationType,
                         PTypeConverter.ToPVector3D(l.AttenuationVector),
                         PTypeConverter.ToPVector3D(l.Location),
+                        PTypeConverter.ToPVector3D(l.PerpendicularDirection),
                         PTypeConverter.ToPVector3D(l.Direction), l.Intensity, l.ShadowIntensity,
                         PTypeConverter.ToPVector3D(l.Length),
                         PTypeConverter.ToPVector3D(l.Width));
