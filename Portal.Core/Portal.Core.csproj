@@ -65,6 +65,7 @@
     <Compile Include="DataModel\Coordinates2D.cs" />
     <Compile Include="DataModel\Coordinates3D.cs" />
     <Compile Include="Binary\Packet.cs" />
+    <Compile Include="DataModel\JsonArray.cs" />
     <Compile Include="DataModel\JsonDict.cs" />
     <Compile Include="DataModel\Payload.cs" />
     <Compile Include="DataModel\PCamera.cs" />

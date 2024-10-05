@@ -15,6 +15,7 @@ using Rhino.DocObjects;
 using Point = Rhino.Geometry.Point;
 using Grasshopper.Kernel.Types;
 using Eto.Drawing;
+using Newtonsoft.Json.Linq;
 using Rhino;
 using Bitmap = System.Drawing.Bitmap;
 
@@ -96,7 +97,7 @@ namespace Portal.Gh.Components.Serialization
         private Payload SerializeGeometry(Point3d geo, JsonDict meta)
         {
             string jsonString = JsonConvert.SerializeObject(new PVector3D(geo.X, geo.Y, geo.Z));
-            JsonDict dict = JsonConvert.DeserializeObject<JsonDict>(jsonString);
+            JsonArray dict = JsonConvert.DeserializeObject<JsonArray>(jsonString);
             return new Payload(dict, meta);
         }
 
