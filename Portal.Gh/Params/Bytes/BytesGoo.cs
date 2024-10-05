@@ -104,7 +104,7 @@ namespace Portal.Gh.Params.Bytes
             {
                 if (length >= threshold.Key)
                 {
-                    return $"{length / threshold.Key} {threshold.Value}";
+                    return $"{(float)length / threshold.Key} {threshold.Value}";
                 }
             }
 
