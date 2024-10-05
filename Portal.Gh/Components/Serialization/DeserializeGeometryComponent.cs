@@ -97,7 +97,16 @@ namespace Portal.Gh.Components.Serialization
             }
 
             string payloadJson = JsonConvert.SerializeObject(payload.Items);
-            JObject parsedObject = JObject.Parse(payloadJson);
+            JObject parsedObject;
+            try
+            {
+                parsedObject = JObject.Parse(payloadJson);
+            }
+            catch (JsonReaderException e)
+            {
+                return PGeoType.Undefined;
+            }
+            
 
             if (parsedObject["Type"] == null)
             {
@@ -172,7 +181,7 @@ namespace Portal.Gh.Components.Serialization
         {
             try
             {
-                dynamic pPoint = JsonConvert.DeserializeObject<dynamic>(data);
+                PVector3D pPoint = JsonConvert.DeserializeObject<PVector3D>(data);
 
                 if (pPoint == null)
                 {
