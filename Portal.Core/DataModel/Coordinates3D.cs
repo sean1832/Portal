@@ -51,6 +51,36 @@ namespace Portal.Core.DataModel
         {
             return Math.Abs(Math.Sqrt(X * X + Y * Y + Z * Z) - 1) < tolerance;
         }
+
+        public static PVector3D CrossProduct(PVector3D a, PVector3D b)
+        {
+            return new PVector3D(a.Y * b.Z - a.Z * b.Y,
+                a.Z * b.X - a.X * b.Z,
+                a.X * b.Y - a.Y * b.X);
+        }
+
+        public static double DotProduct(PVector3D a, PVector3D b)
+        {
+            return a.X * b.X + a.Y * b.Y + a.Z * b.Z;
+        }
+
+        public static double AngleBetween(PVector3D a, PVector3D b)
+        {
+            return Math.Acos(DotProduct(a, b) / (a.Magnitude() * b.Magnitude()));
+        }
+
+        public double Magnitude()
+        {
+            // Pythagorean theorem
+            // a^2 + b^2 = c^2
+            return Math.Sqrt(X * X + Y * Y + Z * Z);
+        }
+
+        // operators for vector math
+        public static PVector3D operator +(PVector3D a, PVector3D b) => new PVector3D(a.X + b.X, a.Y + b.Y, a.Z + b.Z);
+        public static PVector3D operator -(PVector3D a, PVector3D b) => new PVector3D(a.X - b.X, a.Y - b.Y, a.Z - b.Z);
+        public static PVector3D operator *(PVector3D a, double b) => new PVector3D(a.X * b, a.Y * b, a.Z * b);
+        public static PVector3D operator /(PVector3D a, double b) => new PVector3D(a.X / b, a.Y / b, a.Z / b);
     }
 
     public class PVector3Df : Coordinates3D<float>
@@ -85,6 +115,36 @@ namespace Portal.Core.DataModel
         {
             return Math.Abs(Math.Sqrt(X * X + Y * Y + Z * Z) - 1) < tolerance;
         }
+
+        public static PVector3Df CrossProduct(PVector3Df a, PVector3Df b)
+        {
+            return new PVector3Df(a.Y * b.Z - a.Z * b.Y,
+                a.Z * b.X - a.X * b.Z,
+                a.X * b.Y - a.Y * b.X);
+        }
+
+        public static double DotProduct(PVector3Df a, PVector3Df b)
+        {
+            return a.X * b.X + a.Y * b.Y + a.Z * b.Z;
+        }
+
+        public static double AngleBetween(PVector3Df a, PVector3Df b)
+        {
+            return Math.Acos(DotProduct(a, b) / (a.Magnitude() * b.Magnitude()));
+        }
+
+        public double Magnitude()
+        {
+            // Pythagorean theorem
+            // a^2 + b^2 = c^2
+            return Math.Sqrt(X * X + Y * Y + Z * Z);
+        }
+
+        // operators for vector math
+        public static PVector3Df operator +(PVector3Df a, PVector3Df b) => new PVector3Df(a.X + b.X, a.Y + b.Y, a.Z + b.Z);
+        public static PVector3Df operator -(PVector3Df a, PVector3Df b) => new PVector3Df(a.X - b.X, a.Y - b.Y, a.Z - b.Z);
+        public static PVector3Df operator *(PVector3Df a, double b) => new PVector3Df(a.X * (float)b, a.Y * (float)b, a.Z * (float)b);
+        public static PVector3Df operator /(PVector3Df a, double b) => new PVector3Df(a.X / (float)b, a.Y / (float)b, a.Z / (float)b);
     }
 
     
