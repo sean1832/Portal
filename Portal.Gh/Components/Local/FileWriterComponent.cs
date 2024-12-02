@@ -63,7 +63,14 @@ namespace Portal.Gh.Components.Local
             ushort checksum = Packet.Deserialize(data.Value).Header.Checksum;
             if (_lastChecksum != 0 && _lastChecksum  == checksum) return; // // Skip if the message is the same
 
-            System.IO.File.WriteAllBytes(path, data.Value);
+            // if parent directory does not exist, create it
+            string dir = System.IO.Path.GetDirectoryName(path);
+            if (dir != null && !System.IO.Directory.Exists(dir))
+            {
+                System.IO.Directory.CreateDirectory(dir);
+            }
+
+            System.IO.File.WriteAllBytes(path, Packet.Deserialize(data.Value).Data);
             _lastChecksum = checksum;
             Message = "Written";
         }

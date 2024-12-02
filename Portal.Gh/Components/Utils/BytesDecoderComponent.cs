@@ -69,50 +69,67 @@ namespace Portal.Gh.Components.Utils
 
             byte[] rawData = bytesGoo.Value;
             if (rawData == null || rawData.Length == 0) return;
+            string txt; // decoded text
 
-            Packet packet = Packet.Deserialize(rawData);
-            byte[] data = packet.Data;
-
-            // decrypt if encrypted and password is provided
-            if (packet.Header.IsEncrypted)
+            // check if data has header. If not, try to decode as plain text; otherwise, decode as packet
+            if (!bytesGoo.HeaderIsValid)
             {
-                if (string.IsNullOrEmpty(password))
+                byte[] gzMagicNumber = new byte[] { 0x1f, 0x8b };
+
+                // check if data is gzipped
+                if (rawData.Length > 2 && rawData[0] == gzMagicNumber[0] && rawData[1] == gzMagicNumber[1])
                 {
-                    AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Failed to decode. Data is encrypted and password is not provided.");
+                    rawData = GZip.Decompress(rawData);
+                }
+
+                txt = System.Text.Encoding.UTF8.GetString(rawData);
+            }
+            else
+            {
+                Packet packet = Packet.Deserialize(rawData);
+                byte[] data = packet.Data;
+
+                // decrypt if encrypted and password is provided
+                if (packet.Header.IsEncrypted)
+                {
+                    if (string.IsNullOrEmpty(password))
+                    {
+                        AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Failed to decode. Data is encrypted and password is not provided.");
+                        return;
+                    }
+                    Crypto crypto = new Crypto();
+                    try
+                    {
+                        data = crypto.Decrypt(data, password);
+                    }
+                    catch (CryptographicException e)
+                    {
+                        AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Failed to decode. Incorrect Password.");
+                        return;
+                    }
+                }
+
+                // decompress if gzipped
+                if (packet.Header.IsCompressed)
+                {
+                    data = GZip.Decompress(data);
+                }
+
+                // check if data is corrupted
+                if (data == null)
+                {
+                    AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Failed to decode. Data is null.");
                     return;
                 }
-                Crypto crypto = new Crypto();
-                try
+                Crc16 crc16 = new Crc16();
+                ushort checksum = crc16.ComputeChecksum(data);
+                if (packet.Header.Checksum != checksum)
                 {
-                    data = crypto.Decrypt(data, password);
+                    AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Failed to decode. Data is corrupted.");
+                    return;
                 }
-                catch (CryptographicException e)
-                {
-                    AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Failed to decode. Incorrect Password.");
-                    return; 
-                }
+                txt = System.Text.Encoding.UTF8.GetString(data);
             }
-
-            // decompress if gzipped
-            if (packet.Header.IsCompressed)
-            {
-                data = GZip.Decompress(data);
-            }
-
-            // check if data is corrupted
-            if (data == null)
-            {
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Failed to decode. Data is null.");
-                return;
-            }
-            Crc16 crc16 = new Crc16();
-            ushort checksum = crc16.ComputeChecksum(data);
-            if (packet.Header.Checksum != checksum)
-            {
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Failed to decode. Data is corrupted.");
-                return;
-            }
-            string txt = System.Text.Encoding.UTF8.GetString(data);
             DA.SetData(0, txt);
         }
     }

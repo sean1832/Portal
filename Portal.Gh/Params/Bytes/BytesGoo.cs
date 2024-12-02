@@ -18,7 +18,7 @@ namespace Portal.Gh.Params.Bytes
 {
     public class BytesGoo : GH_Goo<byte[]>
     {
-        private bool _headerIsValid = true;
+        public bool HeaderIsValid = true;
         private PacketHeader _header;
 
         public BytesGoo()
@@ -35,7 +35,7 @@ namespace Portal.Gh.Params.Bytes
         {
             if (Value == null || Value.Length == 0)
             {
-                _headerIsValid = false;
+                HeaderIsValid = false;
                 return;
             }
 
@@ -43,11 +43,11 @@ namespace Portal.Gh.Params.Bytes
             {
                 Packet.ValidateMagicNumber(Value);
                 _header = Packet.DeserializeHeader(Value, 2);
-                _headerIsValid = _header != null;
+                HeaderIsValid = _header != null;
             }
             catch (Exception)
             {
-                _headerIsValid = false;
+                HeaderIsValid = false;
             }
         }
 
@@ -55,7 +55,7 @@ namespace Portal.Gh.Params.Bytes
         public override IGH_Goo Duplicate()
         {
             var cloned = new BytesGoo(Value);
-            cloned._headerIsValid = _headerIsValid; // Ensure the validity flag is copied
+            cloned.HeaderIsValid = HeaderIsValid; // Ensure the validity flag is copied
             return cloned;
         }
 
@@ -68,7 +68,7 @@ namespace Portal.Gh.Params.Bytes
 
             string msg = FormatByteSize(Value.Length);
 
-            if (!_headerIsValid)
+            if (!HeaderIsValid)
             {
                 return $"Invalid header | {msg}";
             }
@@ -122,11 +122,11 @@ namespace Portal.Gh.Params.Bytes
                     byte[] rawBytes = Encoding.UTF8.GetBytes(str);
                     Packet packet = new Packet(rawBytes, false, false, new Crc16().ComputeChecksum(rawBytes));
                     Value = packet.Serialize();
-                    _headerIsValid = true;
+                    HeaderIsValid = true;
                 }
                 catch (Exception e)
                 {
-                    _headerIsValid = false;
+                    HeaderIsValid = false;
                 }
                 
                 return true;
@@ -140,11 +140,11 @@ namespace Portal.Gh.Params.Bytes
                     byte[] rawBytes = Encoding.UTF8.GetBytes(json.ToString(true));
                     Packet packet = new Packet(rawBytes, false, false, new Crc16().ComputeChecksum(rawBytes));
                     Value = packet.Serialize();
-                    _headerIsValid = true;
+                    HeaderIsValid = true;
                 }
                 catch (Exception e)
                 {
-                    _headerIsValid = false;
+                    HeaderIsValid = false;
                 }
                 return true;
             }
@@ -155,7 +155,8 @@ namespace Portal.Gh.Params.Bytes
         
         public override bool IsValid
         {
-            get { return Value != null && _headerIsValid; }
+            //get { return Value != null && _headerIsValid; }
+            get { return Value != null; }
         }
 
         public override string TypeName => "Bytes";
