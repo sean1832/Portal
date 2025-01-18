@@ -3,6 +3,7 @@
 ![Static Badge](https://img.shields.io/badge/Grasshopper-7.13%2B-blue)
 ![GitHub License](https://img.shields.io/github/license/sean1832/portal)
 
+<a href="https://www.buymeacoffee.com/zekezhang" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-blue.png" alt="Buy Me A Coffee" style="height: 40px !important;width: 145px !important;" ></a>
 
 Portal is a Grasshopper3D plugin designed to facilitate [Inter-Process Communication (IPC)](https://en.wikipedia.org/wiki/Inter-process_communication), enabling seamless data exchange between Grasshopper and external applications or processes. By extending workflow capabilities beyond Grasshopper3D and Rhino3D, Portal opens up new possibilities for integrated, multi-platform design processes.
 
